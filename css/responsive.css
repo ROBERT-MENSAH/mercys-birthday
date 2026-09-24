@@ -1,0 +1,84 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM
+   Mobile-First & Breakpoints (Tablets, Laptops, Desktops)
+   ========================================================================== */
+
+/* Tablets and medium screens */
+@media (max-width: 900px) {
+  .childhood-grid,
+  .school-layout,
+  .best-friend-hero,
+  .faith-grid,
+  .present-profile-grid,
+  .music-studio-card {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .siblings-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .friends-supporting-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .goals-track {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile screens */
+@media (max-width: 600px) {
+  :root {
+    --space-3xl: 4.5rem;
+    --space-2xl: 3.5rem;
+    --space-xl: 2.25rem;
+  }
+
+  .container,
+  .container--narrow {
+    width: min(100% - 2 * var(--space-sm), var(--container-max));
+  }
+
+  .family-parents-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .siblings-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .friends-supporting-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .school-media-cluster {
+    grid-template-columns: 1fr;
+  }
+
+  .school-card-featured {
+    grid-column: span 1;
+  }
+
+  .discovery-tiles {
+    grid-template-columns: 1fr;
+  }
+
+  .goals-track {
+    grid-template-columns: 1fr;
+  }
+
+  .best-friend-hero {
+    padding: var(--space-md);
+  }
+
+  .robert-letter-card {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .audio-controller {
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+  }
+}
