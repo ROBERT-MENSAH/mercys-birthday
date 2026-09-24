@@ -237,7 +237,19 @@ const MERCY_STORY = {
     { type: "video", category: "family", src: "assets/videos/MY LOVELY MOM VIDEO.mp4", title: "My Lovely Mom Video", caption: "Moments of love and family joy." },
     { type: "image", category: "friends", src: "assets/images/MY FRIEND RACHAEL.jpg", alt: "My friend Rachael", title: "My Friend Rachael", caption: "Special moments with friend Rachael." },
     { type: "image", category: "friends", src: "assets/images/MY FRIEND SANDRA.jpg", alt: "My friend Sandra", title: "My Friend Sandra", caption: "Special moments with friend Sandra." },
-    { type: "image", category: "present", src: "assets/images/ME CURRENTLY.jpg", alt: "Me currently", title: "Me Currently", caption: "Teacher, dreamer, daughter of God." }
+    { type: "image", category: "present", src: "assets/images/ME CURRENTLY.jpg", alt: "Me currently", title: "Me Currently", caption: "Teacher, dreamer, daughter of God." },
+    { type: "image", category: "present", src: "assets/images/MY PICTURE.jpg", alt: "Mercy smiling", title: "Portraits of Grace", caption: "Moments along my journey." },
+    { type: "image", category: "present", src: "assets/images/MY PICTURE 1.jpg", alt: "Mercy standing graceful", title: "Joyful Reflection", caption: "Grace and joy in every step." },
+    { type: "image", category: "present", src: "assets/images/MY PICTURE 2.jpg", alt: "Mercy outdoors", title: "Peace & Serenity", caption: "A quiet moment of gratitude." },
+    { type: "image", category: "friends", src: "assets/images/ME WITH MY FRIENDS 2.jpg", alt: "Mercy with friends group", title: "Circle of Friends", caption: "Cherished company and warm memories." },
+    { type: "image", category: "school", src: "assets/images/SOME YEARS BACK MY PICTURE.jpg", alt: "Some years back picture", title: "School Steps", caption: "Looking back at the path that brought me here." },
+    { type: "image", category: "school", src: "assets/images/YEARS BACK.jpg", alt: "Years back photo", title: "Years Back", caption: "Seeds planted in earlier years." },
+    { type: "video", category: "friends", src: "assets/videos/MY FAMILY AND FRIENDS.mp4", title: "Family & Friends Gathering", caption: "Surrounded by the people who matter most." },
+    { type: "video", category: "present", src: "assets/videos/MYSELF NOW.mp4", title: "Myself Today", caption: "Joyful, determined, and walking in faith." },
+    { type: "video", category: "present", src: "assets/videos/ME CURRENTLY FLEXING.mp4", title: "Graceful Mood", caption: "Smiling with heart and gratitude." },
+    { type: "video", category: "present", src: "assets/videos/ME FLEXING SMALL.mp4", title: "Lighthearted Joy", caption: "Taking time to laugh and celebrate life." },
+    { type: "video", category: "present", src: "assets/videos/MY SELFIE VIDEO 1.mp4", title: "Selfie Moment", caption: "Unfiltered smiles and peaceful days." },
+    { type: "video", category: "present", src: "assets/videos/MY VIDEO 1.mp4", title: "Grateful Heart", caption: "A smile of genuine thankfulness." }
   ],
 
   dedication: {
