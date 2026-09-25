@@ -41,8 +41,8 @@ const MERCY_STORY = {
   roots: {
     chapter: "CHAPTER 01",
     title: "Where It Began",
-    lead: "I grew up in a Christian home. Before the world made noise, my parents and siblings guided my first steps, teaching me how to pray, how to stand firm, and who to trust.",
-    reflection: "Growing up under their care gave me deep roots. They taught me to discern wise counsel and helped me steer away from negative influences that could have led me into bad experiences.",
+    lead: "I grew up in a Christian home, and my parents and siblings guided me strongly.",
+    reflection: "My experiences taught me to overcome negative advice and influences that could have led me into bad experiences.",
     primaryPhoto: {
       src: "assets/images/MY CHILDHOOD PICTURE.jpg",
       alt: "Mercy as a young child",
@@ -54,7 +54,7 @@ const MERCY_STORY = {
     chapter: "CHAPTER 02",
     title: "School Days & Finding My Voice",
     lead: "From Junior High to Senior High School, each stage taught me resilience. But the moment that stands out brightest was standing on the stage during SHS, contesting for Best Vocalist.",
-    reflection: "My heart was pounding, but singing was where my spirit felt completely free. Those school days taught me that who I am is not decided by the crowd, but by the purpose God placed inside me.",
+    reflection: "Singing has been an important part of my story. My school journey includes JHS, SHS, and the memory of contesting for Best Vocalist.",
     featuredContest: {
       src: "assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg",
       alt: "Mercy on stage contesting for Best Vocalist in SHS",
@@ -118,7 +118,7 @@ const MERCY_STORY = {
       role: "My Best Friend",
       src: "assets/images/MY BEST FRIEND ( ELISHA OWUSU ASANTE).jpg",
       alt: "Me and my best friend Elijah Owusu Asante",
-      description: "Elijah has been with me through thick and thin. He gives me honest advice, shows love and care, and stays by my side even when I can be stubborn. A truly valued friend in my life."
+      description: "Elijah has been with me through thick and thin. He gives me advice, shows love and care, and remains present even when I can be stubborn."
     },
     friends: [
       {
@@ -162,7 +162,7 @@ const MERCY_STORY = {
       role: "Father Figure, Pastor & Blessing",
       src: "assets/images/PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg",
       alt: "Pastor Paul Oteng Asamoah and Mama Agartha Asamoah",
-      description: "Pastor Paul never gave up on me. He fought for my dreams, ensured my happiness, served as a father figure, and became a true blessing in my journey."
+      description: "Pastor Paul supported my dreams, cared about my happiness, served as a father figure, and became a blessing in my life."
     },
     worshipVideo: {
       src: "assets/videos/ME WORSHIPING AT CHURCH.mp4",
@@ -216,7 +216,7 @@ const MERCY_STORY = {
     reflection: "I want to become an Agricultural Officer, become a good gospel musician, continue growing in my Christian life, and make both my parents and Heaven proud of me.",
     goals: [
       { number: "01", title: "Agricultural Officer", desc: "Furthering my education at university to serve meaningfully in agriculture." },
-      { number: "02", title: "Gospel Musician", desc: "Writing and ministering gospel music unto the Lord to touch lives." },
+      { number: "02", title: "Gospel Musician", desc: "Becoming a good gospel musician and ministering unto the Lord through music." },
       { number: "03", title: "Holistic Christian Life", desc: "Growing deeper in faith, integrity, and prayer every day." },
       { number: "04", title: "Honoring Family & Heaven", desc: "Making my parents proud and walking in a way that pleases God." }
     ]
@@ -258,12 +258,9 @@ const MERCY_STORY = {
     heading: "Happy Birthday, Mercy.",
     lead: "After walking through your childhood, your family, your friendships, your faith, your music, and your dreams...",
     message: [
-      "Mercy, knowing you and seeing how passionately you love God, how deeply you honor your parents, and how faithfully you stand by your values is truly inspiring.",
-      "As your best friend, I wanted to create an experience that honors your story—not just where you have been, but who you are becoming.",
-      "May this new year of your life open doors you have prayed for. May your voice minister to thousands, may your education rise to higher heights, and may your heart always be filled with peace and joy.",
-      "Happy Birthday, Mercy. A story worth celebrating."
+      "[Robert: write your personal message to Mercy here.]"
     ],
-    closing: "With love, prayers, and deep gratitude,",
+    closing: "[Your closing here]",
     author: "Robert"
   },
 
@@ -276,3 +273,7 @@ const MERCY_STORY = {
 };
 
 Object.freeze(MERCY_STORY);
+
+// Expose the registry as a global for the interactive controller.
+// (`const` at script top level does not create a window property on its own.)
+window.MERCY_STORY = MERCY_STORY;

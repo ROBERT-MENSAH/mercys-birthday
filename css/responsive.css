@@ -1,39 +1,80 @@
 /* ==========================================================================
-   RESPONSIVE DESIGN SYSTEM
-   Mobile-First & Breakpoints (Tablets, Laptops, Desktops)
+   RESPONSIVE DESIGN SYSTEM (REDESIGNED)
+   Fluid Adaptability: Small Phones -> Large Phones -> Tablets -> Desktops
+   Zero Horizontal Overflow, Tactile Spacing
    ========================================================================== */
 
-/* Tablets and medium screens */
-@media (max-width: 900px) {
-  .childhood-grid,
-  .school-layout,
-  .best-friend-hero,
-  .faith-grid,
-  .present-profile-grid,
-  .music-studio-card {
+/* Tablets and medium screens (max-width: 960px) */
+@media (max-width: 960px) {
+  .chapter-indicator {
+    top: max(var(--space-xs), env(safe-area-inset-top));
+    width: max-content;
+    max-width: calc(100vw - 1.5rem);
+    padding: 0.5rem 0.9rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .chapter-section--roots .roots-editorial-grid {
+    gap: var(--space-lg);
+  }
+
+  .chapter-section--roots .roots-editorial-copy h2 {
+    max-width: 14ch;
+  }
+
+  .prologue__portrait img {
+    object-position: center 22%;
+    opacity: 0.32;
+  }
+
+
+  .roots-editorial-grid,
+  .school-editorial-grid,
+  .best-friend-editorial,
+  .faith-editorial-grid,
+  .music-studio-deck,
+  .present-editorial-split {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
   }
 
-  .siblings-grid {
+  .parents-editorial-duo {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .siblings-editorial-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .friends-supporting-grid {
+  .friends-circle-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .goals-track {
+  .horizon-track-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .journey-rail {
+    display: none !important;
+  }
+
+  .mobile-chapter-nav:not([hidden]) {
+    display: grid;
   }
 }
 
-/* Mobile screens */
-@media (max-width: 600px) {
+/* Mobile screens (max-width: 640px) */
+@media (max-width: 640px) {
   :root {
     --space-3xl: 4.5rem;
-    --space-2xl: 3.5rem;
+    --space-2xl: 3.25rem;
     --space-xl: 2.25rem;
+    --space-lg: 1.5rem;
+    --space-md: 1.15rem;
   }
 
   .container,
@@ -41,44 +82,351 @@
     width: min(100% - 2 * var(--space-sm), var(--container-max));
   }
 
-  .family-parents-grid {
+  .mobile-chapter-nav:not([hidden]) {
+    display: grid;
+  }
+
+  .chapter-section {
+    padding: var(--space-xl) 0;
+  }
+
+  .school-visual-mosaic {
     grid-template-columns: 1fr;
   }
 
-  .siblings-grid {
+  .school-visual-lead {
+    grid-row: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .siblings-editorial-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .friends-supporting-grid {
+  .friends-circle-grid {
     grid-template-columns: 1fr;
   }
 
-  .school-media-cluster {
+  .present-snapshot-grid {
     grid-template-columns: 1fr;
   }
 
-  .school-card-featured {
-    grid-column: span 1;
-  }
-
-  .discovery-tiles {
+  .horizon-track-grid {
     grid-template-columns: 1fr;
   }
 
-  .goals-track {
-    grid-template-columns: 1fr;
-  }
-
-  .best-friend-hero {
+  .best-friend-editorial {
     padding: var(--space-md);
   }
 
-  .robert-letter-card {
+  .music-studio-deck {
+    padding: var(--space-md);
+  }
+
+  .robert-letter-editorial {
+    width: 100%;
     padding: var(--space-lg) var(--space-md);
   }
 
-  .audio-controller {
-    bottom: var(--space-sm);
-    right: var(--space-sm);
+  .birthday-grand-stage {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+
+  .birthday-stage-eyebrow {
+    gap: 0.45rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+  }
+
+  .birthday-stage-title__line {
+    font-size: clamp(1.75rem, 9vw, 2.8rem);
+  }
+
+  .birthday-stage-title__name {
+    font-size: clamp(3.9rem, 22vw, 6.4rem);
+  }
+
+  .birthday-stage-lead {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .birthday-song-card {
+    width: 100%;
+    margin-top: var(--space-lg);
+    padding: 0.65rem;
+    border-radius: 1.1rem;
+  }
+
+  .birthday-song-card__head {
+    padding: 0.35rem 0.25rem 0.7rem;
+  }
+
+  .birthday-song-card__video {
+    max-height: none;
+    aspect-ratio: 16 / 10;
+  }
+
+  .chapter-indicator {
+    top: max(0.6rem, env(safe-area-inset-top));
+    font-size: 0.68rem;
+    padding: 0.35rem 0.85rem;
+    max-width: calc(100vw - 1.5rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .music-play-deck {
+    flex-wrap: wrap;
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm);
+    row-gap: var(--space-xs);
+  }
+
+  .music-play-label {
+    white-space: normal;
+    flex: 1 1 100%;
+    text-align: left;
+  }
+
+  .music-waveform {
+    height: 28px;
+  }
+
+  .chapter-transition__num {
+    font-size: clamp(3.6rem, 22vw, 6rem);
+  }
+
+  .motto-band {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .siblings-editorial-section {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .birthday-grand-stage {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+
+  .secret-seal {
+    width: 3.75rem;
+    height: 3.75rem;
+    font-size: 1.6rem;
+  }
+
+  .back-to-top {
+    right: max(0.9rem, env(safe-area-inset-right));
+    bottom: max(5.8rem, calc(env(safe-area-inset-bottom) + 5.8rem));
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border-radius: 50%;
+  }
+
+  .back-to-top__label {
+    display: none;
+  }
+
+  .media-modal__nav {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .media-modal__nav--prev { left: max(0.6rem, env(safe-area-inset-left)); }
+  .media-modal__nav--next { right: max(0.6rem, env(safe-area-inset-right)); }
+
+  .media-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .media-modal__header {
+    padding: max(0.7rem, env(safe-area-inset-top)) var(--space-sm) 0.7rem;
+  }
+
+  .media-modal__media-container {
+    max-height: calc(100dvh - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  .media-modal__media-container img,
+  .media-modal__media-container video {
+    max-height: calc(100dvh - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .mobile-chapter-nav:not([hidden]) {
+    display: grid;
+  }
+
+  .prologue__action {
+    width: min(100%, 22rem);
+    margin-inline: auto;
+  }
+
+  .prologue__action .btn {
+    min-height: 3rem;
+  }
+
+  .btn,
+  .vault-filter-btn,
+  .media-modal__close,
+  .media-modal__fullscreen {
+    min-height: 2.75rem;
+  }
+}
+/* Native phone ergonomics: safe areas, app controls, and edge-to-edge dialogs. */
+@media (max-width: 760px), (display-mode: standalone) {
+  .chapter-indicator {
+    top: max(0.65rem, env(safe-area-inset-top));
+  }
+
+  .reading-progress {
+    top: env(safe-area-inset-top);
+  }
+
+  .back-to-top {
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(5.8rem, calc(env(safe-area-inset-bottom) + 5.8rem));
+    min-width: 2.9rem;
+    min-height: 2.9rem;
+  }
+
+  .mobile-chapter-nav:not([hidden]) {
+    display: grid;
+  }
+
+  .media-modal {
+    width: calc(100vw - 1rem);
+    max-height: calc(100dvh - max(1rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
+    margin: max(0.5rem, env(safe-area-inset-top)) auto;
+    border-radius: var(--radius-md);
+  }
+
+  .media-modal__header {
+    padding: max(0.7rem, env(safe-area-inset-top)) 0.8rem 0.7rem;
+  }
+
+  .media-modal__media-container {
+    width: 100%;
+    max-height: calc(100dvh - 11.5rem);
+  }
+
+  .media-modal__media-container img,
+  .media-modal__media-container video {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 11.5rem);
+  }
+
+  .media-modal__caption {
+    padding: 0.9rem 1rem max(0.9rem, env(safe-area-inset-bottom));
+  }
+
+  .media-modal__nav {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+
+  .media-modal__close {
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+
+  .vault-filter-bar {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 0.25rem 0 0.65rem;
+    margin-inline: calc(-1 * var(--space-xs));
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+
+  .vault-filter-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .vault-filter-btn {
+    min-height: 2.9rem;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .btn {
+    min-height: 2.9rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .birthday-frame::before { border-width: 3px; }
+  .birthday-frame::after { inset: 7px; }
+
+  .birthday-frame__garland {
+    width: min(30rem, 90vw);
+    height: 2.5rem;
+    padding: 0.25rem 0.75rem 0;
+  }
+
+  .birthday-frame__garland span {
+    width: 1.55rem;
+    height: 1.05rem;
+  }
+
+  .birthday-frame__corner {
+    width: 5rem;
+    height: 5.7rem;
+  }
+
+  .birthday-frame__corner--top-left { top: 0.25rem; left: 0.2rem; }
+  .birthday-frame__corner--top-right { top: 0.25rem; right: 0.2rem; }
+  .birthday-frame__corner--bottom-left { bottom: 0.2rem; left: 0.2rem; }
+  .birthday-frame__corner--bottom-right { right: 0.2rem; bottom: 0.2rem; }
+
+  .birthday-frame__corner::after { font-size: 0.9rem; }
+  .birthday-frame__corner--top-left::after { top: 4.1rem; left: 4.1rem; }
+  .birthday-frame__corner--top-right::after { top: 3.5rem; right: 4rem; }
+  .birthday-frame__corner--bottom-left::after { bottom: 3.8rem; left: 4rem; }
+  .birthday-frame__corner--bottom-right::after { right: 4.2rem; bottom: 4.1rem; }
+
+  .birthday-frame__balloon {
+    width: 1.25rem;
+    height: 1.7rem;
+  }
+
+  .birthday-frame__balloon::before { height: 2.4rem; }
+  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(1) { top: 1rem; left: 0.3rem; }
+  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(2) { top: 0.6rem; left: 1.4rem; }
+  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(3) { top: 1.5rem; left: 2.5rem; }
+  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(1) { top: 1rem; right: 0.3rem; }
+  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(2) { top: 0.6rem; right: 1.4rem; }
+  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(3) { top: 1.5rem; right: 2.5rem; }
+  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(1) { bottom: 1rem; left: 0.3rem; }
+  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(2) { bottom: 0.6rem; left: 1.4rem; }
+  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(3) { bottom: 1.5rem; left: 2.5rem; }
+  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(1) { right: 0.3rem; bottom: 1rem; }
+  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(2) { right: 1.4rem; bottom: 0.6rem; }
+  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(3) { right: 2.5rem; bottom: 1.5rem; }
+}
+
+/* Very small phones (max-width: 380px) */
+@media (max-width: 380px) {
+  .chapter-indicator .chapter-indicator__sep,
+  .chapter-indicator [data-indicator-name] {
+    display: none;
+  }
+
+  .siblings-editorial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .parents-editorial-duo {
+    gap: var(--space-md);
   }
 }

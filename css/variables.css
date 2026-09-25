@@ -1,81 +1,100 @@
 /* ==========================================================================
-   DESIGN TOKENS & SYSTEM VARIABLES
+   DESIGN TOKENS & SYSTEM VARIABLES (REDESIGNED)
    Mercy — A Story Worth Celebrating
-   Visual Identity: White (Foundation) · Blush Pink · Royal Slate Blue
+   Visual Identity: Midnight Navy (Foundation) · Dusty Rose · Champagne
+   Editorial, High-Contrast, Balanced Hierarchy
    ========================================================================== */
 
 :root {
-  /* --- PALETTE: WHITE FOUNDATION --- */
-  --bg-primary: #FAFAF9;            /* Alabaster silk foundation */
-  --bg-surface: #FFFFFF;            /* Pure crisp white for cards and dialogue */
-  --bg-elevated: #F4F6F9;           /* Whisper cloud tint for subtle elevation */
-  --bg-overlay: rgba(14, 23, 36, 0.75); /* Deep slate backdrop blur */
+  /* --- PALETTE: MIDNIGHT NAVY FOUNDATION & SURFACE TINTS --- */
+  /* White is reserved for focal copy and controls; the page itself is navy-led. */
+  --white: #FFFFFF;
+  --bg-primary: #0B1624;            /* Midnight Navy Page */
+  --bg-surface: #13233A;            /* Deep Navy Panel */
+  --bg-subtle: #1B2F4A;             /* Raised Navy Tint */
+  --bg-overlay: rgba(6, 13, 23, 0.86);
 
-  /* --- PALETTE: SOPHISTICATED BLUSH PINK ACCENTS --- */
-  --pink-primary: #D47A90;          /* Elegant dusty rose */
-  --pink-hover: #BF657B;            /* Deeper rose interaction state */
-  --pink-soft: #FDF1F4;             /* Petal tint for card backgrounds & badges */
-  --pink-deep: #A84960;             /* Accessible high-contrast text rose */
-  --pink-glow: rgba(212, 122, 144, 0.25);
+  /* --- PALETTE: DUSTY ROSE & CHAMPAGNE ACCENTS --- */
+  --pink-soft: #3A2130;             /* Deep Rose Wash */
+  --pink-tint: #4A2A3A;             /* Muted Rose Panel */
+  --pink-primary: #E79FB2;          /* Signature Dusty Rose (light, on navy) */
+  --pink-hover: #F2B8C6;            /* Brighter Rose hover */
+  --pink-deep: #C4708A;             /* Accent Rose for large text */
+  --pink-glow: rgba(231, 159, 178, 0.30);
+  --champagne: #F0DCC0;             /* Celebration Accent */
+  --champagne-soft: #C9B393;        /* Muted Champagne */
 
-  /* --- PALETTE: DIGNIFIED SLATE & NAVY BLUE ACCENTS --- */
-  --blue-primary: #1E3A5F;          /* Royal slate blue for major headings */
-  --blue-soft: #EBF3F8;             /* Sky mist tint for alternating bands */
-  --blue-accent: #5B8BAE;           /* Cornflower slate for interactive borders & icons */
-  --blue-night: #0B1624;            /* Obsidian night for cinematic chapters */
-  --blue-glow: rgba(91, 139, 174, 0.22);
+  /* --- PALETTE: DIGNIFIED SLATE & MIDNIGHT BLUE --- */
+  --blue-soft: #17293F;             /* Night Sky Mist */
+  --blue-tint: #1E3A5F;             /* Slate Wash */
+  --blue-accent: #7FA8CB;           /* Cornflower Slate (light) */
+  --blue-primary: #2C5382;          /* Royal Slate Blue */
+  --blue-night: #0B1624;            /* Midnight Navy */
+  --blue-deep-contrast: #060D17;    /* Pure Obsidian */
+  --blue-glow: rgba(91, 139, 174, 0.28);
 
   /* --- NEUTRAL INK & READABILITY --- */
-  --text-ink: #141F2D;              /* Primary text - deep slate charcoal (AA/AAA contrast) */
-  --text-muted: #5E6D82;            /* Secondary editorial copy & metadata */
-  --text-light: #F4F7FB;            /* Contrast text on dark chapter backgrounds */
-  --border-subtle: rgba(20, 31, 45, 0.08);
-  --border-strong: rgba(20, 31, 45, 0.16);
+  --text-dark: #F4F7FB;             /* Primary Ink on navy */
+  --text-ink: #EAF0F7;              /* Soft Ink on navy */
+  --text-body: #C8D5E4;             /* Body Copy on navy */
+  --text-muted: #93A6BC;            /* Secondary Editorial Text */
+  --text-light: #FFFFFF;            /* Focal Highlight Text */
+  --text-light-muted: #B9C7D8;      /* Light Muted Text */
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-pink: rgba(231, 159, 178, 0.30);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --border-dark-subtle: rgba(255, 255, 255, 0.14);
 
   /* --- TYPOGRAPHY TOKENS --- */
-  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-accent: "Caveat", cursive, Georgia, serif;
 
   /* Typographic Scale with Fluid Clamp */
   --text-xs: clamp(0.72rem, 0.7rem + 0.1vw, 0.8rem);
-  --text-sm: clamp(0.85rem, 0.82rem + 0.15vw, 0.95rem);
-  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
-  --text-md: clamp(1.15rem, 1.1rem + 0.25vw, 1.3rem);
-  --text-lg: clamp(1.35rem, 1.25rem + 0.5vw, 1.65rem);
-  --text-xl: clamp(1.75rem, 1.5rem + 1.2vw, 2.4rem);
-  --text-2xl: clamp(2.3rem, 1.8rem + 2.5vw, 3.8rem);
-  --text-hero: clamp(3.2rem, 2.2rem + 4.5vw, 6.5rem);
+  --text-sm: clamp(0.85rem, 0.82rem + 0.15vw, 0.94rem);
+  --text-base: clamp(1rem, 0.96rem + 0.2vw, 1.1rem);
+  --text-md: clamp(1.12rem, 1.05rem + 0.25vw, 1.25rem);
+  --text-lg: clamp(1.3rem, 1.2rem + 0.4vw, 1.55rem);
+  --text-xl: clamp(1.6rem, 1.4rem + 1vw, 2.2rem);
+  --text-2xl: clamp(2.2rem, 1.8rem + 2vw, 3.2rem);
+  --text-hero: clamp(3.2rem, 2.5rem + 4.5vw, 6.2rem);
 
-  /* --- SPACING & LAYOUT TOKENS --- */
-  --space-2xs: 0.25rem;
-  --space-xs: 0.5rem;
-  --space-sm: 0.75rem;
-  --space-md: 1.25rem;
-  --space-lg: 2rem;
-  --space-xl: 3.5rem;
-  --space-2xl: 5.5rem;
-  --space-3xl: 8rem;
+  /* Spacing Scale - Controlled, Editorial, Zero Void */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.25rem;
+  --space-xl: 3.25rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 6rem;
 
-  --container-max: 76rem;
-  --container-narrow: 52rem;
+  /* Layout Containers */
+  --container-max: 1260px;
+  --container-wide: 1400px;
+  --container-narrow: 920px;
 
-  /* --- ELEVATION & SHADOWS --- */
-  --shadow-subtle: 0 4px 20px rgba(20, 31, 45, 0.04);
-  --shadow-card: 0 10px 32px rgba(20, 31, 45, 0.06);
-  --shadow-elevated: 0 20px 50px rgba(20, 31, 45, 0.10);
-  --shadow-glow: 0 0 35px var(--pink-glow);
+  /* Elevation & Shadows */
+  --shadow-subtle: 0 4px 18px rgba(11, 22, 36, 0.05);
+  --shadow-card: 0 10px 30px rgba(11, 22, 36, 0.08);
+  --shadow-elevated: 0 20px 48px rgba(11, 22, 36, 0.14);
+  --shadow-floating: 0 30px 70px rgba(11, 22, 36, 0.22);
+  --shadow-pink: 0 14px 35px rgba(212, 122, 144, 0.25);
 
-  /* --- RADII --- */
-  --radius-sm: 0.5rem;
-  --radius-md: 0.875rem;
-  --radius-lg: 1.5rem;
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
   --radius-pill: 9999px;
 
-  /* --- TRANSITIONS & TIMING --- */
+  /* Transitions & Timing */
   --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-fast: 200ms;
-  --duration-medium: 400ms;
-  --duration-slow: 800ms;
+  --duration-fast: 180ms;
+  --duration-medium: 350ms;
+  --duration-slow: 700ms;
 }

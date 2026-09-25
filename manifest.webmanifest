@@ -1,0 +1,26 @@
+{
+  "name": "Mercy — A Story Worth Celebrating",
+  "short_name": "Mercy",
+  "description": "Mercy's interactive birthday story, photographs, videos, and studio song.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FAFAF9",
+  "theme_color": "#1E3A5F",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "assets/icons/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

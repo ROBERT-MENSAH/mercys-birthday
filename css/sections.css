@@ -1,6 +1,7 @@
 /* ==========================================================================
-   STORY SECTIONS & CHAPTER NARRATIVES (Part 1)
-   Mercy — A Story Worth Celebrating
+   STORY CHAPTERS — EDITORIAL & CINEMATIC ARCHITECTURE
+   Visual rhythm: Deep Blue -> White -> Blush Pink -> Crisp White -> Soft Blue -> Midnight Navy -> Studio Rose -> Warm White -> Gallery Blue -> Midnight Celebration
+   No dead space, strong photographic anchors, intentional typography
    ========================================================================== */
 
 /* --- SECTION 00: CINEMATIC PROLOGUE --- */
@@ -17,11 +18,41 @@
   text-align: center;
 }
 
+/* A real portrait gives the opening a quiet photographic anchor.
+   The image is decorative here because the name and story carry the meaning. */
+.prologue__portrait {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--blue-night);
+}
+
+.prologue__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  opacity: 0.38;
+  filter: saturate(0.82) contrast(1.04) brightness(0.78);
+  transform: scale(1.03);
+}
+
+.prologue__portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 18, 32, 0.48) 0%, rgba(7, 18, 32, 0.26) 42%, rgba(7, 18, 32, 0.88) 100%),
+    linear-gradient(90deg, rgba(7, 18, 32, 0.38), transparent 62%, rgba(7, 18, 32, 0.42));
+}
+
+
 .prologue__backdrop {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 30%, rgba(212, 122, 144, 0.18), transparent 60%),
-              radial-gradient(circle at 80% 80%, rgba(91, 139, 174, 0.15), transparent 50%);
+  background: radial-gradient(circle at 50% 35%, rgba(212, 122, 144, 0.22), transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(91, 139, 174, 0.18), transparent 50%);
   pointer-events: none;
 }
 
@@ -30,33 +61,34 @@
   inset: 0;
   pointer-events: none;
   background-image: radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                    radial-gradient(1.5px 1.5px at 100px 150px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
-                    radial-gradient(1px 1px at 220px 80px, #fdf1f4, rgba(0,0,0,0));
-  background-size: 300px 300px;
-  opacity: 0.6;
+                    radial-gradient(1.5px 1.5px at 120px 160px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
+                    radial-gradient(1px 1px at 240px 90px, #fce7ec, rgba(0,0,0,0));
+  background-size: 320px 320px;
+  opacity: 0.65;
 }
 
 .prologue__content {
   position: relative;
   z-index: 2;
-  max-width: 44rem;
+  max-width: 48rem;
 }
 
 .prologue__line {
   font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+  font-size: clamp(1.4rem, 2.6vw, 2.3rem);
   font-style: italic;
   font-weight: 300;
   color: #D3DEEB;
   margin-bottom: var(--space-xs);
   opacity: 0;
-  transform: translateY(15px);
-  animation: prologueFade 1s var(--ease-cinematic) forwards;
+  transform: translateY(16px);
+  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
 }
 
-.prologue__line:nth-child(1) { animation-delay: 0.3s; }
-.prologue__line:nth-child(2) { animation-delay: 1.5s; }
-.prologue__line:nth-child(3) { animation-delay: 2.7s; margin-bottom: var(--space-lg); }
+/* The kicker is the first child, so the staggered lines are matched by type. */
+.prologue__line:nth-of-type(1) { animation-delay: 0.2s; }
+.prologue__line:nth-of-type(2) { animation-delay: 1.1s; }
+.prologue__line:nth-of-type(3) { animation-delay: 2.0s; margin-bottom: var(--space-lg); }
 
 .prologue__name {
   font-family: var(--font-display);
@@ -64,17 +96,30 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #FFFFFF;
-  text-shadow: 0 0 40px rgba(255, 255, 255, 0.35);
+  text-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
   margin-bottom: var(--space-lg);
   opacity: 0;
   transform: scale(0.96);
-  animation: nameReveal 1.2s var(--ease-cinematic) 3.8s forwards;
+  animation: nameReveal 1.1s var(--ease-cinematic) 3.1s forwards;
 }
 
 .prologue__action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs);
   opacity: 0;
-  transform: translateY(10px);
-  animation: prologueFade 1s var(--ease-cinematic) 4.6s forwards;
+  transform: translateY(12px);
+  animation: prologueFade 1s var(--ease-cinematic) 3.8s forwards;
+}
+
+.prologue__action .btn {
+  min-height: 3rem;
+}
+
+.install-help {
+  flex-basis: 100%;
+  margin: 0;
 }
 
 @keyframes prologueFade {
@@ -85,10 +130,11 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-/* --- CHAPTER BASE STRUCTURE --- */
+/* --- GENERAL CHAPTER BASE CONTAINERS --- */
 .chapter-section {
-  padding: var(--space-3xl) 0;
+  padding: var(--space-2xl) 0;
   position: relative;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .chapter-section--white {
@@ -96,310 +142,494 @@
 }
 
 .chapter-section--soft-pink {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--pink-soft) 50%, var(--bg-primary) 100%);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--pink-soft) 42%, var(--pink-soft) 78%, var(--bg-primary) 100%);
 }
 
 .chapter-section--soft-blue {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--blue-soft) 50%, var(--bg-primary) 100%);
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--blue-soft) 42%, var(--blue-soft) 78%, var(--bg-primary) 100%);
 }
 
+.chapter-section--midnight {
+  background: linear-gradient(165deg, #09121E 0%, var(--blue-night) 60%, #060D17 100%);
+  color: var(--white);
+  border-bottom: 1px solid var(--border-dark-subtle);
+}
+
+.chapter-section--midnight h2,
+.chapter-section--midnight h3,
+.chapter-section--midnight h4 {
+  color: var(--white);
+}
+
+.chapter-section--midnight p {
+  color: var(--text-light-muted);
+}
+
+/* --- CHAPTER HEADER EDITORIAL TYPOGRAPHY --- */
 .chapter-header {
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-xl);
 }
 
 .chapter-header--centered {
   text-align: center;
-  max-width: 46rem;
+  max-width: 48rem;
   margin-inline: auto;
 }
 
 .chapter-header h2 {
-  color: var(--blue-primary);
-}
-
-
-/* --- CHAPTER 01: CHILDHOOD & SEED --- */
-.childhood-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: var(--space-2xl);
-  align-items: center;
-}
-
-.childhood-visual {
-  aspect-ratio: 4 / 5;
-  box-shadow: 0 25px 60px rgba(30, 58, 95, 0.12);
-}
-
-/* --- CHAPTER 02: SCHOOL & BEST VOCALIST --- */
-.school-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: var(--space-2xl);
-  align-items: center;
-}
-
-.school-media-cluster {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-}
-
-.school-card-featured {
-  grid-column: span 2;
-  position: relative;
-}
-
-.school-card-featured .badge {
-  position: absolute;
-  top: var(--space-sm);
-  left: var(--space-sm);
-  z-index: 2;
-}
-
-/* --- CHAPTER 03: FAMILY (PILLARS OF LOVE) --- */
-.family-parents-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-lg);
-  margin-bottom: var(--space-2xl);
-}
-
-.parent-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-lg);
-  background-color: var(--bg-surface);
-  box-shadow: var(--shadow-card);
-  border: 1px solid var(--border-subtle);
-  transition: transform var(--duration-medium) var(--ease-cinematic);
-}
-
-.parent-card:hover {
-  transform: translateY(-4px);
-}
-
-.parent-card__img {
-  aspect-ratio: 4 / 5;
-  width: 100%;
-  object-fit: cover;
-}
-
-.parent-card__body {
-  padding: var(--space-md) var(--space-lg);
-}
-
-.parent-card__body h4 {
-  color: var(--blue-primary);
-  margin-bottom: var(--space-2xs);
-}
-
-.parent-card__body p {
-  font-size: var(--text-sm);
+  font-size: var(--text-2xl);
+  line-height: 1.1;
   margin-bottom: var(--space-xs);
 }
 
-.siblings-strip {
-  margin-top: var(--space-xl);
+.chapter-header p {
+  font-size: var(--text-md);
+  margin-inline: auto;
 }
 
-.siblings-grid {
+.chapter-numeral {
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 6vw, 5.5rem);
+  font-weight: 600;
+  line-height: 0.9;
+  color: var(--pink-primary);
+  letter-spacing: -0.03em;
+  display: block;
+  margin-bottom: var(--space-2xs);
+}
+
+/* The first spread should land as one complete story moment after the curtain. */
+.chapter-section--roots {
+  padding-top: clamp(3.5rem, 8vw, 7rem);
+  padding-bottom: clamp(3.5rem, 8vw, 7rem);
+  background:
+    radial-gradient(circle at 8% 22%, rgba(212, 122, 144, 0.12), transparent 28%),
+    linear-gradient(135deg, #FFFFFF 0%, var(--blue-soft) 100%);
+}
+
+.chapter-section--roots .roots-editorial-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.chapter-section--roots .roots-editorial-copy h2 {
+  max-width: 12ch;
+  margin-bottom: var(--space-md);
+}
+
+.chapter-section--roots .roots-editorial-copy .chapter-quote {
+  margin-bottom: var(--space-md);
+}
+
+.chapter-section--roots .roots-editorial-copy > p:not(.chapter-quote) {
+  margin-bottom: var(--space-sm);
+}
+
+.chapter-section--roots .chapter-actions {
+  margin-top: var(--space-md);
+}
+/* --- CHAPTER 01: ROOTS & WHERE IT BEGAN (SPLIT EDITORIAL HERO) --- */
+.roots-editorial-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.roots-visual-stage {
+  position: relative;
+}
+
+.roots-visual-stage .editorial-frame {
+  aspect-ratio: 4 / 5;
+  box-shadow: 0 25px 60px rgba(30, 58, 95, 0.16);
+  border: 1px solid var(--border-subtle);
+}
+
+.roots-badge-floating {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  z-index: 3;
+}
+
+.roots-editorial-copy {
+  padding-left: var(--space-xs);
+}
+
+/* --- CHAPTER 02: SCHOOL DAYS & BEST VOCALIST (BLUSH EDITORIAL CLUSTER) --- */
+.school-editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.school-visual-mosaic {
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  grid-template-rows: auto auto;
+  gap: var(--space-md);
+}
+
+.school-visual-lead {
+  grid-row: span 2;
+  aspect-ratio: 3 / 4;
+  position: relative;
+}
+
+.school-visual-lead .badge {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 3;
+}
+
+.school-visual-sub {
+  aspect-ratio: 4 / 3;
+}
+
+/* --- CHAPTER 03: PILLARS OF LOVE (FAMILY) --- */
+.parents-editorial-duo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+.parent-editorial-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+  transition: transform var(--duration-medium) var(--ease-cinematic),
+              box-shadow var(--duration-medium) var(--ease-cinematic);
+}
+
+.parent-editorial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.parent-editorial-card__frame {
+  aspect-ratio: 4 / 4.5;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--blue-soft);
+}
+
+.parent-editorial-card__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-cinematic);
+}
+
+.parent-editorial-card:hover .parent-editorial-card__frame img {
+  transform: scale(1.03);
+}
+
+.parent-editorial-card__body {
+  padding: var(--space-lg);
+}
+
+.parent-editorial-card__body h3 {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2xs);
+  color: var(--blue-primary);
+}
+
+.parent-editorial-card__body p {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-md);
+  color: var(--text-body);
+}
+
+.siblings-editorial-section {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  border: 1px solid var(--border-subtle);
+}
+
+.siblings-editorial-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-sm);
+  gap: var(--space-md);
 }
 
-.sibling-item {
+.sibling-portrait-unit {
   text-align: center;
 }
 
-.sibling-item__thumb {
+.sibling-portrait-unit__thumb {
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: var(--space-xs);
   box-shadow: var(--shadow-subtle);
   border: 2px solid transparent;
-  transition: all var(--duration-fast) var(--ease-smooth);
+  transition: transform var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth);
 }
-
-/* --- CHAPTER 04: FRIENDSHIP & ELIJAH --- */
-.best-friend-hero {
+/* --- CHAPTER 04: FRIENDSHIP (SLATE BLUE EDITORIAL HERO) --- */
+.best-friend-editorial {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1fr 1.25fr;
   gap: var(--space-2xl);
   align-items: center;
-  background-color: var(--bg-surface);
-  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  border-radius: var(--radius-xl);
   padding: var(--space-xl);
   box-shadow: var(--shadow-elevated);
   border: 1px solid var(--border-subtle);
   margin-bottom: var(--space-2xl);
 }
 
-.best-friend-hero__photo {
+.best-friend-editorial__photo {
   aspect-ratio: 4 / 5;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-}
-
-.friends-supporting-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-lg);
-}
-
-.friend-card {
-  background-color: var(--bg-surface);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-card);
-  border: 1px solid var(--border-subtle);
 }
 
-.friend-card__media {
-  aspect-ratio: 4 / 3;
-}
-
-.friend-card__media img {
+.best-friend-editorial__photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.friend-card__info {
-  padding: var(--space-md);
+.friends-circle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
 }
 
-/* --- CHAPTER 05: FAITH & PASTOR PAUL --- */
-.faith-grid {
+.friend-story-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--duration-medium) var(--ease-cinematic),
+              box-shadow var(--duration-medium) var(--ease-cinematic);
+}
+
+.friend-story-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-elevated);
+}
+
+.friend-story-card__media img {
+  transition: transform var(--duration-slow) var(--ease-cinematic);
+}
+
+.friend-story-card:hover .friend-story-card__media img {
+  transform: scale(1.06);
+}
+
+.friend-story-card__media {
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  position: relative;
+}
+
+.friend-story-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.friend-story-card__body {
+  padding: var(--space-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.friend-story-card__body h4 {
+  font-size: var(--text-base);
+  color: var(--blue-primary);
+  margin-bottom: var(--space-3xs);
+}
+
+.friend-story-card__body p {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-sm);
+  flex: 1;
+}
+
+/* --- CHAPTER 05: FAITH & MENTORS (MIDNIGHT SANCTUARY) --- */
+.faith-editorial-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.15fr;
   gap: var(--space-2xl);
   align-items: center;
 }
 
-.scripture-banner {
-  background: linear-gradient(135deg, var(--blue-primary) 0%, #0F2038 100%);
-  color: #FFFFFF;
+.scripture-card-featured {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-xl);
   padding: var(--space-xl);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-elevated);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(12px);
 }
 
-.scripture-banner::before {
-  content: "✝";
-  position: absolute;
-  right: -1rem;
-  bottom: -2rem;
-  font-size: 10rem;
-  opacity: 0.05;
-  color: #FFF;
-  font-family: serif;
-}
-
-.scripture-text {
-  font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
-  font-style: italic;
-  line-height: 1.4;
-  margin-bottom: var(--space-md);
-  color: #F0F4F8;
-
-/* --- CHAPTER 06: MUSIC MINISTRY --- */
-.music-studio-card {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-xl);
-  background-color: #0F1D2F;
-  color: #FFF;
-  border-radius: var(--radius-lg);
-  padding: var(--space-xl);
-  align-items: center;
-  box-shadow: var(--shadow-elevated);
-  margin-top: var(--space-xl);
-}
-
-.music-studio-card video {
-  width: 100%;
-  border-radius: var(--radius-md);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-}
-
-.song-pill-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-xs);
-  margin-top: var(--space-md);
-}
-
-.song-pill {
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-pill);
-  background-color: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+.scripture-card-featured .verse-ref {
+  font-family: var(--font-body);
   font-size: var(--text-xs);
-  color: #E2EAF2;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--pink-primary);
+  margin-top: var(--space-sm);
+  display: inline-block;
 }
 
-/* --- CHAPTER 07 & 08: PRESENT & HORIZON --- */
-.present-profile-grid {
+.mentor-spotlight-card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.mentor-spotlight-card .editorial-frame {
+  aspect-ratio: 16 / 10;
+  margin-bottom: var(--space-md);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* --- CHAPTER 06: MUSIC MINISTRY (STUDIO VIBE) --- */
+.music-studio-deck {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: var(--space-2xl);
   align-items: center;
+  background: linear-gradient(135deg, #131F30 0%, #1A2D45 100%);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-floating);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--white);
 }
 
-.discovery-tiles {
+.music-studio-deck__media {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.music-studio-deck__media video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.song-badges-deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin: var(--space-md) 0;
+}
+/* --- CHAPTER 07 & 08: PRESENT PROFILE & HORIZON GOALS --- */
+.present-editorial-split {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.present-portrait-stage {
+  aspect-ratio: 4 / 5;
+  box-shadow: 0 25px 60px rgba(30, 58, 95, 0.16);
+}
+
+.present-snapshot-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-md);
   margin-top: var(--space-lg);
 }
 
-.tile {
-  background-color: var(--bg-surface);
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
+.snapshot-pill-card {
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
   box-shadow: var(--shadow-subtle);
 }
 
-.tile h5 {
-  font-family: var(--font-body);
+.snapshot-pill-card span {
   font-size: var(--text-xs);
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--pink-deep);
-  margin-bottom: var(--space-2xs);
+  display: block;
+  margin-bottom: var(--space-3xs);
 }
 
-.tile p {
+.snapshot-pill-card p {
   font-size: var(--text-sm);
-  color: var(--text-ink);
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--blue-primary);
   margin-bottom: 0;
 }
 
-.goals-track {
+/* HORIZON MILESTONE CARDS */
+.horizon-track-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-md);
   margin-top: var(--space-xl);
 }
 
-.goal-node {
+.horizon-card {
   background: var(--bg-surface);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
+  border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-card);
-  border-top: 3px solid var(--blue-accent);
   position: relative;
+  border-top: 3.5px solid var(--blue-accent);
+  transition: transform var(--duration-medium) var(--ease-cinematic),
+              box-shadow var(--duration-medium) var(--ease-cinematic),
+              border-top-color var(--duration-medium) var(--ease-smooth);
+}
 
-/* --- CHAPTER 09: MEMORY ROOM (GALLERY) --- */
-.memory-filters {
+.horizon-card:hover {
+  transform: translateY(-6px);
+  border-top-color: var(--pink-primary);
+  box-shadow: var(--shadow-elevated);
+}
+
+.horizon-card__num {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--pink-primary);
+  line-height: 1;
+  margin-bottom: var(--space-xs);
+}
+
+.horizon-card h4 {
+  font-size: var(--text-md);
+  color: var(--blue-primary);
+  margin-bottom: var(--space-2xs);
+}
+
+.horizon-card p {
+  font-size: var(--text-xs);
+  margin-bottom: 0;
+}
+
+/* --- CHAPTER 09: MEMORY VAULT GALLERY --- */
+.vault-filter-bar {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -407,168 +637,850 @@
   margin-bottom: var(--space-xl);
 }
 
-.filter-btn {
-  padding: 0.5rem 1.25rem;
+.vault-filter-btn {
+  padding: 0.55rem 1.35rem;
   border-radius: var(--radius-pill);
   font-size: var(--text-xs);
   font-weight: 600;
   color: var(--text-muted);
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-subtle);
+  cursor: pointer;
   transition: all var(--duration-fast) var(--ease-smooth);
 }
 
-.filter-btn.active,
-.filter-btn:hover {
+.vault-filter-btn.active,
+.vault-filter-btn:hover {
   background-color: var(--blue-primary);
-  color: var(--bg-surface);
+  color: var(--white);
   border-color: var(--blue-primary);
+  box-shadow: var(--shadow-card);
 }
 
-.memory-masonry {
+.vault-filter-btn:active {
+  transform: scale(0.95);
+}
+
+.vault-filter-btn:focus-visible {
+  outline-offset: 2px;
+}
+
+.vault-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(285px, 100%), 1fr));
   gap: var(--space-md);
 }
 
-.memory-thumb {
+.vault-card-item {
   position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
   border-radius: var(--radius-md);
   overflow: hidden;
   background-color: var(--blue-soft);
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
-  box-shadow: var(--shadow-subtle);
-  transition: transform var(--duration-medium) var(--ease-cinematic);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-subtle);
+  transition: transform var(--duration-medium) var(--ease-cinematic),
+              box-shadow var(--duration-medium) var(--ease-cinematic);
 }
 
-.memory-thumb:hover {
-  transform: translateY(-4px);
+.vault-card-item:hover,
+.vault-card-item:focus-visible {
+  transform: translateY(-5px);
   box-shadow: var(--shadow-elevated);
+  outline: 2px solid var(--pink-primary);
+  outline-offset: 3px;
 }
 
-.memory-thumb img,
-.memory-thumb video {
+.vault-card-item img,
+.vault-card-item video {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-cinematic);
 }
 
-.memory-thumb__caption {
+.vault-card-item:hover img {
+  transform: scale(1.04);
+}
+
+.vault-card-item__badge {
+  position: absolute;
+  top: var(--space-xs);
+  left: var(--space-xs);
+  z-index: 2;
+}
+
+.vault-card-item__overlay {
   position: absolute;
   inset: auto 0 0 0;
   padding: var(--space-sm) var(--space-md);
-  background: linear-gradient(180deg, transparent 0%, rgba(11, 22, 36, 0.88) 100%);
-  color: #FFF;
+  background: linear-gradient(180deg, transparent 0%, rgba(6, 13, 23, 0.92) 100%);
+  color: var(--white);
   font-size: var(--text-xs);
-  font-weight: 500;
+  font-weight: 600;
 }
 
-/* --- CHAPTER 11 & 12: THE BIRTHDAY REVEAL & ROBERT'S MESSAGE --- */
-.birthday-reveal-section {
+.vault-card-item__overlay strong,
+.vault-card-item__overlay small {
+  display: block;
+}
+
+.vault-card-item__overlay small {
+  margin-top: 0.2rem;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Cards cascade in whenever the grid renders or a filter changes.
+   `backwards` (not `both`) so the retained end state never overrides
+   the hover lift once the animation finishes. */
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.vault-gallery-grid .vault-card-item {
+  animation: cardRise 520ms var(--ease-cinematic) backwards;
+}
+
+.vault-gallery-grid .vault-card-item:nth-child(2) { animation-delay: 55ms; }
+.vault-gallery-grid .vault-card-item:nth-child(3) { animation-delay: 110ms; }
+.vault-gallery-grid .vault-card-item:nth-child(4) { animation-delay: 165ms; }
+.vault-gallery-grid .vault-card-item:nth-child(5) { animation-delay: 220ms; }
+.vault-gallery-grid .vault-card-item:nth-child(6) { animation-delay: 275ms; }
+.vault-gallery-grid .vault-card-item:nth-child(7) { animation-delay: 330ms; }
+.vault-gallery-grid .vault-card-item:nth-child(8) { animation-delay: 385ms; }
+.vault-gallery-grid .vault-card-item:nth-child(n + 9) { animation-delay: 440ms; }
+
+/* --- CHAPTER 10: BIRTHDAY GRAND CELEBRATION & ROBERT LETTER --- */
+.birthday-grand-stage {
   min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 50% 20%, rgba(212, 122, 144, 0.22), transparent 50%),
-              linear-gradient(160deg, #0B1726 0%, #172B44 100%);
-  color: #FFF;
+  background: radial-gradient(circle at 50% 20%, rgba(212, 122, 144, 0.28), transparent 50%),
+              radial-gradient(circle at 20% 80%, rgba(91, 139, 174, 0.2), transparent 45%),
+              linear-gradient(165deg, #091422 0%, #132439 60%, #070E18 100%);
+  color: var(--white);
   text-align: center;
   padding: var(--space-3xl) var(--space-md);
   position: relative;
   overflow: hidden;
 }
 
-.birthday-reveal-content {
-  position: relative;
-  z-index: 2;
-  max-width: 48rem;
-}
-
-.birthday-reveal-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.6rem, 6.5vw, 5.5rem);
-  color: #FFFFFF;
-  text-shadow: 0 0 45px rgba(212, 122, 144, 0.5);
-  margin-bottom: var(--space-md);
-}
-
 .birthday-confetti-canvas {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 1;
 }
 
-.robert-letter-card {
-  background-color: rgba(255, 255, 255, 0.95);
-  color: var(--text-ink);
-  border-radius: var(--radius-lg);
-  padding: var(--space-2xl);
-  text-align: left;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
-  margin-top: var(--space-2xl);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+.birthday-stage-content {
   position: relative;
+  z-index: 2;
+  width: min(100%, 58rem);
+  margin-inline: auto;
 }
 
-.robert-letter-card::before {
+.birthday-stage-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--pink-primary);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.birthday-stage-eyebrow::before,
+.birthday-stage-eyebrow::after {
+  content: "";
+  width: clamp(1.5rem, 5vw, 3rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--champagne-soft));
+}
+
+.birthday-stage-eyebrow::after {
+  background: linear-gradient(90deg, var(--champagne-soft), transparent);
+}
+
+.birthday-stage-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: var(--space-sm) 0 var(--space-md);
+  color: var(--champagne);
+  font-family: var(--font-display);
+  line-height: 0.88;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.birthday-stage-title__line {
+  color: var(--text-light);
+  font-size: clamp(2rem, 5vw, 4.1rem);
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
+}
+
+.birthday-stage-title__name {
+  margin-top: 0.08em;
+  background: linear-gradient(115deg, #FFF0CC 0%, #E79FB2 45%, #F0DCC0 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: clamp(4.2rem, 12vw, 8.6rem);
+  font-weight: 700;
+  filter: drop-shadow(0 8px 28px rgba(231, 159, 178, 0.22));
+}
+
+.birthday-stage-lead {
+  width: min(100%, 44rem);
+  margin: 0 auto;
+  color: var(--text-light-muted);
+  font-size: var(--text-md);
+  line-height: 1.8;
+  text-wrap: balance;
+}
+
+.birthday-song-card {
+  width: min(100%, 48rem);
+  margin: var(--space-xl) auto var(--space-lg);
+  padding: clamp(0.75rem, 2vw, 1rem);
+  overflow: hidden;
+  text-align: left;
+  background:
+    radial-gradient(circle at 100% 0, rgba(231, 159, 178, 0.20), transparent 36%),
+    linear-gradient(145deg, rgba(27, 47, 74, 0.98), rgba(10, 21, 35, 0.98));
+  border: 1px solid var(--border-pink);
+  border-radius: clamp(1.1rem, 3vw, 1.75rem);
+  box-shadow: 0 24px 65px rgba(0, 0, 0, 0.38), inset 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.birthday-song-card__head {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.45rem 0.55rem 0.9rem;
+}
+
+.birthday-song-card__eyebrow {
+  color: var(--pink-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.birthday-song-card__title {
+  color: var(--champagne);
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.birthday-song-card__note {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.birthday-song-card__video {
+  display: block;
+  width: 100%;
+  max-height: min(56vh, 30rem);
+  aspect-ratio: 16 / 9;
+  background: #02060c;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: clamp(0.75rem, 2vw, 1.1rem);
+  object-fit: contain;
+}
+
+.robert-letter-editorial {
+  width: min(100%, 48rem);
+  margin: var(--space-2xl) auto 0;
+  padding: var(--space-2xl);
+  text-align: left;
+  color: var(--text-ink);
+  background:
+    linear-gradient(145deg, rgba(27, 47, 74, 0.98), rgba(58, 33, 48, 0.92)),
+    var(--bg-surface);
+  border: 1px solid var(--border-pink);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42), inset 0 1px rgba(255, 255, 255, 0.07);
+  position: relative;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 720ms var(--ease-cinematic), transform 720ms var(--ease-cinematic);
+}
+
+.robert-letter-editorial .badge {
+  color: var(--champagne);
+  background: rgba(240, 220, 192, 0.09);
+  border-color: rgba(240, 220, 192, 0.28);
+}
+
+.robert-letter-editorial h3 {
+  color: var(--champagne);
+  font-family: var(--font-accent);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+}
+
+.robert-letter-editorial p {
+  color: var(--text-body);
+  line-height: 1.85;
+}
+
+.robert-letter-signature {
+  color: var(--pink-primary) !important;
+  font-family: var(--font-accent);
+  font-size: 1.4rem;
+}
+
+.robert-letter-editorial.is-open {
+  opacity: 1;
+  transform: none;
+}
+
+.robert-letter-editorial::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--pink-primary), var(--blue-accent));
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--pink-primary), var(--blue-accent), var(--pink-primary));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+/* ==========================================================================
+   PROLOGUE REFINEMENTS (RICH FIRST SCREEN — NO DEAD SPACE)
+   ========================================================================== */
+.prologue__kicker {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(244, 186, 199, 0.85);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-xs);
+  border-bottom: 1px solid rgba(244, 186, 199, 0.25);
+  opacity: 0;
+  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
+}
+
+.btn--journey {
+  padding: 1.05rem 2.4rem;
+  font-size: var(--text-base);
+  letter-spacing: 0.06em;
+}
+
+.prologue__preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: var(--space-xl);
+  opacity: 0;
+  animation: prologueFade 1s var(--ease-cinematic) 4.4s forwards;
+}
+
+.prologue__preview-thumb {
+  width: clamp(58px, 12vw, 84px);
+  height: clamp(58px, 12vw, 84px);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  margin-left: -1.1rem;
+  position: relative;
+  transition: transform var(--duration-medium) var(--ease-cinematic);
+}
+
+.prologue__preview-thumb:first-child {
+  margin-left: 0;
+  transform: rotate(-6deg);
+}
+
+.prologue__preview-thumb:nth-child(2) {
+  transform: translateY(-6px);
+  z-index: 2;
+}
+
+.prologue__preview-thumb:last-child {
+  transform: rotate(6deg);
+}
+
+.prologue__preview:hover .prologue__preview-thumb {
+  transform: translateY(-6px) rotate(0deg);
+}
+
+.prologue__preview-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.prologue__hint {
+  margin-top: var(--space-md);
+  font-size: var(--text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(203, 213, 225, 0.6);
+  margin-bottom: 0;
+  opacity: 0;
+  animation: prologueFade 1s var(--ease-cinematic) 4.7s forwards;
+}
+
+/* ==========================================================================
+   CINEMATIC CHAPTER TRANSITION OVERLAY
+   ========================================================================== */
+.chapter-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, #12203A 0%, #070E18 70%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 520ms var(--ease-cinematic), visibility 520ms;
+}
+
+.chapter-transition.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+}
+
+.chapter-transition__inner {
+  text-align: center;
+  padding: var(--space-md);
+  transform: translateY(18px) scale(0.98);
+  opacity: 0;
+  transition: transform 850ms var(--ease-cinematic) 120ms,
+              opacity 850ms var(--ease-cinematic) 120ms;
+}
+
+.chapter-transition.is-active .chapter-transition__inner {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.chapter-transition__num {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 14vw, 10rem);
+  font-weight: 700;
+  line-height: 0.85;
+  color: rgba(212, 122, 144, 0.9);
+  letter-spacing: -0.04em;
+}
+
+.chapter-transition__rule {
+  display: block;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue-accent), transparent);
+  margin: var(--space-md) auto;
+  transition: width 900ms var(--ease-cinematic) 320ms;
+}
+
+/* ==========================================================================
+   EDITORIAL SECTION HELPERS (ROOTS, ACTIONS, FOOTNOTES)
+   ========================================================================== */
+.chapter-section--roots {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(180deg, var(--white) 0%, var(--pink-soft) 100%);
+  padding-top: calc(var(--space-xl) + 1.25rem);
+  padding-bottom: var(--space-xl);
+}
+
+.roots-editorial-grid .editorial-frame {
+  aspect-ratio: 4 / 5;
+  max-height: 72svh;
+}
+
+.chapter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.chapter-actions--center {
+  justify-content: center;
+}
+
+.chapter-footnote {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border-pink);
+}
+
+.siblings-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.siblings-header h3 {
+  margin-bottom: 0;
+}
+
+/* Editorial name treatments */
+.editorial-name {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--blue-primary);
+  margin: var(--space-xs) 0 var(--space-sm);
+  line-height: 1.15;
+}
+
+.editorial-name--light {
+  color: var(--white);
+}
+
+.quote-light {
+  color: var(--text-light-muted);
+  font-size: var(--text-base);
+  margin-bottom: var(--space-md);
+}
+
+.scripture-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.1vw, 1.85rem);
+  font-style: italic;
+  line-height: 1.45;
+  color: #F0F4F8;
+  margin-bottom: var(--space-sm);
+}
+
+.scripture-rule {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: var(--space-lg) 0;
+}
+
+/* --- PHONE INSTALL HELP --- */
+.btn--install {
+  margin-top: 0.8rem;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.install-help,
+.music-status {
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.install-help {
+  max-width: 20rem;
+  margin: 0.7rem auto 0;
+  color: rgba(255, 255, 255, 0.86);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+}
+
+.music-status {
+  margin: var(--space-xs) 0 var(--space-md);
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   MUSIC PLAY DECK & VISUAL WAVEFORM
+   ========================================================================== */
+.music-play-deck {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-lg);
+}
+
+.music-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--pink-primary);
+  color: var(--white);
+  box-shadow: 0 8px 22px var(--pink-glow);
+  transition: transform var(--duration-fast) var(--ease-smooth),
+              background-color var(--duration-fast) var(--ease-smooth);
+}
+
+.music-play-btn:hover {
+  background: var(--pink-hover);
+  transform: scale(1.06);
+}
+
+.music-play-btn:active {
+  transform: scale(0.96);
+}
+
+.music-waveform {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 34px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.music-waveform span {
+  flex: 1;
+  min-width: 2px;
+  background: linear-gradient(180deg, var(--pink-primary), var(--blue-accent));
+  border-radius: 2px;
+  height: 22%;
+  transition: height 260ms var(--ease-smooth);
+}
+
+/* ==========================================================================
+   MOTTO BAND (CHAPTER 08)
+   ========================================================================== */
+.motto-band {
+  margin-top: var(--space-2xl);
+  padding: var(--space-xl);
+  text-align: center;
+  background: linear-gradient(135deg, var(--blue-primary) 0%, #0F2038 100%);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-elevated);
+}
+
+.motto-band .eyebrow {
+  color: #F4BAC7;
+}
+
+.motto-band__text {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  font-style: italic;
+  color: var(--white);
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   CELEBRATION STAGE EXTRAS
+   ========================================================================== */
+.birthday-stage-lead {
+  font-size: var(--text-lg);
+  color: #E2EAF2;
+  margin-bottom: var(--space-lg);
+  margin-inline: auto;
+}
+
+.btn--celebrate {
+  padding: 1.05rem 2.4rem;
+  font-size: var(--text-base);
+}
+
+.celebration-seal-wrap {
+  margin-top: var(--space-2xl);
+}
+
+.blessing-body {
+  padding: var(--space-xl);
+  background: var(--bg-surface);
+  color: var(--text-ink);
+  text-align: center;
+}
+
+.blessing-body h3 {
+  color: var(--blue-primary);
+  margin-bottom: var(--space-md);
+}
+
+.blessing-body blockquote {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-ink);
+  margin-bottom: var(--space-md);
+  max-width: 100%;
+}
+
+.blessing-body p {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  margin-bottom: 0;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   SCROLL REVEAL SYSTEM (SUBTLE, NOT EXCESSIVE)
+   Scoped to html.js so the story is always readable if scripting is blocked.
+   ========================================================================== */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 780ms var(--ease-cinematic),
+              transform 780ms var(--ease-cinematic);
+}
+
+html.js .reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .vault-gallery-grid .vault-card-item {
+    animation: none;
+  }
+  .music-waveform.is-playing span {
+    animation: none;
+  }
+  .prologue__line,
+  .prologue__name,
+  .prologue__action,
+  .prologue__kicker,
+  .prologue__preview,
+  .prologue__hint {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+
+.music-waveform.is-playing span {
+  animation: wavePulse 900ms infinite alternate ease-in-out;
+}
+
+@keyframes wavePulse {
+  0% { height: 16%; }
+  100% { height: 100%; }
+}
+
+.music-play-label {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #F4BAC7;
+  white-space: nowrap;
+}
+
+
+.chapter-transition.is-active .chapter-transition__rule {
+  width: min(260px, 60vw);
+}
+
+.chapter-transition__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.2vw, 2.1rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--white);
+  letter-spacing: 0.02em;
+  margin-bottom: 0;
+}
+
+
+.robert-letter-editorial h3 {
+  font-size: var(--text-xl);
+  color: var(--champagne);
+  margin-bottom: var(--space-sm);
+}
+
+.robert-letter-editorial p {
+  color: var(--text-body);
+  font-size: var(--text-base);
+  line-height: 1.8;
+  margin-bottom: var(--space-md);
 }
 
 .robert-letter-signature {
   font-family: var(--font-accent);
-  font-size: 2rem;
-  color: var(--blue-primary);
-  margin-top: var(--space-md);
-}
-
-}
-
-.goal-number {
-  font-family: var(--font-display);
   font-size: 2.2rem;
+  color: var(--pink-primary) !important;
+  margin-top: var(--space-md);
+  margin-bottom: 0;
+}
+
+
+.song-badge-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: #F8FAFC;
+}
+
+.song-badge-item svg {
   color: var(--pink-primary);
-  font-weight: 700;
-  line-height: 1;
-  margin-bottom: var(--space-xs);
-}
-
-}
-
-.scripture-ref {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: #E8A3B3;
+  flex-shrink: 0;
 }
 
 
-.sibling-item:hover .sibling-item__thumb {
+.sibling-portrait-unit:hover .sibling-portrait-unit__thumb {
   border-color: var(--pink-primary);
-  transform: scale(1.04);
+  transform: translateY(-3px);
 }
 
-.sibling-item span {
+.sibling-portrait-unit__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sibling-portrait-unit span {
   font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--text-ink);
+  color: var(--blue-primary);
+  display: block;
+}
+
+
+.chapter-section--midnight .chapter-numeral {
+  color: var(--blue-accent);
 }
 
 .chapter-quote {
   font-family: var(--font-display);
-  font-size: clamp(1.3rem, 2vw, 1.8rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
   font-style: italic;
-  line-height: 1.45;
-  color: var(--text-ink);
+  line-height: 1.42;
+  color: var(--blue-primary);
   border-left: 3px solid var(--pink-primary);
   padding-left: var(--space-md);
   margin: var(--space-md) 0;
+}
+
+.chapter-section--midnight .chapter-quote {
+  color: #F8FAFC;
+  border-left-color: var(--blue-accent);
 }

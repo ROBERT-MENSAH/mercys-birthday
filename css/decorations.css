@@ -1,0 +1,176 @@
+/* ==========================================================================
+   FIXED BIRTHDAY DECORATION FRAME
+   Decorative only: aria-hidden markup, no pointer interaction, no page flow.
+   ========================================================================== */
+.birthday-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--white);
+}
+
+.birthday-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 4px solid transparent;
+  border-image: linear-gradient(135deg, var(--pink-primary), #D9A441,
+    var(--blue-accent), var(--pink-primary), #D9A441) 1;
+  opacity: 0.92;
+}
+
+.birthday-frame::after {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border: 1px dashed rgba(217, 164, 65, 0.6);
+}
+
+.birthday-frame__garland {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(36rem, 58vw);
+  height: 3.8rem;
+  transform: translateX(-50%);
+  padding: 0.3rem 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  filter: drop-shadow(0 4px 5px rgba(11, 22, 36, 0.2));
+}
+
+.birthday-frame__garland::before {
+  content: "";
+  position: absolute;
+  top: 0.35rem;
+  left: 0;
+  right: 0;
+  border-top: 2px solid #D9A441;
+  border-radius: 50%;
+}
+
+.birthday-frame__garland span {
+  position: relative;
+  width: 2.5rem;
+  height: 1.65rem;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  animation: garlandSway 3.8s ease-in-out infinite;
+}
+
+.birthday-frame__garland span:nth-child(1),
+.birthday-frame__garland span:nth-child(6) { background: var(--pink-primary); }
+.birthday-frame__garland span:nth-child(2),
+.birthday-frame__garland span:nth-child(5) { background: var(--blue-accent); }
+.birthday-frame__garland span:nth-child(3) { background: #D9A441; }
+.birthday-frame__garland span:nth-child(4) { background: #F4BAC7; }
+.birthday-frame__garland span:nth-child(2) { animation-delay: -0.8s; }
+.birthday-frame__garland span:nth-child(3) { animation-delay: -1.6s; }
+.birthday-frame__garland span:nth-child(4) { animation-delay: -2.4s; }
+.birthday-frame__garland span:nth-child(5) { animation-delay: -3s; }
+.birthday-frame__garland span:nth-child(6) { animation-delay: -3.4s; }
+.birthday-frame__garland span:nth-child(7) { animation-delay: -1.2s; }
+
+.birthday-frame__corner {
+  position: absolute;
+  width: 6.5rem;
+  height: 7.5rem;
+}
+
+.birthday-frame__corner::after {
+  content: "\2726";
+  position: absolute;
+  color: #D9A441;
+  font-size: 1.2rem;
+  text-shadow: 0 1px 4px rgba(11, 22, 36, 0.3);
+  animation: frameTwinkle 2.4s ease-in-out infinite;
+}
+
+.birthday-frame__corner--top-left { top: 0.4rem; left: 0.4rem; }
+.birthday-frame__corner--top-right { top: 0.4rem; right: 0.4rem; }
+.birthday-frame__corner--bottom-left { bottom: 0.3rem; left: 0.4rem; }
+.birthday-frame__corner--bottom-right { right: 0.4rem; bottom: 0.3rem; }
+.birthday-frame__corner--top-left::after { top: 5.5rem; left: 5.6rem; }
+.birthday-frame__corner--top-right::after { top: 4.8rem; right: 5.5rem; animation-delay: -1.2s; }
+.birthday-frame__corner--bottom-left::after { bottom: 5.2rem; left: 5.4rem; animation-delay: -0.6s; }
+.birthday-frame__corner--bottom-right::after { right: 5.7rem; bottom: 5.6rem; animation-delay: -1.8s; }
+
+.birthday-frame__balloon {
+  position: absolute;
+  display: block;
+  width: 1.7rem;
+  height: 2.3rem;
+  border-radius: 52% 52% 47% 47%;
+  box-shadow: inset -4px -5px 8px rgba(11, 22, 36, 0.12),
+    0 5px 9px rgba(11, 22, 36, 0.16);
+  animation: balloonFloat 4.5s ease-in-out infinite;
+}
+
+.birthday-frame__balloon::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  height: 3.5rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.8);
+  transform: rotate(5deg);
+}
+
+.birthday-frame__balloon::after {
+  content: "";
+  position: absolute;
+  bottom: -0.22rem;
+  left: 50%;
+  width: 0.38rem;
+  height: 0.38rem;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform: translateX(-50%);
+}
+
+.birthday-frame__balloon--pink {
+  background: linear-gradient(135deg, #F4BAC7, var(--pink-primary));
+}
+.birthday-frame__balloon--blue {
+  background: linear-gradient(135deg, #B9D2E3, var(--blue-accent));
+}
+.birthday-frame__balloon--gold {
+  background: linear-gradient(135deg, #F6D98D, #D9A441);
+}
+
+
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(1) { top: 1.5rem; left: 0.6rem; }
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(2) { top: 0.9rem; left: 2.1rem; animation-delay: -1.5s; }
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(3) { top: 2.1rem; left: 3.5rem; animation-delay: -3s; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(1) { top: 1.4rem; right: 0.6rem; animation-delay: -0.5s; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(2) { top: 0.8rem; right: 2.1rem; animation-delay: -2.2s; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(3) { top: 2rem; right: 3.5rem; animation-delay: -3.7s; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(1) { bottom: 1.5rem; left: 0.6rem; animation-delay: -1s; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(2) { bottom: 0.8rem; left: 2.1rem; animation-delay: -2.8s; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(3) { bottom: 2rem; left: 3.5rem; animation-delay: -4s; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(1) { right: 0.6rem; bottom: 1.5rem; animation-delay: -1.8s; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(2) { right: 2.1rem; bottom: 0.8rem; animation-delay: -3.2s; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(3) { right: 3.5rem; bottom: 2rem; animation-delay: -0.2s; }
+
+@keyframes garlandSway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(5deg); }
+}
+
+@keyframes balloonFloat {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
+  50% { transform: translate3d(0.2rem, -0.45rem, 0) rotate(4deg); }
+}
+
+@keyframes frameTwinkle {
+  0%, 100% { opacity: 0.45; transform: scale(0.75) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(18deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .birthday-frame__balloon,
+  .birthday-frame__garland span,
+  .birthday-frame__corner::after { animation: none; }
+}

@@ -1,9 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="Mercy — A Story Worth Celebrating. An interactive journey of faith, family, friendship, music, and purpose.">
+  <meta name="theme-color" content="#1E3A5F">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mercy">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+  <link rel="icon" href="assets/icons/app-icon-192.png" sizes="192x192">
   <title>Mercy — A Story Worth Celebrating</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,379 +20,636 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/decorations.css">
   <link rel="stylesheet" href="css/sections.css">
   <link rel="stylesheet" href="css/responsive.css">
+
+  <script>document.documentElement.className = "js";</script>
+  <noscript>
+    <style>
+      /* Without JavaScript the journey must still be readable, never a dead button. */
+      #prologue { display: none; }
+      #story-main { display: block !important; }
+      .chapter-indicator,
+      .journey-rail,
+      .mobile-chapter-nav,
+      .chapter-transition { display: none !important; }
+    </style>
+  </noscript>
 </head>
 <body>
   <a class="skip-link" href="#story-main">Skip to story content</a>
 
-  <!-- Audio Controller -->
-  <aside class="audio-controller" aria-label="Ambient background music player">
-    <button class="audio-controller__btn" type="button" data-audio-toggle aria-label="Toggle ambient piano music">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-      </svg>
-    </button>
-    <div class="waveform" aria-hidden="true">
-      <span class="waveform-bar"></span>
-      <span class="waveform-bar"></span>
-      <span class="waveform-bar"></span>
-      <span class="waveform-bar"></span>
+  <!-- FIXED BIRTHDAY DECORATION FRAME -->
+  <div class="birthday-frame" aria-hidden="true">
+    <div class="birthday-frame__garland">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
-    <span data-audio-label>Ambient Sound</span>
-  </aside>
+    <span class="birthday-frame__corner birthday-frame__corner--top-left">
+      <i class="birthday-frame__balloon birthday-frame__balloon--pink"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--blue"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--gold"></i>
+    </span>
+    <span class="birthday-frame__corner birthday-frame__corner--top-right">
+      <i class="birthday-frame__balloon birthday-frame__balloon--gold"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--pink"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--blue"></i>
+    </span>
+    <span class="birthday-frame__corner birthday-frame__corner--bottom-left">
+      <i class="birthday-frame__balloon birthday-frame__balloon--blue"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--gold"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--pink"></i>
+    </span>
+    <span class="birthday-frame__corner birthday-frame__corner--bottom-right">
+      <i class="birthday-frame__balloon birthday-frame__balloon--pink"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--blue"></i>
+      <i class="birthday-frame__balloon birthday-frame__balloon--gold"></i>
+    </span>
+  </div>
+
+
+  <!-- READING PROGRESS BAR (TOP EDGE) -->
+  <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="Story reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <span class="reading-progress__bar" id="reading-progress-bar"></span>
+  </div>
+
+  <!-- FIXED CHAPTER INDICATOR (TOP CENTER) -->
+  <div class="chapter-indicator" id="chapter-indicator" hidden>
+    <span class="chapter-indicator__num" data-indicator-num>01</span>
+    <span class="chapter-indicator__slash">/</span>
+    <span data-indicator-total>10</span>
+    <span class="chapter-indicator__sep">&middot;</span>
+    <span data-indicator-name>Where It Began</span>
+  </div>
+
+  <!-- ELEGANT CHAPTER PROGRESS RAIL (RIGHT) -->
+  <nav class="journey-rail" id="journey-rail" aria-label="Chapter navigation" hidden>
+    <a class="journey-rail__dot" href="#chapter-roots" data-rail="roots">01<span class="journey-rail__label">Where It Began</span></a>
+    <a class="journey-rail__dot" href="#chapter-school" data-rail="school">02<span class="journey-rail__label">School Days</span></a>
+    <a class="journey-rail__dot" href="#chapter-family" data-rail="family">03<span class="journey-rail__label">Family</span></a>
+    <a class="journey-rail__dot" href="#chapter-friendship" data-rail="friendship">04<span class="journey-rail__label">Friendship</span></a>
+    <a class="journey-rail__dot" href="#chapter-faith" data-rail="faith">05<span class="journey-rail__label">Faith</span></a>
+    <a class="journey-rail__dot" href="#chapter-music" data-rail="music">06<span class="journey-rail__label">Music</span></a>
+    <a class="journey-rail__dot" href="#chapter-present" data-rail="present">07<span class="journey-rail__label">Today</span></a>
+    <a class="journey-rail__dot" href="#chapter-future" data-rail="future">08<span class="journey-rail__label">Horizon</span></a>
+    <a class="journey-rail__dot" href="#chapter-gallery" data-rail="gallery">09<span class="journey-rail__label">Memories</span></a>
+    <a class="journey-rail__dot" href="#chapter-celebration" data-rail="celebration">10<span class="journey-rail__label">Finale</span></a>
+  </nav>
+
+  <!-- PHONE CHAPTER NAVIGATION -->
+  <nav class="mobile-chapter-nav" id="mobile-chapter-nav" aria-label="Quick chapter navigation" data-mobile-chapter-nav hidden>
+    <a href="#chapter-roots" data-mobile-nav="roots" class="is-active" aria-current="step"><span>01</span>Start</a>
+    <a href="#chapter-family" data-mobile-nav="family"><span>03</span>Family</a>
+    <a href="#chapter-music" data-mobile-nav="music"><span>06</span>Song</a>
+    <a href="#chapter-gallery" data-mobile-nav="gallery"><span>09</span>Memories</a>
+    <a href="#chapter-celebration" data-mobile-nav="celebration"><span>10</span>Birthday</a>
+  </nav>
+
+  <!-- APP TOAST FOR SHARE / OFFLINE / MEDIA NOTICES -->
+  <div class="app-toast" data-app-toast role="status" aria-live="polite" hidden></div>
 
   <!-- SECTION 00: CINEMATIC PROLOGUE -->
   <section class="prologue" id="prologue" aria-labelledby="prologue-name">
+    <div class="prologue__portrait" aria-hidden="true">
+      <img src="assets/images/ME CURRENTLY.jpg" alt="" loading="eager" decoding="async">
+    </div>
     <div class="prologue__backdrop" aria-hidden="true"></div>
     <div class="prologue__stardust" aria-hidden="true"></div>
     <div class="prologue__content">
+      <span class="prologue__kicker">A Story Worth Celebrating</span>
       <p class="prologue__line">Some stories are written in books.</p>
       <p class="prologue__line">Others are written in moments.</p>
       <p class="prologue__line">This is mine.</p>
       <h1 class="prologue__name" id="prologue-name">MERCY</h1>
       <div class="prologue__action">
-        <button class="btn btn--pink" type="button" data-begin-journey>
-          Begin My Journey
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
+        <button class="btn btn--pink btn--journey" type="button" data-begin-journey>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 3l14 9-14 9V3z"></path>
           </svg>
+          <span data-begin-label>Begin My Journey</span>
         </button>
+        <button class="btn btn--install" type="button" data-install-app hidden>Add to Phone</button>
+        <button class="btn btn--share" type="button" data-share-app>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
+          </svg>
+          Share
+        </button>
+        <p class="install-help" data-install-help role="status" hidden></p>
       </div>
+      <div class="prologue__preview" aria-hidden="true">
+        <div class="prologue__preview-thumb"><img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt=""></div>
+        <div class="prologue__preview-thumb"><img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt=""></div>
+        <div class="prologue__preview-thumb"><img src="assets/images/ME CURRENTLY.jpg" alt=""></div>
+      </div>
+      <p class="prologue__hint">10 chapters &middot; photographs, voices &amp; memories</p>
     </div>
   </section>
 
+  <!-- CINEMATIC CHAPTER TRANSITION OVERLAY -->
+  <div class="chapter-transition" id="chapter-transition" aria-hidden="true">
+    <div class="chapter-transition__inner">
+      <span class="chapter-transition__num" data-transition-num>01</span>
+      <span class="chapter-transition__rule" aria-hidden="true"></span>
+      <h2 class="chapter-transition__title" data-transition-title>Where It Began</h2>
+    </div>
+  </div>
   <!-- MAIN STORY SHELL -->
   <main id="story-main" hidden>
-    <!-- CHAPTER 01: ROOTS & CHILDHOOD -->
-    <section class="chapter-section chapter-section--white" id="chapter-roots" aria-labelledby="ch1-heading">
-      <div class="container">
-        <div class="childhood-grid">
-          <div class="portrait-frame childhood-visual">
-            <img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt="Mercy as a young child" loading="lazy">
-          </div>
-          <div class="chapter-content">
-            <span class="eyebrow">Chapter 01 &middot; Foundation</span>
-            <h2 id="ch1-heading">Where It Began</h2>
-            <p class="chapter-quote">“I grew up in a Christian home. Before the world made noise, my parents and siblings guided my first steps, teaching me how to pray, how to stand firm, and who to trust.”</p>
-            <p>Growing up under their care gave me deep roots. They taught me to discern wise counsel and helped me steer away from negative influences that could have led me off course.</p>
-            <p>Those quiet, foundational days set the rhythm for everything that would follow.</p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- CHAPTER 02: SCHOOL & FINDING MY VOICE -->
-    <section class="chapter-section chapter-section--soft-pink" id="chapter-school" aria-labelledby="ch2-heading">
+    <!-- CHAPTER 01: WHERE IT BEGAN -->
+    <section class="chapter-section chapter-section--roots" id="chapter-roots" data-chapter="roots" data-chapter-num="01" data-chapter-name="Where It Began" aria-labelledby="ch1-heading">
       <div class="container">
-        <div class="school-layout">
-          <div class="chapter-content">
-            <span class="eyebrow">Chapter 02 &middot; Growth</span>
-            <h2 id="ch2-heading">School Days &amp; Finding My Voice</h2>
-            <p class="chapter-quote">“My heart was pounding, but singing was where my spirit felt completely free.”</p>
-            <p>From Junior High School to Senior High School, each classroom and friendship taught me resilience. But the moment that stands out brightest in my memory was standing on stage during SHS, contesting for Best Vocalist.</p>
-            <p>Those school days taught me that who I am is not decided by the crowd, but by the purpose God placed inside me.</p>
+        <div class="roots-editorial-grid">
+          <div class="roots-visual-stage reveal">
+            <span class="badge badge--white roots-badge-floating">Chapter 01 &middot; Foundation</span>
+            <figure class="editorial-frame">
+              <img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt="Me as a young child" loading="eager">
+              <figcaption class="editorial-frame__caption">
+                <span>Me in my early childhood</span>
+                <span>Where the story started</span>
+              </figcaption>
+            </figure>
           </div>
-          <div class="school-media-cluster">
-            <div class="school-card-featured portrait-frame">
-              <span class="badge">SHS Best Vocalist Contest</span>
-              <img src="assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg" alt="Mercy contesting for Best Vocalist in SHS" loading="lazy">
-            </div>
-            <div class="portrait-frame">
-              <img src="assets/images/WHEN WAS AT JHS SOME YEARS BACK.jpg" alt="Mercy during JHS days" loading="lazy">
-            </div>
-            <div class="portrait-frame">
-              <img src="assets/images/MY PICTURE AT SCHOOL.jpg" alt="Mercy at school" loading="lazy">
+          <div class="roots-editorial-copy">
+            <span class="chapter-numeral reveal">01</span>
+            <span class="eyebrow reveal">Where It All Began</span>
+            <h2 id="ch1-heading" class="reveal">The House That Taught Me To Pray</h2>
+            <p class="chapter-quote reveal">&ldquo;I grew up in a Christian home. Before the world made noise, my parents and siblings guided my first steps &mdash; teaching me how to pray, how to stand firm, and who to trust.&rdquo;</p>
+            <p class="reveal">Growing up under their care gave me deep roots. They taught me to weigh advice carefully and helped me steer away from voices that could have led me somewhere I did not belong.</p>
+            <p class="reveal">Those quiet, foundational days set the rhythm for everything that would follow.</p>
+            <div class="chapter-actions reveal">
+              <a class="btn btn--primary" href="#chapter-school">
+                Continue to Chapter 02
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 03: FAMILY -->
-    <section class="chapter-section chapter-section--white" id="chapter-family" aria-labelledby="ch3-heading">
+    <!-- CHAPTER 02: SCHOOL DAYS & FINDING MY VOICE -->
+    <section class="chapter-section chapter-section--soft-pink" id="chapter-school" data-chapter="school" data-chapter-num="02" data-chapter-name="School Days" aria-labelledby="ch2-heading">
       <div class="container">
-        <div class="chapter-header chapter-header--centered">
-          <span class="eyebrow">Chapter 03 &middot; Pillars</span>
-          <h2 id="ch3-heading">The Pillars of My Heart</h2>
-          <p>My parents and siblings are among the most important people in my life. One of the deepest desires of my heart is to make my parents proud, and to make Heaven proud of me.</p>
+        <div class="school-editorial-grid">
+          <div class="roots-editorial-copy">
+            <span class="chapter-numeral reveal">02</span>
+            <span class="eyebrow reveal">School Days &amp; Finding My Voice</span>
+            <h2 id="ch2-heading" class="reveal">The Stage Where I Found Myself</h2>
+            <p class="chapter-quote reveal">&ldquo;My heart was pounding, but singing was where my spirit felt completely free.&rdquo;</p>
+            <p class="reveal">From Junior High to Senior High, every classroom and every friendship taught me resilience. But the moment that stands out brightest was standing on that stage in SHS, contesting for Best Vocalist.</p>
+            <p class="reveal">Those school days taught me that who I am is not decided by the crowd, but by the purpose God placed inside me.</p>
+            <div class="chapter-actions reveal">
+              <a class="btn btn--primary" href="#chapter-family">
+                Continue to Chapter 03
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+              </a>
+            </div>
+          </div>
+          <div class="school-visual-mosaic reveal">
+            <figure class="editorial-frame school-visual-lead">
+              <span class="badge badge--white">SHS &middot; Best Vocalist Contest</span>
+              <img src="assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg" alt="Me contesting for Best Vocalist in SHS" loading="lazy">
+              <figcaption class="editorial-frame__caption"><span>Way back in SHS</span><span>Contesting for Best Vocalist</span></figcaption>
+            </figure>
+            <figure class="editorial-frame school-visual-sub">
+              <img src="assets/images/WHEN WAS AT JHS SOME YEARS BACK.jpg" alt="Me during my JHS days" loading="lazy">
+              <figcaption class="editorial-frame__caption"><span>My JHS days</span></figcaption>
+            </figure>
+            <figure class="editorial-frame school-visual-sub">
+              <img src="assets/images/MY PICTURE AT SCHOOL.jpg" alt="Me at school" loading="lazy">
+              <figcaption class="editorial-frame__caption"><span>A quiet moment at school</span></figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="chapter-footnote reveal">
+          <button class="btn btn--outline-dark btn--pill-compact" type="button" data-video-trigger="assets/videos/SOME YEARS BACK AND UP TO TODAY.mp4" data-caption="Looking back through the years up to today.">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Watch This Moment &mdash; Some Years Back Up To Today
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 03: THE PILLARS OF MY HEART (FAMILY) -->
+    <section class="chapter-section chapter-section--white" id="chapter-family" data-chapter="family" data-chapter-num="03" data-chapter-name="Family" aria-labelledby="ch3-heading">
+      <div class="container">
+        <div class="chapter-header chapter-header--centered reveal">
+          <span class="chapter-numeral">03</span>
+          <span class="eyebrow">The Pillars of My Heart</span>
+          <h2 id="ch3-heading">Pillars of Love</h2>
+          <p>My parents and siblings are among the most important people in my life. One of the deepest desires of my heart is to make my parents proud &mdash; and to make Heaven proud of me.</p>
         </div>
 
-        <div class="family-parents-grid">
-          <article class="parent-card">
-            <img class="parent-card__img" src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt="Mercy with her lovely mother" loading="lazy">
-            <div class="parent-card__body">
-              <h4>My Lovely Mother</h4>
-              <p>A source of quiet strength, endless prayers, and unconditional warmth. Her guidance has shaped my character at every turn.</p>
-              <button class="btn btn--outline" type="button" data-video-trigger="assets/videos/MY LOVELY MOM VIDEO.mp4" data-caption="Moments with my lovely mom">Watch Mom Video &rarr;</button>
+        <div class="parents-editorial-duo">
+          <article class="parent-editorial-card reveal">
+            <div class="parent-editorial-card__frame">
+              <img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt="Me with my lovely mother" loading="lazy">
+            </div>
+            <div class="parent-editorial-card__body">
+              <span class="badge">My Mother</span>
+              <h3>My Lovely Mother</h3>
+              <p>A source of quiet strength, endless prayers, and unconditional warmth. Her guidance has shaped my character at every single turn.</p>
+              <button class="btn btn--outline-dark btn--pill-compact" type="button" data-video-trigger="assets/videos/MY LOVELY MOM VIDEO.mp4" data-caption="Moments with my lovely mom.">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Watch Mom Video
+              </button>
             </div>
           </article>
 
-          <article class="parent-card">
-            <img class="parent-card__img" src="assets/images/ME AND MY LOVELY FATHER.jpg" alt="Mercy with her lovely father" loading="lazy">
-            <div class="parent-card__body">
-              <h4>My Lovely Father</h4>
-              <p>A pillar of wisdom, protection, and steady guidance. His presence reminds me daily of dignity, patience, and honor.</p>
+          <article class="parent-editorial-card reveal">
+            <div class="parent-editorial-card__frame">
+              <img src="assets/images/ME AND MY LOVELY FATHER.jpg" alt="Me with my lovely father" loading="lazy">
+            </div>
+            <div class="parent-editorial-card__body">
+              <span class="badge badge--blue">My Father</span>
+              <h3>My Lovely Father</h3>
+              <p>A pillar of wisdom, protection, and steady guidance. His presence reminds me every day of dignity, patience, and honour.</p>
+              <button class="btn btn--outline-dark btn--pill-compact" type="button" data-video-trigger="assets/videos/MY FAMILY AND FRIENDS.mp4" data-caption="My family and friends gathered together.">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Watch Family Moment
+              </button>
             </div>
           </article>
         </div>
 
-        <div class="siblings-strip">
-          <h3 style="text-align: center; margin-bottom: var(--space-lg); font-size: var(--text-lg);">My Siblings — Constant Companions</h3>
-          <div class="siblings-grid">
-            <div class="sibling-item">
-              <div class="sibling-item__thumb"><img src="assets/images/SISTER CECE.jpg" alt="Sister Cece" loading="lazy"></div>
+        <div class="siblings-editorial-section reveal">
+          <div class="siblings-header">
+            <span class="eyebrow">Constant Companions</span>
+            <h3>My Siblings</h3>
+          </div>
+          <div class="siblings-editorial-grid">
+            <div class="sibling-portrait-unit">
+              <div class="sibling-portrait-unit__thumb"><img src="assets/images/SISTER CECE.jpg" alt="My sister Cece" loading="lazy"></div>
               <span>Sister Cece</span>
             </div>
-            <div class="sibling-item">
-              <div class="sibling-item__thumb"><img src="assets/images/SISTER ELIZABETH.jpg" alt="Sister Elizabeth" loading="lazy"></div>
+            <div class="sibling-portrait-unit">
+              <div class="sibling-portrait-unit__thumb"><img src="assets/images/SISTER ELIZABETH.jpg" alt="My sister Elizabeth" loading="lazy"></div>
               <span>Sister Elizabeth</span>
             </div>
-            <div class="sibling-item">
-              <div class="sibling-item__thumb"><img src="assets/images/BROTHER KOFI.jpg" alt="Brother Kofi" loading="lazy"></div>
+            <div class="sibling-portrait-unit">
+              <div class="sibling-portrait-unit__thumb"><img src="assets/images/BROTHER KOFI.jpg" alt="My brother Kofi" loading="lazy"></div>
               <span>Brother Kofi</span>
             </div>
-            <div class="sibling-item">
-              <div class="sibling-item__thumb"><img src="assets/images/BROTHER SAMUEL.jpg" alt="Brother Samuel" loading="lazy"></div>
+            <div class="sibling-portrait-unit">
+              <div class="sibling-portrait-unit__thumb"><img src="assets/images/BROTHER SAMUEL.jpg" alt="My brother Samuel" loading="lazy"></div>
               <span>Brother Samuel</span>
             </div>
-            <div class="sibling-item">
-              <div class="sibling-item__thumb"><img src="assets/images/PICTURE WITH MY YOUNGER SIBLINGS.jpg" alt="Younger Siblings" loading="lazy"></div>
-              <span>Younger Siblings</span>
+            <div class="sibling-portrait-unit">
+              <div class="sibling-portrait-unit__thumb"><img src="assets/images/PICTURE WITH MY YOUNGER SIBLINGS.jpg" alt="Me with my younger siblings" loading="lazy"></div>
+              <span>My Younger Siblings</span>
             </div>
+          </div>
+          <div class="chapter-actions">
+            <a class="btn btn--primary" href="#chapter-friendship">
+              Continue to Chapter 04
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 04: FRIENDSHIP -->
-    <section class="chapter-section chapter-section--soft-blue" id="chapter-friendship" aria-labelledby="ch4-heading">
+    <!-- CHAPTER 04: THOSE WHO WALK BESIDE ME (FRIENDSHIP) -->
+    <section class="chapter-section chapter-section--soft-blue" id="chapter-friendship" data-chapter="friendship" data-chapter-num="04" data-chapter-name="Friendship" aria-labelledby="ch4-heading">
       <div class="container">
-        <div class="chapter-header chapter-header--centered">
-          <span class="eyebrow">Chapter 04 &middot; Loyalty &amp; Community</span>
+        <div class="chapter-header chapter-header--centered reveal">
+          <span class="chapter-numeral">04</span>
+          <span class="eyebrow">Loyalty &amp; Community</span>
           <h2 id="ch4-heading">Those Who Walk Beside Me</h2>
-          <p>Some friendships fade when things get difficult. But genuine ones stay. God placed people in my journey who bring real joy and stand firm.</p>
+          <p>Some friendships fade when things get difficult. The genuine ones stay. God placed people in my journey who bring real joy and stand firm with me.</p>
         </div>
 
-        <div class="best-friend-hero">
-          <div class="best-friend-hero__photo">
-            <img src="assets/images/MY BEST FRIEND ( ELISHA OWUSU ASANTE).jpg" alt="Mercy and her best friend Elijah Owusu Asante" loading="lazy">
-          </div>
-          <div class="best-friend-hero__content">
-            <span class="badge badge--blue">Best Friend</span>
-            <h3 style="margin-top: var(--space-xs);">Elijah Owusu Asante</h3>
-            <p class="chapter-quote">“Elijah has been with me through thick and thin. He gives me honest advice, shows love and care, and stays by my side even when I can be stubborn.”</p>
+        <div class="best-friend-editorial reveal">
+          <figure class="best-friend-editorial__photo">
+            <img src="assets/images/MY BEST FRIEND ( ELISHA OWUSU ASANTE).jpg" alt="Me and my best friend Elijah Owusu Asante" loading="lazy">
+          </figure>
+          <div>
+            <span class="badge badge--blue">My Best Friend</span>
+            <h3 class="editorial-name">Elijah Owusu Asante</h3>
+            <p class="chapter-quote">&ldquo;Elijah has been with me through thick and thin. He gives me honest advice, shows love and care, and stays by my side even when I can be stubborn.&rdquo;</p>
             <p>A true friend who listens, checks on my growth, and never wavers in support.</p>
           </div>
         </div>
 
-        <div class="friends-supporting-grid">
-          <div class="friend-card">
-            <div class="friend-card__media">
-              <img src="assets/images/MY FAVORITE PERSON AND I.jpg" alt="Mercy with favorite person" loading="lazy">
+        <div class="friends-circle-grid">
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/MY FAVORITE PERSON AND I.jpg" alt="Me with my favorite person" loading="lazy">
             </div>
-            <div class="friend-card__info">
-              <h4>Favorite Person &amp; Partner</h4>
-              <p>Laughter, debates, and moments of absolute honesty.</p>
+            <div class="friend-story-card__body">
+              <h4>My Favorite Person</h4>
+              <p>Shared laughter, honest banter, and steadfast companionship.</p>
             </div>
-          </div>
+          </article>
 
-          <div class="friend-card">
-            <div class="friend-card__media">
-              <img src="assets/images/MY FRIEND RACHAEL.jpg" alt="Friend Rachael" loading="lazy">
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/MY FIGHTING PATNER.jpg" alt="Me and my fighting partner" loading="lazy">
             </div>
-            <div class="friend-card__info">
-              <h4>Rachael &amp; Sandra</h4>
-              <p>Cherished friends who bring warmth and shared smiles.</p>
+            <div class="friend-story-card__body">
+              <h4>My Fighting Partner</h4>
+              <p>The one who challenges me, corrects me, and still stays.</p>
             </div>
-          </div>
+          </article>
 
-          <div class="friend-card">
-            <div class="friend-card__media">
-              <img src="assets/images/I AND MY LOVELY FRIENDS.jpg" alt="Lovely friends circle" loading="lazy">
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/MY FRIEND RACHAEL.jpg" alt="My friend Rachael" loading="lazy">
             </div>
-            <div class="friend-card__info">
+            <div class="friend-story-card__body">
+              <h4>Rachael</h4>
+              <p>A cherished friend who brings warmth and shared smiles.</p>
+            </div>
+          </article>
+
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/MY FRIEND SANDRA.jpg" alt="My friend Sandra" loading="lazy">
+            </div>
+            <div class="friend-story-card__body">
+              <h4>Sandra</h4>
+              <p>Kindness that shows up quietly, exactly when it is needed.</p>
+            </div>
+          </article>
+
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/I AND MY LOVELY FRIENDS.jpg" alt="Me and my lovely friends" loading="lazy">
+            </div>
+            <div class="friend-story-card__body">
               <h4>Circle of Joy</h4>
-              <p>Unfiltered moments of community and laughter.</p>
-              <button class="btn btn--outline" type="button" data-video-trigger="assets/videos/HAPPY MOMENT WITH FRIENDS.mp4" data-caption="Happy moments with my friends">Watch Video &rarr;</button>
+              <p>Unfiltered moments of community, laughter, and belonging.</p>
+              <button class="btn btn--outline-dark btn--pill-compact" type="button" data-video-trigger="assets/videos/HAPPY MOMENT WITH FRIENDS.mp4" data-caption="Happy moments with my friends.">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Watch Video
+              </button>
             </div>
-          </div>
+          </article>
+
+          <article class="friend-story-card reveal">
+            <div class="friend-story-card__media">
+              <img src="assets/images/ME WITH MY FRIENDS 2.jpg" alt="Me with my friends" loading="lazy">
+            </div>
+            <div class="friend-story-card__body">
+              <h4>Gathered Together</h4>
+              <p>Cherished company and warm memories that keep me grounded.</p>
+            </div>
+          </article>
+        </div>
+        <div class="chapter-actions chapter-actions--center">
+          <a class="btn btn--primary" href="#chapter-faith">
+            Continue to Chapter 05
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 05: FAITH & PASTOR PAUL -->
-    <section class="chapter-section chapter-section--white" id="chapter-faith" aria-labelledby="ch5-heading">
+    <!-- CHAPTER 05: ROOTED IN FAITH & WORSHIP (MIDNIGHT SANCTUARY) -->
+    <section class="chapter-section chapter-section--midnight" id="chapter-faith" data-chapter="faith" data-chapter-num="05" data-chapter-name="Faith" aria-labelledby="ch5-heading">
       <div class="container">
-        <div class="faith-grid">
-          <div class="scripture-banner">
-            <span class="eyebrow" style="color: #F8B4C4;">Anchor of My Life</span>
-            <blockquote class="scripture-text">“Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.”</blockquote>
-            <p class="scripture-ref">Philippians 4:6</p>
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.15); margin: var(--space-md) 0;">
-            <p style="color: #D3DEEB; font-size: var(--text-sm);">My life experiences taught me to live without depending on someone else but God. Through every challenge, His grace has carried me through.</p>
+        <div class="faith-editorial-grid">
+          <div class="scripture-card-featured reveal">
+            <span class="chapter-numeral">05</span>
+            <span class="eyebrow" style="color:#F4BAC7;">The Anchor of My Life</span>
+            <h2 id="ch5-heading" style="margin-bottom: var(--space-md);">Rooted in Faith</h2>
+            <blockquote class="scripture-text">&ldquo;Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.&rdquo;</blockquote>
+            <span class="verse-ref">Philippians 4:6</span>
+            <hr class="scripture-rule">
+            <p>My life experiences taught me to live without depending on anyone else but God. Through every challenge, His grace has carried me through.</p>
           </div>
 
-          <div class="mentor-card card">
-            <div class="portrait-frame" style="aspect-ratio: 16/10; margin-bottom: var(--space-md);">
+          <div class="mentor-spotlight-card reveal">
+            <figure class="editorial-frame">
               <img src="assets/images/PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg" alt="Pastor Paul Oteng Asamoah and Mama Agartha Asamoah" loading="lazy">
-            </div>
-            <span class="badge">Spiritual Father &amp; Mentors</span>
-            <h4 style="margin-top: var(--space-xs);">Pastor Paul Oteng Asamoah &amp; Mama Agartha Asamoah</h4>
-            <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">“Pastor Paul never gave up on me. He fought for my dreams, ensured my happiness, served as a father figure, and became a true blessing in my journey.”</p>
-            <div style="margin-top: var(--space-md);">
-              <button class="btn btn--primary" type="button" data-video-trigger="assets/videos/ME WORSHIPING AT CHURCH.mp4" data-caption="Me worshiping at church — a life surrendered to God.">Watch Worship Video &rarr;</button>
-            </div>
+              <figcaption class="editorial-frame__caption"><span>Pastor Paul &amp; Mama Agartha</span><span>My spiritual parents</span></figcaption>
+            </figure>
+            <span class="badge badge--glass">Spiritual Father &amp; Mentor</span>
+            <h3 class="editorial-name editorial-name--light">Pastor Paul Oteng Asamoah &amp; Mama Agartha Asamoah</h3>
+            <p class="quote-light">&ldquo;Pastor Paul never gave up on me. He fought for my dreams, cared about my happiness, served as a father figure, and became a true blessing in my journey.&rdquo;</p>
+            <button class="btn btn--outline-light" type="button" data-video-trigger="assets/videos/ME WORSHIPING AT CHURCH.mp4" data-caption="Me worshiping at church — a life surrendered to God.">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Watch Worship Moment
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 06: MUSIC MINISTRY -->
-    <section class="chapter-section chapter-section--soft-pink" id="chapter-music" aria-labelledby="ch6-heading">
+    <!-- CHAPTER 06: THE SONG IN MY SPIRIT (MUSIC) -->
+    <section class="chapter-section chapter-section--white" id="chapter-music" data-chapter="music" data-chapter-num="06" data-chapter-name="Music" aria-labelledby="ch6-heading">
       <div class="container">
-        <div class="chapter-header chapter-header--centered">
-          <span class="eyebrow">Chapter 06 &middot; Calling</span>
+        <div class="chapter-header chapter-header--centered reveal">
+          <span class="chapter-numeral">06</span>
+          <span class="eyebrow">Calling &amp; Song</span>
           <h2 id="ch6-heading">The Song in My Spirit</h2>
           <p>Singing and listening to music are woven into who I am. One of my greatest callings is to become a good gospel musician and minister unto the Lord through song.</p>
         </div>
 
-        <div class="music-studio-card">
-          <div class="music-studio-card__video-wrap">
-            <video preload="none" controls poster="assets/images/ME CURRENTLY.jpg" playsinline>
+        <div class="music-studio-deck reveal">
+          <div class="music-studio-deck__media">
+            <video preload="metadata" controls playsinline poster="assets/images/ME CURRENTLY.jpg" data-studio-video>
               <source src="assets/videos/MY STUDIO SONG.mp4" type="video/mp4">
               Your browser does not support HTML5 video.
             </video>
           </div>
-          <div class="music-studio-card__content">
-            <span class="badge" style="background-color: rgba(212,122,144,0.25); color: #FFF;">In the Studio</span>
-            <h3 style="color: #FFF; margin-top: var(--space-xs);">Pursuing the Gift</h3>
-            <p style="color: #CBD5E1; font-size: var(--text-sm);">Singing with the Melody Singers has been a cornerstone of my spiritual life. And listening to Mama Esther inspires my walk and my music every single day.</p>
-            <div class="song-pill-cloud">
-              <span class="song-pill">♫ My Soul Says Yes to Your Ways</span>
-              <span class="song-pill">♫ May the Meditation of My Heart Be Accepted to You</span>
+          <div>
+            <span class="badge badge--glass">In The Studio</span>
+            <h3 class="editorial-name editorial-name--light">Pursuing The Gift</h3>
+            <p class="quote-light">Singing with the Melody Singers has been a cornerstone of my spiritual life. And listening to Mama Esther inspires my walk and my music every single day.</p>
+
+            <div class="music-play-deck">
+              <button class="music-play-btn" type="button" data-music-play aria-label="Play my studio song">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-icon-play><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              </button>
+              <div class="music-waveform" data-waveform aria-hidden="true"></div>
+              <span class="music-play-label" data-music-label>Play My Studio Song</span>
+            </div>
+            <p class="music-status" data-music-status role="status">Tap Play and turn up your phone volume.</p>
+
+            <div class="song-badges-deck">
+              <div class="song-badge-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                My Soul Says Yes to Your Ways
+              </div>
+              <div class="song-badge-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                May the Meditation of My Heart Be Accepted to You
+              </div>
+              <div class="song-badge-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"></path></svg>
+                Mama Esther &mdash; My Favourite Artist
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 07 & 08: PRESENT & HORIZON -->
-    <section class="chapter-section chapter-section--white" id="chapter-present" aria-labelledby="ch7-heading">
+    <!-- CHAPTER 07: WHERE I AM TODAY (PRESENT) -->
+    <section class="chapter-section chapter-section--soft-pink" id="chapter-present" data-chapter="present" data-chapter-num="07" data-chapter-name="Today" aria-labelledby="ch7-heading">
       <div class="container">
-        <div class="present-profile-grid">
-          <div class="portrait-frame" style="aspect-ratio: 4/5;">
-            <img src="assets/images/ME CURRENTLY.jpg" alt="Mercy currently — poised and smiling" loading="lazy">
-          </div>
-          <div class="chapter-content">
-            <span class="eyebrow">Chapter 07 &middot; Present Day</span>
-            <h2 id="ch7-heading">Where I Am Today</h2>
-            <p class="chapter-quote">“Today, I am working as a teacher, pouring guidance and knowledge into the lives of young minds, while diligently working toward furthering my education at university.”</p>
-            <p>I want to live an holistic life, grow in my faith, and make my parents proud in all that I do.</p>
-            
-            <div class="discovery-tiles">
-              <div class="tile">
-                <h5>Favorite Food</h5>
-                <p>Banku and okra stew with meat</p>
+        <div class="present-editorial-split">
+          <figure class="editorial-frame present-portrait-stage reveal">
+            <img src="assets/images/ME CURRENTLY.jpg" alt="Me currently — poised and smiling" loading="lazy">
+            <figcaption class="editorial-frame__caption">
+              <span>Me currently</span>
+              <span>Living each day with gratitude</span>
+            </figcaption>
+          </figure>
+          <div>
+            <span class="chapter-numeral reveal">07</span>
+            <span class="eyebrow reveal">Present Day</span>
+            <h2 id="ch7-heading" class="reveal">Where I Am Today</h2>
+            <p class="chapter-quote reveal">&ldquo;Today, I am working as a teacher, pouring guidance and knowledge into the lives of young minds, while diligently working toward furthering my education at university.&rdquo;</p>
+            <p class="reveal">I want to live a holistic life, grow in my faith, and make my parents proud in all that I do.</p>
+
+            <div class="present-snapshot-grid">
+              <div class="snapshot-pill-card reveal">
+                <span>Favourite Food</span>
+                <p>Banku &amp; okra stew with meat</p>
               </div>
-              <div class="tile">
-                <h5>Favorite Movies</h5>
+              <div class="snapshot-pill-card reveal">
+                <span>Favourite Movies</span>
                 <p>Treasure in the Sky &middot; Best Friends in the World</p>
               </div>
-              <div class="tile">
-                <h5>Favorite Colors</h5>
+              <div class="snapshot-pill-card reveal">
+                <span>Favourite Colours</span>
                 <p>White &middot; Pink &middot; Blue</p>
               </div>
-              <div class="tile">
-                <h5>Favorite Artist</h5>
+              <div class="snapshot-pill-card reveal">
+                <span>Favourite Artist</span>
                 <p>Mama Esther</p>
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- HORIZON GOALS -->
-        <div style="margin-top: var(--space-3xl);" id="chapter-future">
-          <div class="chapter-header chapter-header--centered">
-            <span class="eyebrow">Chapter 08 &middot; Looking Ahead</span>
-            <h2>Where I Am Going</h2>
-            <p>My dreams are anchored in purpose. Looking ahead, I am pressing forward to reach every goal God has placed in my heart.</p>
-          </div>
-
-          <div class="goals-track">
-            <div class="goal-node">
-              <div class="goal-number">01</div>
-              <h4>Agric Officer</h4>
-              <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">Furthering my education at university to serve meaningfully in agriculture.</p>
-            </div>
-            <div class="goal-node">
-              <div class="goal-number">02</div>
-              <h4>Gospel Musician</h4>
-              <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">Writing and ministering gospel songs that bring people closer to God.</p>
-            </div>
-            <div class="goal-node">
-              <div class="goal-number">03</div>
-              <h4>Holistic Christian</h4>
-              <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">Deepening my spiritual walk, integrity, and daily prayer life.</p>
-            </div>
-            <div class="goal-node">
-              <div class="goal-number">04</div>
-              <h4>Honoring God &amp; Family</h4>
-              <p style="font-size: var(--text-sm); margin-top: var(--space-xs);">Making my parents proud and walking in a manner that pleases Heaven.</p>
+            <div class="chapter-actions reveal">
+              <button class="btn btn--outline-dark" type="button" data-video-trigger="assets/videos/MY VIDEO IN SMILLING MOOD.mp4" data-caption="My video in smiling mood — joy from within.">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Watch Me Today
+              </button>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 09: MEMORY VAULT -->
-    <section class="chapter-section chapter-section--soft-blue" id="chapter-gallery" aria-labelledby="ch9-heading">
+    <!-- CHAPTER 08: WHERE I AM GOING (THE HORIZON) -->
+    <section class="chapter-section chapter-section--white" id="chapter-future" data-chapter="future" data-chapter-num="08" data-chapter-name="Horizon" aria-labelledby="ch8-heading">
       <div class="container">
-        <div class="chapter-header chapter-header--centered">
-          <span class="eyebrow">Chapter 09 &middot; The Vault</span>
-          <h2 id="ch9-heading">Moments Worth Keeping Close</h2>
-          <p>Every photograph and clip holds a piece of my journey. Filter through the memories or tap any item to view in full detail.</p>
+        <div class="chapter-header chapter-header--centered reveal">
+          <span class="chapter-numeral">08</span>
+          <span class="eyebrow">The Horizon</span>
+          <h2 id="ch8-heading">Where I Am Going</h2>
+          <p>My dreams are anchored in purpose. Looking ahead, I am pressing forward toward every goal God has placed in my heart.</p>
         </div>
 
-        <div class="memory-filters" role="tablist" aria-label="Filter memory vault">
-          <button class="filter-btn active" type="button" data-filter="all">All Memories</button>
-          <button class="filter-btn" type="button" data-filter="family">Family</button>
-          <button class="filter-btn" type="button" data-filter="friends">Friends</button>
-          <button class="filter-btn" type="button" data-filter="faith">Faith &amp; Music</button>
-          <button class="filter-btn" type="button" data-filter="present">Portraits</button>
+        <div class="horizon-track-grid">
+          <article class="horizon-card reveal">
+            <div class="horizon-card__num">01</div>
+            <h4>Agricultural Officer</h4>
+            <p>Furthering my education at university to serve meaningfully in agriculture.</p>
+          </article>
+          <article class="horizon-card reveal">
+            <div class="horizon-card__num">02</div>
+            <h4>Gospel Musician</h4>
+            <p>Becoming a good gospel musician and ministering unto the Lord through music.</p>
+          </article>
+          <article class="horizon-card reveal">
+            <div class="horizon-card__num">03</div>
+            <h4>Holistic Christian Life</h4>
+            <p>Growing deeper in faith, integrity, and prayer every single day.</p>
+          </article>
+          <article class="horizon-card reveal">
+            <div class="horizon-card__num">04</div>
+            <h4>Honouring Family &amp; Heaven</h4>
+            <p>Making my parents proud and walking in a way that pleases God.</p>
+          </article>
         </div>
 
-        <div class="memory-masonry" data-gallery-grid>
-          <!-- Dynamic rendering by main.js -->
+        <div class="motto-band reveal">
+          <span class="eyebrow">My Motto</span>
+          <p class="motto-band__text">&ldquo;My life experiences taught me to live without depending on someone else but God.&rdquo;</p>
         </div>
       </div>
     </section>
 
-    <!-- CHAPTER 11 & 12: BIRTHDAY CELEBRATION & ROBERT'S LETTER -->
-    <section class="birthday-reveal-section" id="chapter-celebration" aria-labelledby="bday-title">
-      <canvas class="birthday-confetti-canvas" id="confetti-canvas"></canvas>
-      <div class="birthday-reveal-content">
-        <span class="eyebrow" style="color: #F8B4C4;">The Grand Celebration</span>
-        <h2 class="birthday-reveal-title" id="bday-title">Happy Birthday, Mercy!</h2>
-        <p style="font-size: var(--text-md); color: #E2EAF2; margin-bottom: var(--space-lg);">
-          After walking through your childhood, your family, your friendships, your faith, your music, and your dreams...
-        </p>
+    <!-- CHAPTER 09: THE MEMORY ROOM (GALLERY) -->
+    <section class="chapter-section chapter-section--soft-blue" id="chapter-gallery" data-chapter="gallery" data-chapter-num="09" data-chapter-name="Memories" aria-labelledby="ch9-heading">
+      <div class="container">
+        <div class="chapter-header chapter-header--centered reveal">
+          <span class="chapter-numeral">09</span>
+          <span class="eyebrow">The Memory Room</span>
+          <h2 id="ch9-heading">Moments Worth Keeping Close</h2>
+          <p>Every photograph and every clip holds a piece of my journey. Filter through the memories, or open any one of them to see it in full.</p>
+        </div>
 
-        <!-- Robert's Dedication Letter -->
-        <article class="robert-letter-card">
-          <span class="badge badge--blue" style="margin-bottom: var(--space-sm);">A Personal Dedication</span>
-          <h3 style="color: var(--blue-primary); font-size: var(--text-xl);">Dear Mercy,</h3>
-          <p>Knowing you and seeing how passionately you love God, how deeply you honor your parents, and how faithfully you stand by your values is truly inspiring.</p>
-          <p>As your best friend, I wanted to create an experience that honors your story—not just where you have been, but who you are becoming.</p>
-          <p>May this new year of your life open doors you have prayed for. May your voice minister to thousands, may your education rise to higher heights, and may your heart always be filled with peace and joy.</p>
+        <div class="vault-filter-bar" role="tablist" aria-label="Filter my memory room">
+          <button class="vault-filter-btn active" type="button" data-filter="all" role="tab" aria-selected="true">All Memories</button>
+          <button class="vault-filter-btn" type="button" data-filter="family" role="tab" aria-selected="false">Family</button>
+          <button class="vault-filter-btn" type="button" data-filter="friends" role="tab" aria-selected="false">Friends</button>
+          <button class="vault-filter-btn" type="button" data-filter="school" role="tab" aria-selected="false">School Days</button>
+          <button class="vault-filter-btn" type="button" data-filter="faith" role="tab" aria-selected="false">Faith</button>
+          <button class="vault-filter-btn" type="button" data-filter="music" role="tab" aria-selected="false">Music</button>
+          <button class="vault-filter-btn" type="button" data-filter="present" role="tab" aria-selected="false">Portraits</button>
+        </div>
+
+        <div class="vault-gallery-grid" data-gallery-grid>
+          <!-- Rendered dynamically by main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 10: THE GRAND CELEBRATION & ROBERT'S LETTER -->
+    <section class="birthday-grand-stage" id="chapter-celebration" data-chapter="celebration" data-chapter-num="10" data-chapter-name="Finale" aria-labelledby="bday-title">
+      <canvas class="birthday-confetti-canvas" id="confetti-canvas"></canvas>
+      <div class="birthday-stage-content">
+        <span class="eyebrow birthday-stage-eyebrow">Chapter 10 &middot; The Grand Celebration</span>
+        <h2 class="birthday-stage-title" id="bday-title"><span class="birthday-stage-title__line">Happy Birthday,</span><span class="birthday-stage-title__name">Mercy</span></h2>
+        <p class="birthday-stage-lead">After walking through your childhood, your family, your friendships, your faith, your music, and your dreams &mdash; there is one more thing left to say.</p>
+
+        <!-- DEDICATED BIRTHDAY SONG -->
+        <figure class="birthday-song-card">
+          <figcaption class="birthday-song-card__head">
+            <span class="birthday-song-card__eyebrow">A Song For You</span>
+            <strong class="birthday-song-card__title">Your Birthday Song</strong>
+            <span class="birthday-song-card__note">Press play and let it carry the birthday wishes.</span>
+          </figcaption>
+          <video
+            class="birthday-song-card__video"
+            controls
+            preload="metadata"
+            playsinline
+            src="assets/videos/MY STUDIO SONG.mp4"
+            data-birthday-song-video
+            aria-label="Birthday song for Mercy">
+            Your browser cannot play this birthday song.
+            <a href="assets/videos/MY STUDIO SONG.mp4">Download the birthday song</a> instead.
+          </video>
+        </figure>
+
+        <button class="btn btn--pink btn--celebrate" type="button" data-celebrate>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5A2.5 2.5 0 0 1 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5A2.5 2.5 0 0 0 12 7z"></path>
+          </svg>
+          Open My Birthday Letter
+        </button>
+
+        <article class="robert-letter-editorial" data-letter-card hidden>
+          <span class="badge">A Personal Dedication</span>
+          <h3>Dear Mercy,</h3>
+          <p>Knowing you and seeing how passionately you love God, how deeply you honour your parents, and how faithfully you stand by your values is truly inspiring.</p>
+          <p>As your best friend, I wanted to create an experience that honours your story &mdash; not just where you have been, but who you are becoming.</p>
+          <p>May this new year of your life open the doors you have prayed for. May your voice minister to thousands, may your education rise to higher heights, and may your heart always be filled with peace and joy.</p>
           <p class="robert-letter-signature">With love, prayers, and deep gratitude,<br>Robert</p>
+
+
         </article>
 
-        <!-- The Secret Seal Blessing -->
-        <div style="margin-top: var(--space-2xl); text-align: center;">
-          <button class="secret-seal" type="button" data-secret-seal aria-label="Unlock Robert's Secret Blessing for Mercy">
+        <div class="celebration-seal-wrap">
+          <button class="secret-seal" type="button" data-secret-seal aria-label="Unlock a special blessing for Mercy">
             <span>M</span>
             <span class="secret-seal__tooltip">Tap for a special blessing</span>
           </button>
@@ -392,32 +658,51 @@
     </section>
   </main>
 
-  <!-- SHARED ACCESSIBLE MEDIA MODAL DIALOG -->
+  <!-- SHARED MEDIA MODAL DIALOG -->
   <dialog class="media-modal" id="media-modal" aria-labelledby="modal-caption">
     <div class="media-modal__header">
-      <span class="badge badge--blue">Memory Spotlight</span>
-      <button class="media-modal__close" type="button" data-modal-close aria-label="Close media dialog">&times;</button>
+      <span class="badge badge--glass">Memory Spotlight</span>
+      <span class="media-modal__count" data-modal-count hidden></span>
+      <div class="media-modal__header-actions">
+        <button class="media-modal__fullscreen" type="button" data-media-fullscreen hidden aria-label="View video full screen">Full screen</button>
+        <button class="media-modal__close" type="button" data-modal-close aria-label="Close media dialog">&times;</button>
+      </div>
     </div>
-    <div class="media-modal__media-container" id="modal-container">
-      <!-- Injected media element (img or video) -->
+    <div class="media-modal__stage">
+      <button class="media-modal__nav media-modal__nav--prev" type="button" data-modal-prev aria-label="Previous memory">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <div class="media-modal__media-container" id="modal-container"></div>
+
+      <button class="media-modal__nav media-modal__nav--next" type="button" data-modal-next aria-label="Next memory">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      </button>
     </div>
     <div class="media-modal__caption" id="modal-caption"></div>
   </dialog>
 
   <!-- SECRET BLESSING MODAL -->
-  <dialog class="media-modal" id="blessing-modal" aria-labelledby="blessing-title" style="max-width: 38rem;">
+  <dialog class="media-modal" id="blessing-modal" aria-labelledby="blessing-title">
     <div class="media-modal__header">
-      <span class="badge" style="background-color: var(--pink-soft); color: var(--pink-deep);">A Divine Blessing</span>
+      <span class="badge">A Divine Blessing</span>
       <button class="media-modal__close" type="button" data-blessing-close aria-label="Close blessing dialog">&times;</button>
     </div>
-    <div style="padding: var(--space-xl); background: var(--bg-surface); color: var(--text-ink); text-align: center;">
-      <h3 id="blessing-title" style="color: var(--blue-primary); margin-bottom: var(--space-md); font-family: var(--font-display);">Numbers 6:24–26</h3>
-      <blockquote style="font-family: var(--font-display); font-size: 1.45rem; font-style: italic; line-height: 1.5; color: var(--text-ink); margin-bottom: var(--space-md);">
-        “The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace.”
-      </blockquote>
-      <p style="font-size: var(--text-sm); color: var(--text-muted);">You are treasured, Mercy. Walk into this new chapter knowing you are deeply appreciated.</p>
+    <div class="blessing-body">
+      <h3 id="blessing-title">Numbers 6:24&ndash;26</h3>
+      <blockquote>&ldquo;The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace.&rdquo;</blockquote>
+      <p>You are treasured, Mercy. Walk into this new chapter knowing you are deeply appreciated.</p>
     </div>
   </dialog>
+
+  <!-- PHONE CHAPTER SHORTCUTS + APP STATUS -->
+
+  <!-- BACK TO TOP (APPEARS ONCE YOU HAVE READ A WHILE) -->
+  <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+    <span class="back-to-top__label">Top</span>
+  </button>
+
+  <!-- Temporary, non-blocking app/share status message -->
 
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
