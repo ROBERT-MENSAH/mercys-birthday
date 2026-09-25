@@ -1442,6 +1442,23 @@
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* The prologue's secondary Share button. It sits directly above/below the
+   install button on the dark hero, so it uses the same translucent treatment:
+   without this rule it fell back to the base .btn only, which left it with a
+   transparent border and no fill, so it read as loose text rather than a button. */
+.btn--share {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn--share:hover {
+  color: var(--blue-night);
+  background: var(--white);
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
 .install-help,
 .music-status {
   font-size: 0.78rem;

@@ -1,11 +1,11 @@
 # Mercy — A Story Worth Celebrating
 
-A personalized, cinematic, interactive digital birthday and life-story web experience celebrating Mercy, told in her own authentic first-person voice and concluding with a warm personal dedication from her best friend, Robert.
+A personalized, cinematic, interactive digital birthday and life-story web experience celebrating Mercy, told in her own authentic first-person voice and concluding with a warm birthday message from her friend, Robert Mensah.
 
 ## Architectural Highlights
 
 - **First-Person Authentic Storytelling**: Chapters 01 through 09 are written strictly in Mercy's authentic voice ("I", "my", "myself"), reflecting her Christian foundation, memories of school, love for her family and friends, spiritual mentors, music ministry, and life dreams.
-- **Robert's Dedication Transition**: Chapter 10 closes the journey with a birthday song, Mercy's portrait, and a personal dedication from her best friend, Robert.
+- **Birthday Message Transition**: Chapter 10 closes the journey with a birthday song, Mercy's portrait, and a birthday message from her friend, Robert Mensah.
 - **Curated Memory Montage**: A five-image editorial collage gathers childhood, family, school, friendship, and present-day memories before the filterable memory room.
 - **Living Memory Room**: A 27-item archive reports its live photograph/video totals, uses an asymmetric tile hierarchy, and opens every item in the shared media spotlight.
 - **Color System**: White foundation (#FAFAF9 / #FFFFFF) with dusty blush rose accents (#D47A90) and royal slate/navy blue typography (#1E3A5F / #0B1624).
