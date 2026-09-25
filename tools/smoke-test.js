@@ -114,6 +114,8 @@ console.log("\n== BOOT ==");
 check("window.MERCY_STORY exposed", !!sandbox.window.MERCY_STORY);
 check("gallery rendered from data registry", shim.galleryGrid.children.length === GAL,
   shim.galleryGrid.children.length + " of " + GAL + " cards");
+check("gallery summary reports photographs and videos", shim.galleryStatus.textContent === "17 photographs · 10 videos",
+  shim.galleryStatus.textContent);
 check("waveform built (visual only)", shim.waveformHost.children.length === 34,
   shim.waveformHost.children.length + " bars");
 check("music starts paused - no autoplay",
@@ -167,6 +169,8 @@ const familyCount = sandbox.window.MERCY_STORY.gallery.filter(function (i) {
 }).length;
 check("family filter renders only family memories", shim.galleryGrid.children.length === familyCount,
   shim.galleryGrid.children.length + " cards, expected " + familyCount);
+check("gallery summary updates with active filter", shim.galleryStatus.textContent === "3 photographs · 1 video",
+  shim.galleryStatus.textContent);
 shim.filterButtons[0].setAttribute("data-filter", "all");
 shim.filterButtons[0].emit("click");
 check("all filter restores every memory", shim.galleryGrid.children.length === GAL);

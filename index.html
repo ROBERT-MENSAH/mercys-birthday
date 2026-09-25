@@ -586,14 +586,47 @@
           <p>Every photograph and every clip holds a piece of my journey. Filter through the memories, or open any one of them to see it in full.</p>
         </div>
 
-        <div class="vault-filter-bar" role="tablist" aria-label="Filter my memory room">
-          <button class="vault-filter-btn active" type="button" data-filter="all" role="tab" aria-selected="true">All Memories</button>
-          <button class="vault-filter-btn" type="button" data-filter="family" role="tab" aria-selected="false">Family</button>
-          <button class="vault-filter-btn" type="button" data-filter="friends" role="tab" aria-selected="false">Friends</button>
-          <button class="vault-filter-btn" type="button" data-filter="school" role="tab" aria-selected="false">School Days</button>
-          <button class="vault-filter-btn" type="button" data-filter="faith" role="tab" aria-selected="false">Faith</button>
-          <button class="vault-filter-btn" type="button" data-filter="music" role="tab" aria-selected="false">Music</button>
-          <button class="vault-filter-btn" type="button" data-filter="present" role="tab" aria-selected="false">Portraits</button>
+        <div class="memory-montage" aria-labelledby="montage-heading">
+          <div class="memory-montage__heading">
+            <span class="eyebrow">A Few Precious Frames</span>
+            <h3 id="montage-heading">Moments I Keep Returning To</h3>
+            <p>Childhood, family, school, friendship, and today — gathered together as one small reminder of how far I have come.</p>
+          </div>
+          <div class="memory-montage__collage">
+            <figure class="memory-montage__item memory-montage__item--childhood">
+              <img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt="Mercy as a young child" loading="lazy" decoding="async">
+              <figcaption>Where it began</figcaption>
+            </figure>
+            <figure class="memory-montage__item memory-montage__item--family">
+              <img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt="Mercy with her mother" loading="lazy" decoding="async">
+              <figcaption>Love that rooted me</figcaption>
+            </figure>
+            <figure class="memory-montage__item memory-montage__item--school">
+              <img src="assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg" alt="Mercy contesting for Best Vocalist in SHS" loading="lazy" decoding="async">
+              <figcaption>Where I found my voice</figcaption>
+            </figure>
+            <figure class="memory-montage__item memory-montage__item--friends">
+              <img src="assets/images/I AND MY LOVELY FRIENDS.jpg" alt="Mercy surrounded by her friends" loading="lazy" decoding="async">
+              <figcaption>Love that stayed</figcaption>
+            </figure>
+            <figure class="memory-montage__item memory-montage__item--today">
+              <img src="assets/images/ME CURRENTLY.jpg" alt="Mercy today" loading="lazy" decoding="async">
+              <figcaption>Grace in this season</figcaption>
+            </figure>
+          </div>
+        </div>
+
+        <div class="vault-toolbar">
+          <div class="vault-filter-bar" role="tablist" aria-label="Filter my memory room">
+            <button class="vault-filter-btn active" type="button" data-filter="all" role="tab" aria-selected="true">All Memories</button>
+            <button class="vault-filter-btn" type="button" data-filter="family" role="tab" aria-selected="false">Family</button>
+            <button class="vault-filter-btn" type="button" data-filter="friends" role="tab" aria-selected="false">Friends</button>
+            <button class="vault-filter-btn" type="button" data-filter="school" role="tab" aria-selected="false">School Days</button>
+            <button class="vault-filter-btn" type="button" data-filter="faith" role="tab" aria-selected="false">Faith</button>
+            <button class="vault-filter-btn" type="button" data-filter="music" role="tab" aria-selected="false">Music</button>
+            <button class="vault-filter-btn" type="button" data-filter="present" role="tab" aria-selected="false">Portraits</button>
+          </div>
+          <p class="vault-gallery-status" data-gallery-status role="status" aria-live="polite"></p>
         </div>
 
         <div class="vault-gallery-grid" data-gallery-grid>
@@ -606,36 +639,53 @@
     <section class="birthday-grand-stage" id="chapter-celebration" data-chapter="celebration" data-chapter-num="10" data-chapter-name="Finale" aria-labelledby="bday-title">
       <canvas class="birthday-confetti-canvas" id="confetti-canvas"></canvas>
       <div class="birthday-stage-content">
-        <span class="eyebrow birthday-stage-eyebrow">Chapter 10 &middot; The Grand Celebration</span>
-        <h2 class="birthday-stage-title" id="bday-title"><span class="birthday-stage-title__line">Happy Birthday,</span><span class="birthday-stage-title__name">Mercy</span></h2>
-        <p class="birthday-stage-lead">After walking through your childhood, your family, your friendships, your faith, your music, and your dreams &mdash; there is one more thing left to say.</p>
+        <div class="birthday-stage-intro">
+          <span class="eyebrow birthday-stage-eyebrow">Chapter 10 &middot; The Grand Celebration</span>
+          <h2 class="birthday-stage-title" id="bday-title"><span class="birthday-stage-title__line">Happy Birthday,</span><span class="birthday-stage-title__name">Mercy</span></h2>
+          <p class="birthday-stage-lead">After walking through your childhood, your family, your friendships, your faith, your music, and your dreams &mdash; there is one more thing left to say.</p>
+        </div>
 
-        <!-- DEDICATED BIRTHDAY SONG -->
-        <figure class="birthday-song-card">
-          <figcaption class="birthday-song-card__head">
-            <span class="birthday-song-card__eyebrow">A Song For You</span>
-            <strong class="birthday-song-card__title">Your Birthday Song</strong>
-            <span class="birthday-song-card__note">Press play and let it carry the birthday wishes.</span>
-          </figcaption>
-          <video
-            class="birthday-song-card__video"
-            controls
-            preload="metadata"
-            playsinline
-            src="assets/videos/MY STUDIO SONG.mp4"
-            data-birthday-song-video
-            aria-label="Birthday song for Mercy">
-            Your browser cannot play this birthday song.
-            <a href="assets/videos/MY STUDIO SONG.mp4">Download the birthday song</a> instead.
-          </video>
-        </figure>
+        <div class="birthday-experience-grid">
+          <div class="birthday-experience-grid__song">
+            <!-- DEDICATED BIRTHDAY SONG -->
+            <figure class="birthday-song-card">
+              <figcaption class="birthday-song-card__head">
+                <span class="birthday-song-card__eyebrow">A Song For You</span>
+                <strong class="birthday-song-card__title">Your Birthday Song</strong>
+                <span class="birthday-song-card__note">Press play and let it carry the birthday wishes.</span>
+              </figcaption>
+              <video
+                class="birthday-song-card__video"
+                controls
+                preload="metadata"
+                playsinline
+                src="assets/videos/MY STUDIO SONG.mp4"
+                data-birthday-song-video
+                aria-label="Birthday song for Mercy">
+                Your browser cannot play this birthday song.
+                <a href="assets/videos/MY STUDIO SONG.mp4">Download the birthday song</a> instead.
+              </video>
+            </figure>
+          </div>
 
-        <button class="btn btn--pink btn--celebrate" type="button" data-celebrate>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5A2.5 2.5 0 0 1 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5A2.5 2.5 0 0 0 12 7z"></path>
-          </svg>
-          Open My Birthday Letter
-        </button>
+          <aside class="birthday-letter-invitation" aria-label="Robert's birthday dedication">
+            <figure class="birthday-letter-invitation__portrait">
+              <img src="assets/images/ME CURRENTLY.jpg" alt="Mercy smiling on her birthday journey" loading="lazy" decoding="async">
+              <figcaption>For every version of you &mdash; then, now, and always.</figcaption>
+            </figure>
+            <div class="birthday-letter-invitation__copy">
+              <span class="badge badge--glass">From Robert, With Love</span>
+              <h3>A Personal Dedication</h3>
+              <p>For the girl who has turned every season into a reason to stand taller, love deeper, and keep moving forward.</p>
+              <button class="btn btn--pink btn--celebrate" type="button" data-celebrate>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 12v10H4V12"></path><path d="M2 7h20v5H2z"></path><path d="M12 22V7"></path><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5A2.5 2.5 0 0 1 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5A2.5 2.5 0 0 0 12 7z"></path>
+                </svg>
+                Open My Birthday Letter
+              </button>
+            </div>
+          </aside>
+        </div>
 
         <article class="robert-letter-editorial" data-letter-card hidden>
           <span class="badge">A Personal Dedication</span>

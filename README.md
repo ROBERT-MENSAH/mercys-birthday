@@ -5,7 +5,9 @@ A personalized, cinematic, interactive digital birthday and life-story web exper
 ## Architectural Highlights
 
 - **First-Person Authentic Storytelling**: Chapters 01 through 09 are written strictly in Mercy's authentic voice ("I", "my", "myself"), reflecting her Christian foundation, memories of school, love for her family and friends, spiritual mentors, music ministry, and life dreams.
-- **Robert's Dedication Transition**: Chapter 11 & 12 seamlessly transition from Mercy's narrative into a touching birthday tribute from Robert.
+- **Robert's Dedication Transition**: Chapter 10 closes the journey with a birthday song, Mercy's portrait, and a personal dedication from her best friend, Robert.
+- **Curated Memory Montage**: A five-image editorial collage gathers childhood, family, school, friendship, and present-day memories before the filterable memory room.
+- **Living Memory Room**: A 27-item archive reports its live photograph/video totals, uses an asymmetric tile hierarchy, and opens every item in the shared media spotlight.
 - **Color System**: White foundation (#FAFAF9 / #FFFFFF) with dusty blush rose accents (#D47A90) and royal slate/navy blue typography (#1E3A5F / #0B1624).
 - **Music Playback**: The embedded studio recording starts from an explicit tap, remains unmuted, uses inline iPhone playback, and shows retry guidance if a phone blocks playback.
 - **Accessible Video Player**: Shared native `<dialog>` modal with lazy loading (`preload="none"` / `preload="metadata"`) ensuring mobile Safari and Android devices stay crash-free across all 13 MP4 media clips.
@@ -20,14 +22,13 @@ A personalized, cinematic, interactive digital birthday and life-story web exper
 MERCY'S BIRTHDAY/
 ├── assets/
 │   ├── icons/           # Home-screen and favicon app artwork
-│   ├── images/          # 26 personal photos (verified and organized)
+│   ├── images/          # 27 personal photos (verified and organized)
 │   └── videos/          # 13 authentic video moments
 ├── css/
 │   ├── variables.css    # Color tokens, typographic fluid clamps, spacing
 │   ├── base.css         # Reset, typography, skip link, accessibility
 │   ├── components.css   # Buttons, cards, modal dialog, audio controls
-│   ├── sections.css     # Chapters 00 through 12 layout and styles
-│   ├── montage.css      # Curated cinematic memory reel
+│   ├── sections.css     # Chapters 00 through 10, montage, gallery, and finale
 │   └── responsive.css   # Mobile, tablet, and desktop media queries
 ├── js/
 │   ├── data.js          # Frozen first-person narrative registry and asset registry

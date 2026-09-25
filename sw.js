@@ -1,4 +1,4 @@
-const CACHE_NAME = "mercy-story-v3";
+const CACHE_NAME = "mercy-story-v4";
 const APP_SHELL = [
   "./",
   "index.html",

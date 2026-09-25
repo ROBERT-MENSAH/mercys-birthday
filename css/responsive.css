@@ -405,3 +405,169 @@
     gap: var(--space-md);
   }
 }
+
+/* ==========================================================================
+   PHASE 2 RESPONSIVE COMPOSITIONS
+   ========================================================================== */
+@media (max-width: 960px) {
+  .memory-montage__heading {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-montage__collage {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(11rem, 16rem));
+    height: auto;
+  }
+
+  .memory-montage__item--childhood {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  .memory-montage__item--family {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .memory-montage__item--school {
+    grid-column: 2;
+    grid-row: 2 / 4;
+  }
+
+  .memory-montage__item--friends {
+    grid-column: 1;
+    grid-row: 3 / 5;
+  }
+
+  .memory-montage__item--today {
+    grid-column: 2;
+    grid-row: 4;
+  }
+
+  .vault-toolbar {
+    align-items: flex-end;
+    border-radius: var(--radius-lg);
+  }
+
+  .vault-gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .birthday-experience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .birthday-experience-grid .birthday-song-card__video {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
+
+  .birthday-letter-invitation {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .birthday-letter-invitation__portrait {
+    min-height: 22rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .roots-visual-stage .editorial-frame,
+  .school-visual-lead,
+  .school-visual-sub:nth-child(3),
+  .school-visual-sub:nth-child(4),
+  .present-portrait-stage {
+    transform: none;
+  }
+
+  .parent-editorial-card__frame,
+  .best-friend-editorial__photo,
+  .mentor-spotlight-card .editorial-frame {
+    aspect-ratio: 4 / 5;
+  }
+
+  .memory-montage {
+    margin-block: var(--space-xl);
+    padding: 0.85rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .memory-montage__heading {
+    padding-inline: var(--space-2xs);
+  }
+
+  .memory-montage__heading h3 {
+    font-size: clamp(2rem, 11vw, 2.85rem);
+  }
+
+  .memory-montage__collage {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    gap: 0.65rem;
+  }
+
+  .memory-montage__item,
+  .memory-montage__item--childhood,
+  .memory-montage__item--family,
+  .memory-montage__item--school,
+  .memory-montage__item--friends,
+  .memory-montage__item--today {
+    grid-column: 1;
+    grid-row: auto;
+    aspect-ratio: 4 / 5;
+    transform: none;
+  }
+
+  .memory-montage__item--school {
+    aspect-ratio: 1;
+  }
+
+  .vault-toolbar {
+    display: block;
+    padding: var(--space-sm);
+  }
+
+  .vault-gallery-status {
+    padding: var(--space-xs) var(--space-2xs) 0;
+    font-size: 0.68rem;
+  }
+
+  .vault-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vault-card-item,
+  .vault-card-item--feature {
+    grid-column: auto;
+    grid-row: auto;
+    min-height: 0;
+  }
+
+  .vault-card-item--feature img,
+  .vault-card-item--feature video,
+  .vault-card-item--landscape img,
+  .vault-card-item--landscape video {
+    aspect-ratio: 4 / 5;
+  }
+
+  .vault-card-item__badge {
+    opacity: 1;
+    transform: none;
+  }
+
+  .birthday-experience-grid {
+    margin-top: var(--space-lg);
+  }
+
+  .birthday-letter-invitation {
+    display: flex;
+  }
+
+  .birthday-letter-invitation__portrait {
+    min-height: 20rem;
+    aspect-ratio: 4 / 5;
+  }
+}

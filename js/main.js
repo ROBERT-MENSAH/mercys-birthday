@@ -25,6 +25,7 @@
   const chapterSections = Array.prototype.slice.call(document.querySelectorAll("[data-chapter]"));
   const rootsSection = document.getElementById("chapter-roots");
   const galleryGrid = document.querySelector("[data-gallery-grid]");
+  const galleryStatus = document.querySelector("[data-gallery-status]");
   const filterButtons = Array.prototype.slice.call(document.querySelectorAll("[data-filter]"));
 
   const mediaModal = document.getElementById("media-modal");
@@ -295,10 +296,26 @@
   }
 
 
+  const galleryPosters = {
+    music: "assets/images/ME CURRENTLY.jpg",
+    faith: "assets/images/PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg",
+    friends: "assets/images/I AND MY LOVELY FRIENDS.jpg",
+    family: "assets/images/PICTURE WITH MY YOUNGER SIBLINGS.jpg",
+    present: "assets/images/ME CURRENTLY.jpg"
+  };
+
   function renderGallery(filter) {
     if (!galleryGrid || !story || !story.gallery) return;
     const active = filter || "all";
     const items = active === "all" ? story.gallery : story.gallery.filter(function (item) { return item.category === active; });
+    const imageCount = items.filter(function (item) { return item.type !== "video"; }).length;
+    const videoCount = items.length - imageCount;
+    if (galleryStatus) {
+      const parts = [];
+      if (imageCount) parts.push(imageCount + (imageCount === 1 ? " photograph" : " photographs"));
+      if (videoCount) parts.push(videoCount + (videoCount === 1 ? " video" : " videos"));
+      galleryStatus.textContent = parts.join(" · ");
+    }
     galleryGrid.innerHTML = "";
     if (!items.length) {
       const empty = document.createElement("p");
@@ -311,6 +328,8 @@
       const card = document.createElement("button");
       card.type = "button";
       card.className = "vault-card-item";
+      if (index === 0 && items.length > 4) card.classList.add("vault-card-item--feature");
+      if ((index === 4 || index === 12) && items.length > 8) card.classList.add("vault-card-item--landscape");
       card.setAttribute("aria-label", "Open " + (item.title || "memory"));
       const media = document.createElement(item.type === "video" ? "video" : "img");
       if (item.type === "video") {
@@ -318,6 +337,7 @@
         media.preload = "none";
         media.playsInline = true;
         media.muted = true;
+        media.poster = galleryPosters[item.category] || "assets/images/ME CURRENTLY.jpg";
         media.setAttribute("playsinline", "");
         media.setAttribute("aria-label", item.title || "Video memory");
       } else {
@@ -326,6 +346,9 @@
         media.loading = "lazy";
         media.decoding = "async";
       }
+      const badge = document.createElement("span");
+      badge.className = "badge badge--glass vault-card-item__badge";
+      badge.textContent = item.type === "video" ? "Video Memory" : "Photograph";
       const overlay = document.createElement("span");
       overlay.className = "vault-card-item__overlay";
       const title = document.createElement("strong");
@@ -335,6 +358,7 @@
       overlay.appendChild(title);
       overlay.appendChild(caption);
       card.appendChild(media);
+      card.appendChild(badge);
       card.appendChild(overlay);
       galleryGrid.appendChild(card);
       card.addEventListener("click", function () { openMediaModal(items, index); });

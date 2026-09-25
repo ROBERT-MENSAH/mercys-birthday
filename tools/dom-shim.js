@@ -106,6 +106,7 @@ chapterSections.forEach(function (s, i) {
 const filterButtons = collection(7, "button");
 const revealEls = collection(30, "div");
 const galleryGrid = makeEl("div");
+const galleryStatus = makeEl("p");
 const beginBtn = makeEl("button");
 const modalCloseBtn = makeEl("button");
 const secretSealBtn = makeEl("button");
@@ -142,6 +143,7 @@ els["chapter-roots"].querySelectorAll = function (sel) {
 const lookup = {
   "[data-begin-journey]": beginBtn,
   "[data-gallery-grid]": galleryGrid,
+  "[data-gallery-status]": galleryStatus,
   "[data-filter]": filterButtons,
   "[data-modal-close]": modalCloseBtn,
   "[data-secret-seal]": secretSealBtn,
@@ -167,6 +169,7 @@ module.exports = {
   filterButtons: filterButtons,
   revealEls: revealEls,
   galleryGrid: galleryGrid,
+  galleryStatus: galleryStatus,
   beginBtn: beginBtn,
   modalCloseBtn: modalCloseBtn,
   secretSealBtn: secretSealBtn,
