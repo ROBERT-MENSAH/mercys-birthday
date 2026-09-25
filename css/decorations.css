@@ -1,6 +1,7 @@
 /* ==========================================================================
-   FIXED BIRTHDAY DECORATION FRAME
-   Decorative only: aria-hidden markup, no pointer interaction, no page flow.
+   FIXED BIRTHDAY EDGE
+   A restrained rose-blue frame: fine light, small corner silhouettes, no
+   continuous page-wide animation. Decorative only; never interactive.
    ========================================================================== */
 .birthday-frame {
   position: fixed;
@@ -9,103 +10,109 @@
   overflow: hidden;
   pointer-events: none;
   color: var(--white);
+  opacity: 0.82;
 }
 
+/* A fine, light-catching edge rather than a thick party border. */
 .birthday-frame::before {
   content: "";
   position: absolute;
   inset: 0;
-  border: 4px solid transparent;
-  border-image: linear-gradient(135deg, var(--pink-primary), #D9A441,
-    var(--blue-accent), var(--pink-primary), #D9A441) 1;
-  opacity: 0.92;
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg,
+    rgba(231, 159, 178, 0.58),
+    rgba(240, 220, 192, 0.34) 24%,
+    rgba(127, 168, 203, 0.52) 52%,
+    rgba(231, 159, 178, 0.44) 78%,
+    rgba(240, 220, 192, 0.3)) 1;
 }
 
+/* Four quiet corner marks echo the story's rose/blue lighting. */
 .birthday-frame::after {
   content: "";
   position: absolute;
-  inset: 9px;
-  border: 1px dashed rgba(217, 164, 65, 0.6);
+  inset: 8px;
+  opacity: 0.58;
+  background:
+    linear-gradient(var(--pink-primary), var(--pink-primary)) top left / 42px 1px no-repeat,
+    linear-gradient(var(--pink-primary), var(--pink-primary)) top left / 1px 42px no-repeat,
+    linear-gradient(var(--blue-accent), var(--blue-accent)) top right / 42px 1px no-repeat,
+    linear-gradient(var(--blue-accent), var(--blue-accent)) top right / 1px 42px no-repeat,
+    linear-gradient(var(--blue-accent), var(--blue-accent)) bottom left / 42px 1px no-repeat,
+    linear-gradient(var(--blue-accent), var(--blue-accent)) bottom left / 1px 42px no-repeat,
+    linear-gradient(var(--pink-primary), var(--pink-primary)) bottom right / 42px 1px no-repeat,
+    linear-gradient(var(--pink-primary), var(--pink-primary)) bottom right / 1px 42px no-repeat;
 }
 
+/* The center garland is now a slim ceremonial titlepiece. */
 .birthday-frame__garland {
   position: absolute;
   top: 0;
   left: 50%;
-  width: min(36rem, 58vw);
-  height: 3.8rem;
+  width: min(22rem, 42vw);
+  height: 1.75rem;
+  padding: 0 1.5rem;
   transform: translateX(-50%);
-  padding: 0.3rem 1.25rem 0;
   display: flex;
   justify-content: space-between;
-  filter: drop-shadow(0 4px 5px rgba(11, 22, 36, 0.2));
+  opacity: 0.66;
 }
 
 .birthday-frame__garland::before {
   content: "";
   position: absolute;
-  top: 0.35rem;
-  left: 0;
-  right: 0;
-  border-top: 2px solid #D9A441;
-  border-radius: 50%;
+  top: 0.55rem;
+  inset-inline: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-chrome) 18%, var(--border-chrome) 82%, transparent);
 }
 
 .birthday-frame__garland span {
   position: relative;
-  width: 2.5rem;
-  height: 1.65rem;
-  clip-path: polygon(0 0, 100% 0, 50% 100%);
-  transform-origin: 50% 0;
-  animation: garlandSway 3.8s ease-in-out infinite;
+  width: 1.25rem;
+  height: 0.5rem;
+  margin-top: 0.55rem;
+  border-radius: 999px 999px 0.35rem 0.35rem;
+  box-shadow: 0 3px 8px rgba(2, 8, 16, 0.2);
 }
 
-.birthday-frame__garland span:nth-child(1),
-.birthday-frame__garland span:nth-child(6) { background: var(--pink-primary); }
-.birthday-frame__garland span:nth-child(2),
-.birthday-frame__garland span:nth-child(5) { background: var(--blue-accent); }
-.birthday-frame__garland span:nth-child(3) { background: #D9A441; }
-.birthday-frame__garland span:nth-child(4) { background: #F4BAC7; }
-.birthday-frame__garland span:nth-child(2) { animation-delay: -0.8s; }
-.birthday-frame__garland span:nth-child(3) { animation-delay: -1.6s; }
-.birthday-frame__garland span:nth-child(4) { animation-delay: -2.4s; }
-.birthday-frame__garland span:nth-child(5) { animation-delay: -3s; }
-.birthday-frame__garland span:nth-child(6) { animation-delay: -3.4s; }
-.birthday-frame__garland span:nth-child(7) { animation-delay: -1.2s; }
+.birthday-frame__garland span:nth-child(odd) { background: var(--pink-primary); }
+.birthday-frame__garland span:nth-child(even) { background: var(--blue-accent); }
+.birthday-frame__garland span:nth-child(4) { background: var(--champagne); }
 
 .birthday-frame__corner {
   position: absolute;
-  width: 6.5rem;
-  height: 7.5rem;
+  width: 4.5rem;
+  height: 5rem;
+  opacity: 0.58;
 }
 
+/* A tiny champagne glint provides a celebration cue without twinkling. */
 .birthday-frame__corner::after {
-  content: "\2726";
+  content: "✦";
   position: absolute;
-  color: #D9A441;
-  font-size: 1.2rem;
-  text-shadow: 0 1px 4px rgba(11, 22, 36, 0.3);
-  animation: frameTwinkle 2.4s ease-in-out infinite;
+  color: var(--champagne);
+  font-size: 0.72rem;
+  text-shadow: 0 1px 4px rgba(11, 22, 36, 0.34);
 }
 
-.birthday-frame__corner--top-left { top: 0.4rem; left: 0.4rem; }
-.birthday-frame__corner--top-right { top: 0.4rem; right: 0.4rem; }
-.birthday-frame__corner--bottom-left { bottom: 0.3rem; left: 0.4rem; }
-.birthday-frame__corner--bottom-right { right: 0.4rem; bottom: 0.3rem; }
-.birthday-frame__corner--top-left::after { top: 5.5rem; left: 5.6rem; }
-.birthday-frame__corner--top-right::after { top: 4.8rem; right: 5.5rem; animation-delay: -1.2s; }
-.birthday-frame__corner--bottom-left::after { bottom: 5.2rem; left: 5.4rem; animation-delay: -0.6s; }
-.birthday-frame__corner--bottom-right::after { right: 5.7rem; bottom: 5.6rem; animation-delay: -1.8s; }
+.birthday-frame__corner--top-left { top: 0.65rem; left: 0.65rem; }
+.birthday-frame__corner--top-right { top: 0.65rem; right: 0.65rem; }
+.birthday-frame__corner--bottom-left { bottom: 0.55rem; left: 0.65rem; }
+.birthday-frame__corner--bottom-right { right: 0.65rem; bottom: 0.55rem; }
+.birthday-frame__corner--top-left::after { top: 3.6rem; left: 3.7rem; }
+.birthday-frame__corner--top-right::after { top: 3.6rem; right: 3.7rem; }
+.birthday-frame__corner--bottom-left::after { bottom: 3.6rem; left: 3.7rem; }
+.birthday-frame__corner--bottom-right::after { right: 3.7rem; bottom: 3.6rem; }
 
 .birthday-frame__balloon {
   position: absolute;
   display: block;
-  width: 1.7rem;
-  height: 2.3rem;
+  width: 0.9rem;
+  height: 1.2rem;
   border-radius: 52% 52% 47% 47%;
-  box-shadow: inset -4px -5px 8px rgba(11, 22, 36, 0.12),
-    0 5px 9px rgba(11, 22, 36, 0.16);
-  animation: balloonFloat 4.5s ease-in-out infinite;
+  box-shadow: inset -2px -3px 5px rgba(11, 22, 36, 0.1),
+    0 4px 8px rgba(11, 22, 36, 0.12);
 }
 
 .birthday-frame__balloon::before {
@@ -113,64 +120,36 @@
   position: absolute;
   top: 100%;
   left: 50%;
-  height: 3.5rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.8);
+  height: 1.6rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.52);
   transform: rotate(5deg);
 }
 
 .birthday-frame__balloon::after {
   content: "";
   position: absolute;
-  bottom: -0.22rem;
+  bottom: -0.16rem;
   left: 50%;
-  width: 0.38rem;
-  height: 0.38rem;
+  width: 0.24rem;
+  height: 0.24rem;
   background: inherit;
   clip-path: polygon(0 0, 100% 0, 50% 100%);
   transform: translateX(-50%);
 }
 
-.birthday-frame__balloon--pink {
-  background: linear-gradient(135deg, #F4BAC7, var(--pink-primary));
-}
-.birthday-frame__balloon--blue {
-  background: linear-gradient(135deg, #B9D2E3, var(--blue-accent));
-}
-.birthday-frame__balloon--gold {
-  background: linear-gradient(135deg, #F6D98D, #D9A441);
-}
+.birthday-frame__balloon--pink { background: linear-gradient(135deg, var(--pink-hover), var(--pink-primary)); }
+.birthday-frame__balloon--blue { background: linear-gradient(135deg, #D5E3ED, var(--blue-accent)); }
+.birthday-frame__balloon--gold { background: linear-gradient(135deg, var(--champagne), var(--champagne-soft)); }
 
-
-.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(1) { top: 1.5rem; left: 0.6rem; }
-.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(2) { top: 0.9rem; left: 2.1rem; animation-delay: -1.5s; }
-.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(3) { top: 2.1rem; left: 3.5rem; animation-delay: -3s; }
-.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(1) { top: 1.4rem; right: 0.6rem; animation-delay: -0.5s; }
-.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(2) { top: 0.8rem; right: 2.1rem; animation-delay: -2.2s; }
-.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(3) { top: 2rem; right: 3.5rem; animation-delay: -3.7s; }
-.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(1) { bottom: 1.5rem; left: 0.6rem; animation-delay: -1s; }
-.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(2) { bottom: 0.8rem; left: 2.1rem; animation-delay: -2.8s; }
-.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(3) { bottom: 2rem; left: 3.5rem; animation-delay: -4s; }
-.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(1) { right: 0.6rem; bottom: 1.5rem; animation-delay: -1.8s; }
-.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(2) { right: 2.1rem; bottom: 0.8rem; animation-delay: -3.2s; }
-.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(3) { right: 3.5rem; bottom: 2rem; animation-delay: -0.2s; }
-
-@keyframes garlandSway {
-  0%, 100% { transform: rotate(-4deg); }
-  50% { transform: rotate(5deg); }
-}
-
-@keyframes balloonFloat {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg); }
-  50% { transform: translate3d(0.2rem, -0.45rem, 0) rotate(4deg); }
-}
-
-@keyframes frameTwinkle {
-  0%, 100% { opacity: 0.45; transform: scale(0.75) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.15) rotate(18deg); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .birthday-frame__balloon,
-  .birthday-frame__garland span,
-  .birthday-frame__corner::after { animation: none; }
-}
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(1) { top: 1rem; left: 0.35rem; }
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(2) { top: 0.5rem; left: 1.35rem; }
+.birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(3) { top: 1.35rem; left: 2.35rem; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(1) { top: 1rem; right: 0.35rem; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(2) { top: 0.5rem; right: 1.35rem; }
+.birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(3) { top: 1.35rem; right: 2.35rem; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(1) { bottom: 1rem; left: 0.35rem; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(2) { bottom: 0.5rem; left: 1.35rem; }
+.birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(3) { bottom: 1.35rem; left: 2.35rem; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(1) { right: 0.35rem; bottom: 1rem; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(2) { right: 1.35rem; bottom: 0.5rem; }
+.birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(3) { right: 2.35rem; bottom: 1.35rem; }

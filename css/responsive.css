@@ -364,55 +364,30 @@
   }
 }
 
+/* Phones keep only the fine edge and slim titlepiece; corner silhouettes
+   would compete with navigation, so they step aside. */
 @media (max-width: 640px) {
-  .birthday-frame::before { border-width: 3px; }
-  .birthday-frame::after { inset: 7px; }
+  .birthday-frame { opacity: 0.72; }
+  .birthday-frame::after {
+    inset: 6px;
+    background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
+    background-size: 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px;
+  }
 
   .birthday-frame__garland {
-    width: min(30rem, 90vw);
-    height: 2.5rem;
-    padding: 0.25rem 0.75rem 0;
+    width: min(18rem, 74vw);
+    height: 1.4rem;
+    padding-inline: 0.9rem;
   }
 
+  .birthday-frame__garland::before { top: 0.4rem; }
   .birthday-frame__garland span {
-    width: 1.55rem;
-    height: 1.05rem;
+    width: 0.85rem;
+    height: 0.36rem;
+    margin-top: 0.4rem;
   }
 
-  .birthday-frame__corner {
-    width: 5rem;
-    height: 5.7rem;
-  }
-
-  .birthday-frame__corner--top-left { top: 0.25rem; left: 0.2rem; }
-  .birthday-frame__corner--top-right { top: 0.25rem; right: 0.2rem; }
-  .birthday-frame__corner--bottom-left { bottom: 0.2rem; left: 0.2rem; }
-  .birthday-frame__corner--bottom-right { right: 0.2rem; bottom: 0.2rem; }
-
-  .birthday-frame__corner::after { font-size: 0.9rem; }
-  .birthday-frame__corner--top-left::after { top: 4.1rem; left: 4.1rem; }
-  .birthday-frame__corner--top-right::after { top: 3.5rem; right: 4rem; }
-  .birthday-frame__corner--bottom-left::after { bottom: 3.8rem; left: 4rem; }
-  .birthday-frame__corner--bottom-right::after { right: 4.2rem; bottom: 4.1rem; }
-
-  .birthday-frame__balloon {
-    width: 1.25rem;
-    height: 1.7rem;
-  }
-
-  .birthday-frame__balloon::before { height: 2.4rem; }
-  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(1) { top: 1rem; left: 0.3rem; }
-  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(2) { top: 0.6rem; left: 1.4rem; }
-  .birthday-frame__corner--top-left .birthday-frame__balloon:nth-child(3) { top: 1.5rem; left: 2.5rem; }
-  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(1) { top: 1rem; right: 0.3rem; }
-  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(2) { top: 0.6rem; right: 1.4rem; }
-  .birthday-frame__corner--top-right .birthday-frame__balloon:nth-child(3) { top: 1.5rem; right: 2.5rem; }
-  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(1) { bottom: 1rem; left: 0.3rem; }
-  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(2) { bottom: 0.6rem; left: 1.4rem; }
-  .birthday-frame__corner--bottom-left .birthday-frame__balloon:nth-child(3) { bottom: 1.5rem; left: 2.5rem; }
-  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(1) { right: 0.3rem; bottom: 1rem; }
-  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(2) { right: 1.4rem; bottom: 0.6rem; }
-  .birthday-frame__corner--bottom-right .birthday-frame__balloon:nth-child(3) { right: 2.5rem; bottom: 1.5rem; }
+  .birthday-frame__corner { display: none; }
 }
 
 /* Very small phones (max-width: 380px) */

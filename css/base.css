@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-display);
   font-weight: 500;
   line-height: 1.12;
-  color: var(--blue-primary);
+  color: var(--text-light);
   letter-spacing: -0.02em;
 }
 
@@ -193,7 +193,7 @@ html {
    Stronger ring everywhere, and a high-contrast ring on dark stages
    where the rose outline would otherwise disappear. */
 :focus-visible {
-  outline: 2px solid var(--pink-primary);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
