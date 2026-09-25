@@ -73,24 +73,76 @@
     showToast(message, 5200);
   }
 
-  function shareStory() {
-    const shareData = { title: "Mercy — A Story Worth Celebrating", text: "A birthday story for Mercy", url: window.location.href };
-    if (window.navigator.share) {
-      window.navigator.share(shareData).catch(function (error) {
-        if (!error || error.name !== "AbortError") showToast("Sharing was cancelled. You can copy the page address instead.");
-      });
-    } else if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
-      window.navigator.clipboard.writeText(window.location.href).then(function () {
-        showToast("The app link was copied.");
-      }).catch(function () { showToast("Copy the page address from your browser to share it."); });
-    } else {
-      showToast("Open your browser menu and choose Share.");
+  /**
+   * Share the experience.
+   *
+   * Uses the Web Share API where it exists, because on a phone that is the
+   * native WhatsApp/Messages/Radio flow the visitor expects. Falls back to
+   * copying the link, and finally to telling them to use the browser menu.
+   *
+   * @param {object} [options]
+   * @param {string} [options.text]   Message body.
+   * @param {string} [options.status] Text shown in the inline status line.
+   * @param {Element} [options.statusEl]
+   */
+  function shareStory(options) {
+    var opts = options || {};
+    var shareData = {
+      title: "Mercy — A Story Worth Celebrating",
+      text: opts.text || "A birthday story for Mercy",
+      url: window.location.href
+    };
+    var statusEl = opts.statusEl || null;
+
+    function report(message) {
+      if (statusEl) statusEl.textContent = message;
+      showToast(message);
     }
+
+    if (window.navigator.share) {
+      window.navigator.share(shareData).then(function () {
+        report("Thank you for sharing Mercy's story.");
+      }).catch(function (error) {
+        // AbortError means the visitor closed the sheet themselves, which is
+        // not an error worth reporting.
+        if (error && error.name === "AbortError") return;
+        report("Sharing was cancelled. You can copy the page address instead.");
+      });
+      return;
+    }
+
+    if (window.navigator.clipboard && window.navigator.clipboard.writeText) {
+      window.navigator.clipboard.writeText(window.location.href).then(function () {
+        report("The link was copied. Paste it to share Mercy's story.");
+      }).catch(function () {
+        report("Open your browser menu and choose Share.");
+      });
+      return;
+    }
+
+    report("Open your browser menu and choose Share.");
   }
 
   Array.prototype.forEach.call(document.querySelectorAll("[data-share-app]"), function (button) {
-    button.addEventListener("click", shareStory);
+    button.addEventListener("click", function () {
+      shareStory({ statusEl: button.closest(".closing-stage")
+        ? button.closest(".closing-stage").querySelector("[data-closing-status]")
+        : null });
+    });
   });
+
+  /* "Send a Birthday Wish" shares a ready-made message, so the visitor can
+     send something thoughtful without having to write it themselves. */
+  const shareWishBtn = document.querySelector("[data-share-wish]");
+  if (shareWishBtn) {
+    shareWishBtn.addEventListener("click", function () {
+      const closing = shareWishBtn.closest(".closing-stage");
+      shareStory({
+        text: "Happy Birthday, Mercy! Your story is worth celebrating - take a moment to read it: ",
+        statusEl: closing ? closing.querySelector("[data-closing-status]") : null
+      });
+    });
+  }
 
   if (installBtn) {
     installBtn.addEventListener("click", function () {
@@ -230,22 +282,36 @@
     releaseModalMedia();
     if (item.type === "video") {
       const video = document.createElement("video");
-      video.src = item.src;
-      video.controls = true;
+      // Show the extracted poster first, then attach the source. The clip is
+      // only requested once the visitor has actually opened this memory.
+      video.preload = "metadata";
       video.playsInline = true;
       video.setAttribute("playsinline", "");
       video.muted = false;
       video.defaultMuted = false;
       video.volume = 1;
-      video.preload = "metadata";
+      video.poster = posterFor(item.src, item.category);
+      video.src = item.src;
+      video.controls = true;
       modalContainer.appendChild(video);
       const attempt = video.play();
       if (attempt && typeof attempt.catch === "function") attempt.catch(function () { showToast("Tap the video Play button to start this memory."); });
       if (fullscreenBtn) fullscreenBtn.hidden = false;
     } else {
       const image = document.createElement("img");
-      image.src = item.src;
       image.alt = item.alt || item.title || "A photograph from my story";
+      if (window.MERCY_MEDIA) {
+        // The spotlight shows the photograph as large as the screen allows, so
+        // the ladder should be allowed to reach the widest size.
+        window.MERCY_MEDIA.applyImage(image, item.src, {
+          alt: image.alt,
+          sizes: "(max-width: 760px) 96vw, 60rem",
+          eager: true,
+          fetchPriority: "high"
+        });
+      } else {
+        image.src = item.src;
+      }
       modalContainer.appendChild(image);
       if (fullscreenBtn) fullscreenBtn.hidden = true;
     }
@@ -296,6 +362,12 @@
   }
 
 
+  /* Poster strategy, in order of preference:
+     1. A real frame extracted from that exact clip (js/media-manifest.json).
+        This is what makes a video tile identifiable before it is opened.
+     2. A category photograph, as a graceful fallback.
+     The old behaviour - one shared photo for every clip - made unrelated
+     memories look identical in the grid. */
   const galleryPosters = {
     music: "assets/images/ME CURRENTLY.jpg",
     faith: "assets/images/PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg",
@@ -303,6 +375,20 @@
     family: "assets/images/PICTURE WITH MY YOUNGER SIBLINGS.jpg",
     present: "assets/images/ME CURRENTLY.jpg"
   };
+
+  /** Resolve the best available poster for a clip. */
+  function posterFor(src, category) {
+    if (window.MERCY_MEDIA) {
+      const real = window.MERCY_MEDIA.posterFor(src);
+      if (real) return real;
+    }
+    return galleryPosters[category] || galleryPosters.present;
+  }
+
+  /** Sizes hint matching the gallery layout at each breakpoint. */
+  const GALLERY_SIZES =
+    "(max-width: 380px) 92vw, (max-width: 560px) 46vw, (max-width: 900px) 31vw, (max-width: 1100px) 23vw, 19vw";
+
 
   function renderGallery(filter) {
     if (!galleryGrid || !story || !story.gallery) return;
@@ -333,18 +419,29 @@
       card.setAttribute("aria-label", "Open " + (item.title || "memory"));
       const media = document.createElement(item.type === "video" ? "video" : "img");
       if (item.type === "video") {
-        media.src = item.src;
+        // preload="none" is the important line: none of these clips may be
+        // fetched until the visitor actually opens one.
         media.preload = "none";
         media.playsInline = true;
         media.muted = true;
-        media.poster = galleryPosters[item.category] || "assets/images/ME CURRENTLY.jpg";
+        media.poster = posterFor(item.src, item.category);
         media.setAttribute("playsinline", "");
         media.setAttribute("aria-label", item.title || "Video memory");
-      } else {
+        // The src is attached after the poster so the browser paints the
+        // thumbnail first and only then starts fetching the clip.
         media.src = item.src;
+      } else {
         media.alt = item.alt || item.title || "A photograph from my story";
-        media.loading = "lazy";
-        media.decoding = "async";
+        if (window.MERCY_MEDIA) {
+          window.MERCY_MEDIA.applyImage(media, item.src, {
+            alt: media.alt,
+            sizes: GALLERY_SIZES
+          });
+        } else {
+          media.src = item.src;
+          media.loading = "lazy";
+          media.decoding = "async";
+        }
       }
       const badge = document.createElement("span");
       badge.className = "badge badge--glass vault-card-item__badge";
@@ -485,6 +582,9 @@
 
   if (celebrateBtn) {
     celebrateBtn.addEventListener("click", function () {
+      if (window.MERCY_SOUND && typeof window.MERCY_SOUND.play === "function") {
+        window.MERCY_SOUND.play({ force: true });
+      }
       if (letterCard) {
         letterCard.hidden = false;
         requestAnimationFrame(function () { letterCard.classList.add("is-open"); });
@@ -507,6 +607,9 @@
   if (secretSealBtn && blessingModal) {
     secretSealBtn.addEventListener("click", function () {
       if (blessingModal.open) return;
+      if (window.MERCY_SOUND && typeof window.MERCY_SOUND.play === "function") {
+        window.MERCY_SOUND.play({ force: true });
+      }
       blessingReturnFocus = document.activeElement;
       if (typeof blessingModal.showModal === "function") blessingModal.showModal();
       syncPageLock();
@@ -564,6 +667,20 @@
   buildWaveform();
   initRevealObserver();
   renderGallery("all");
+
+  /* The image manifest is fetched by js/media.js. Render the gallery as soon as
+     it arrives, and again if the active filter is still set, so every tile
+     picks up its srcset. The first render already works using the original
+     photographs, so this is purely an upgrade - never a blocker. */
+  if (window.MERCY_MEDIA && typeof window.MERCY_MEDIA.load === "function") {
+    window.MERCY_MEDIA.load().then(function () {
+      const activeFilterBtn = filterButtons.filter(function (b) {
+        return b.classList.contains("active");
+      })[0];
+      renderGallery(activeFilterBtn ? (activeFilterBtn.getAttribute("data-filter") || "all") : "all");
+    });
+  }
+
   if (studioVideo) {
     studioVideo.muted = false;
     studioVideo.defaultMuted = false;

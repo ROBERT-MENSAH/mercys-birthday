@@ -21,7 +21,10 @@ html {
 
 body {
   min-width: 320px;
-  background-color: var(--bg-primary);
+  background:
+    radial-gradient(circle at top left, rgba(255, 124, 165, 0.18), transparent 20%),
+    radial-gradient(circle at bottom right, rgba(110, 169, 255, 0.18), transparent 25%),
+    linear-gradient(180deg, var(--blue-night) 0%, #0a1d35 28%, #0a1b2f 100%);
   color: var(--text-ink);
   font-family: var(--font-body);
   font-size: var(--text-base);

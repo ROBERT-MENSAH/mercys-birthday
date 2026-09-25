@@ -1,0 +1,341 @@
+{
+  "BROTHER KOFI.jpg": {
+    "height": 1280,
+    "slug": "brother-kofi",
+    "src": "assets/img/brother-kofi-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "BROTHER SAMUEL.jpg": {
+    "height": 1280,
+    "slug": "brother-samuel",
+    "src": "assets/img/brother-samuel-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "HAPPY MOMENT WITH FRIENDS.mp4": {
+    "poster": "assets/img/happy-moment-with-friends-poster.webp",
+    "posterBytes": 17084,
+    "type": "video"
+  },
+  "I AND MY LOVELY FRIENDS.jpg": {
+    "height": 1280,
+    "slug": "i-and-my-lovely-friends",
+    "src": "assets/img/i-and-my-lovely-friends-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "ME AND MY LOVELY FATHER.jpg": {
+    "height": 1280,
+    "slug": "me-and-my-lovely-father",
+    "src": "assets/img/me-and-my-lovely-father-890.jpg",
+    "width": 890,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "ME AND MY LOVELY MOTHER.jpg": {
+    "height": 1280,
+    "slug": "me-and-my-lovely-mother",
+    "src": "assets/img/me-and-my-lovely-mother-890.jpg",
+    "width": 890,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "ME CURRENTLY FLEXING.mp4": {
+    "poster": "assets/img/me-currently-flexing-poster.webp",
+    "posterBytes": 32440,
+    "type": "video"
+  },
+  "ME CURRENTLY.jpg": {
+    "height": 1280,
+    "slug": "me-currently",
+    "src": "assets/img/me-currently-852.jpg",
+    "width": 852,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "ME FLEXING SMALL.mp4": {
+    "poster": "assets/img/me-flexing-small-poster.webp",
+    "posterBytes": 32440,
+    "type": "video"
+  },
+  "ME WITH MY FRIENDS 2.jpg": {
+    "height": 1280,
+    "slug": "me-with-my-friends-2",
+    "src": "assets/img/me-with-my-friends-2-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "ME WORSHIPING AT CHURCH.mp4": {
+    "poster": "assets/img/me-worshiping-at-church-poster.webp",
+    "posterBytes": 9022,
+    "type": "video"
+  },
+  "MY BEST FRIEND ( ELISHA OWUSU ASANTE).jpg": {
+    "height": 1280,
+    "slug": "my-best-friend-elisha-owusu-asante",
+    "src": "assets/img/my-best-friend-elisha-owusu-asante-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY CHILDHOOD PICTURE.jpg": {
+    "height": 1280,
+    "slug": "my-childhood-picture",
+    "src": "assets/img/my-childhood-picture-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY FAMILY AND FRIENDS.mp4": {
+    "poster": "assets/img/my-family-and-friends-poster.webp",
+    "posterBytes": 57906,
+    "type": "video"
+  },
+  "MY FAVORITE PERSON AND I.jpg": {
+    "height": 900,
+    "slug": "my-favorite-person-and-i",
+    "src": "assets/img/my-favorite-person-and-i-600.jpg",
+    "width": 600,
+    "widths": [
+      320
+    ]
+  },
+  "MY FAVOURATE PICTURE.jpg": {
+    "height": 1280,
+    "slug": "my-favourate-picture",
+    "src": "assets/img/my-favourate-picture-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY FIGHTING PATNER.jpg": {
+    "height": 1280,
+    "slug": "my-fighting-patner",
+    "src": "assets/img/my-fighting-patner-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY FRIEND RACHAEL.jpg": {
+    "height": 1080,
+    "slug": "my-friend-rachael",
+    "src": "assets/img/my-friend-rachael-810.jpg",
+    "width": 810,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "MY FRIEND SANDRA.jpg": {
+    "height": 1280,
+    "slug": "my-friend-sandra",
+    "src": "assets/img/my-friend-sandra-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY LOVELY MOM VIDEO.mp4": {
+    "poster": "assets/img/my-lovely-mom-video-poster.webp",
+    "posterBytes": 25272,
+    "type": "video"
+  },
+  "MY PICTURE 1.jpg": {
+    "height": 1280,
+    "slug": "my-picture-1",
+    "src": "assets/img/my-picture-1-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY PICTURE 2.jpg": {
+    "height": 1280,
+    "slug": "my-picture-2",
+    "src": "assets/img/my-picture-2-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY PICTURE AT SCHOOL.jpg": {
+    "height": 1280,
+    "slug": "my-picture-at-school",
+    "src": "assets/img/my-picture-at-school-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY PICTURE.jpg": {
+    "height": 1280,
+    "slug": "my-picture",
+    "src": "assets/img/my-picture-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "MY SELFIE VIDEO 1.mp4": {
+    "poster": "assets/img/my-selfie-video-1-poster.webp",
+    "posterBytes": 46670,
+    "type": "video"
+  },
+  "MY STUDIO SONG.mp4": {
+    "poster": "assets/img/my-studio-song-poster.webp",
+    "posterBytes": 18794,
+    "type": "video"
+  },
+  "MY VIDEO  2.mp4": {
+    "poster": "assets/img/my-video--2-poster.webp",
+    "posterBytes": 46670,
+    "type": "video"
+  },
+  "MY VIDEO 1.mp4": {
+    "poster": "assets/img/my-video-1-poster.webp",
+    "posterBytes": 30130,
+    "type": "video"
+  },
+  "MY VIDEO IN SMILLING MOOD.mp4": {
+    "poster": "assets/img/my-video-in-smilling-mood-poster.webp",
+    "posterBytes": 46652,
+    "type": "video"
+  },
+  "MYSELF NOW.mp4": {
+    "poster": "assets/img/myself-now-poster.webp",
+    "posterBytes": 19060,
+    "type": "video"
+  },
+  "PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg": {
+    "height": 1080,
+    "slug": "pastor-paul-oteng-asamoah-and-mama-agartha-asamoah",
+    "src": "assets/img/pastor-paul-oteng-asamoah-and-mama-agartha-asamoah-796.jpg",
+    "width": 796,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "PICTURE WITH MY YOUNGER SIBLINGS.jpg": {
+    "height": 1280,
+    "slug": "picture-with-my-younger-siblings",
+    "src": "assets/img/picture-with-my-younger-siblings-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "SISTER CECE.jpg": {
+    "height": 1280,
+    "slug": "sister-cece",
+    "src": "assets/img/sister-cece-960.jpg",
+    "width": 960,
+    "widths": [
+      320,
+      640,
+      960
+    ]
+  },
+  "SISTER ELIZABETH.jpg": {
+    "height": 1280,
+    "slug": "sister-elizabeth",
+    "src": "assets/img/sister-elizabeth-846.jpg",
+    "width": 846,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "SOME YEARS BACK AND UP TO TODAY.mp4": {
+    "poster": "assets/img/some-years-back-and-up-to-today-poster.webp",
+    "posterBytes": 29624,
+    "type": "video"
+  },
+  "SOME YEARS BACK MY PICTURE.jpg": {
+    "height": 1280,
+    "slug": "some-years-back-my-picture",
+    "src": "assets/img/some-years-back-my-picture-720.jpg",
+    "width": 720,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg": {
+    "height": 640,
+    "slug": "way-back-in-shs-when-i-contested-for-best-vocalist",
+    "src": "assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-640.jpg",
+    "width": 640,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "WHEN WAS AT JHS SOME YEARS BACK.jpg": {
+    "height": 1024,
+    "slug": "when-was-at-jhs-some-years-back",
+    "src": "assets/img/when-was-at-jhs-some-years-back-768.jpg",
+    "width": 768,
+    "widths": [
+      320,
+      640
+    ]
+  },
+  "YEARS BACK.jpg": {
+    "height": 1280,
+    "slug": "years-back",
+    "src": "assets/img/years-back-902.jpg",
+    "width": 902,
+    "widths": [
+      320,
+      640
+    ]
+  }
+}

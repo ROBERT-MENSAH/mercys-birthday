@@ -1,573 +1,523 @@
 /* ==========================================================================
-   RESPONSIVE DESIGN SYSTEM (REDESIGNED)
-   Fluid Adaptability: Small Phones -> Large Phones -> Tablets -> Desktops
-   Zero Horizontal Overflow, Tactile Spacing
+   RESPONSIVE SYSTEM — MOBILE-FIRST
+   Mercy — A Story Worth Celebrating
+
+   THE PRIMARY EXPERIENCE IS A PHONE.
+
+   The un-queried part of this file IS the phone design. Larger screens are
+   progressive enhancements added with min-width queries. There are no
+   max-width layout queries in this file by design: a small phone never pays
+   for a rule written for a large screen. (The single <=380px block below is
+   a narrow-phone safety net, not a layout strategy.)
+
+   Target widths (what real phones report):
+       320  small / older Android      390  iPhone 12 / 13 / 14
+       360  very common Android        412  Pixel / large Android
+       375  iPhone SE / 13 mini        430  iPhone 14 Pro Max
+
+   Enhancement breakpoints: 380 / 560 / 760 / 900 / 1100 / 1400
    ========================================================================== */
 
-/* Tablets and medium screens (max-width: 960px) */
-@media (max-width: 960px) {
-  .chapter-indicator {
-    top: max(var(--space-xs), env(safe-area-inset-top));
-    width: max-content;
-    max-width: calc(100vw - 1.5rem);
-    padding: 0.5rem 0.9rem;
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .chapter-section--roots .roots-editorial-grid {
-    gap: var(--space-lg);
-  }
-
-  .chapter-section--roots .roots-editorial-copy h2 {
-    max-width: 14ch;
-  }
-
-  .prologue__portrait img {
-    object-position: center 22%;
-    opacity: 0.32;
-  }
-
-
-  .roots-editorial-grid,
-  .school-editorial-grid,
-  .best-friend-editorial,
-  .faith-editorial-grid,
-  .music-studio-deck,
-  .present-editorial-split {
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
-  }
-
-  .parents-editorial-duo {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
-
-  .siblings-editorial-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .friends-circle-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .horizon-track-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .journey-rail {
-    display: none !important;
-  }
-
-  .mobile-chapter-nav:not([hidden]) {
-    display: grid;
-  }
+/* --------------------------------------------------------------------------
+   PHONE BASELINE (no media query)
+   Touch targets, safe areas, and the bottom navigation are the default.
+   -------------------------------------------------------------------------- */
+.chapter-indicator {
+  top: max(0.65rem, env(safe-area-inset-top));
+  width: max-content;
+  max-width: calc(100vw - 1.5rem);
+  padding: 0.35rem 0.85rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-/* Mobile screens (max-width: 640px) */
-@media (max-width: 640px) {
-  :root {
-    --space-3xl: 4.5rem;
-    --space-2xl: 3.25rem;
-    --space-xl: 2.25rem;
-    --space-lg: 1.5rem;
-    --space-md: 1.15rem;
-  }
+.reading-progress { top: env(safe-area-inset-top); }
 
+/* Comfortable touch targets everywhere. */
+.btn,
+.vault-filter-btn,
+.media-modal__close,
+.media-modal__fullscreen,
+.media-modal__nav {
+  min-height: 2.75rem;
+}
+
+.btn,
+.vault-filter-btn {
+  min-height: 2.9rem;
+}
+
+.vault-filter-btn {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* The journey rail is a pointer affordance; phones get the bottom bar. */
+.journey-rail { display: none !important; }
+.mobile-chapter-nav:not([hidden]) { display: grid; }
+
+/* The filter bar is a swipeable rail, not a wrapping stack. */
+.vault-filter-bar {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overflow-x: auto;
+  padding: 0.25rem 0 0.65rem;
+  margin-inline: calc(-1 * var(--space-xs));
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.vault-filter-bar::-webkit-scrollbar { display: none; }
+
+.vault-toolbar {
+  display: block;
+  padding: var(--space-sm);
+  border-radius: var(--radius-lg);
+}
+
+.vault-gallery-status {
+  padding: var(--space-xs) var(--space-2xs) 0;
+  font-size: 0.68rem;
+}
+
+/* The media dialog is edge-to-edge on a phone. */
+.media-modal {
+  width: calc(100vw - 1rem);
+  max-width: 100%;
+  max-height: calc(100dvh - max(1rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
+  margin: max(0.5rem, env(safe-area-inset-top)) auto;
+  border-radius: var(--radius-md);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.media-modal__header { padding: max(0.7rem, env(safe-area-inset-top)) 0.8rem 0.7rem; }
+
+.media-modal__media-container {
+  width: 100%;
+  max-height: calc(100dvh - 11.5rem);
+}
+
+.media-modal__media-container img,
+.media-modal__media-container video {
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100dvh - 11.5rem);
+  object-fit: contain;
+}
+
+.media-modal__caption { padding: 0.9rem 1rem max(0.9rem, env(safe-area-inset-bottom)); }
+
+.media-modal__nav {
+  width: 2.9rem;
+  height: 2.9rem;
+}
+
+.media-modal__nav--prev { left: max(0.6rem, env(safe-area-inset-left)); }
+.media-modal__nav--next { right: max(0.6rem, env(safe-area-inset-right)); }
+
+.media-modal__close {
+  width: 2.9rem;
+  height: 2.9rem;
+}
+
+/* Back-to-top clears the bottom bar and the home indicator. */
+.back-to-top {
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(5.8rem, calc(env(safe-area-inset-bottom) + 5.8rem));
+  min-width: 2.9rem;
+  min-height: 2.9rem;
+  width: 2.9rem;
+  height: 2.9rem;
+  padding: 0;
+  border-radius: 50%;
+}
+.back-to-top__label { display: none; }
+
+/* Phone-scaled type and rhythm. */
+.birthday-grand-stage { padding: var(--space-2xl) var(--space-sm); }
+.birthday-stage-eyebrow {
+  gap: 0.45rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+}
+.birthday-stage-title__line { font-size: clamp(1.75rem, 9vw, 2.8rem); }
+.birthday-stage-title__name { font-size: clamp(3.9rem, 22vw, 6.4rem); }
+.birthday-stage-lead {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.birthday-stage-sound-toggle {
+  width: min(100%, 16rem);
+  margin-bottom: var(--space-md);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+}
+
+.birthday-song-card {
+  width: 100%;
+  margin-top: var(--space-lg);
+  padding: 0.65rem;
+  border-radius: 1.1rem;
+}
+.birthday-song-card__head { padding: 0.35rem 0.25rem 0.7rem; }
+.birthday-song-card__video {
+  max-height: none;
+  aspect-ratio: 16 / 10;
+}
+.birthday-experience-grid .birthday-song-card__video {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+}
+.birthday-experience-grid { margin-top: var(--space-lg); }
+.birthday-letter-invitation { display: flex; }
+.birthday-letter-invitation__portrait {
+  min-height: 20rem;
+  aspect-ratio: 4 / 5;
+}
+.birthday-letter-invitation__copy { padding: var(--space-md); }
+
+.robert-letter-editorial {
+  width: 100%;
+  padding: var(--space-lg) var(--space-md);
+}
+
+.chapter-section { padding: var(--space-xl) 0; }
+
+.container,
+.container--narrow {
+  width: min(100% - 2 * var(--space-sm), var(--container-max));
+}
+
+/* Desktop tilt effects are removed so phone photos sit square and stable. */
+.roots-visual-stage .editorial-frame,
+.school-visual-lead,
+.school-visual-sub:nth-child(3),
+.school-visual-sub:nth-child(4),
+.present-portrait-stage {
+  transform: none;
+}
+
+.parent-editorial-card__frame,
+.best-friend-editorial__photo,
+.mentor-spotlight-card .editorial-frame {
+  aspect-ratio: 4 / 5;
+}
+
+.prologue__portrait img { object-position: center 22%; }
+.siblings-editorial-section { padding: var(--space-lg) var(--space-md); }
+.motto-band { padding: var(--space-lg) var(--space-md); }
+.secret-seal {
+  width: 3.75rem;
+  height: 3.75rem;
+  font-size: 1.6rem;
+}
+.music-play-deck {
+  flex-wrap: wrap;
+  border-radius: var(--radius-lg);
+  padding: var(--space-sm);
+  row-gap: var(--space-xs);
+}
+.music-play-label {
+  white-space: normal;
+  flex: 1 1 100%;
+  text-align: left;
+}
+.music-waveform { height: 28px; }
+.chapter-transition__num { font-size: clamp(3.6rem, 22vw, 6rem); }
+.prologue__action {
+  width: min(100%, 22rem);
+  margin-inline: auto;
+}
+.prologue__action .btn { min-height: 3rem; }
+
+.memory-montage {
+  margin-block: var(--space-lg);
+  padding: 0.85rem;
+  border-radius: var(--radius-lg);
+}
+
+/* --------------------------------------------------------------------------
+   >=560px — comfortable multi-up grids
+   -------------------------------------------------------------------------- */
+@media (min-width: 560px) {
   .container,
   .container--narrow {
-    width: min(100% - 2 * var(--space-sm), var(--container-max));
+    width: min(100% - 2.5rem, var(--container-max));
   }
 
-  .mobile-chapter-nav:not([hidden]) {
-    display: grid;
+  .vault-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .chapter-section {
-    padding: var(--space-xl) 0;
+  /* The montage rail shows two frames at a time. */
+  .memory-montage__collage { grid-auto-columns: 46%; }
+
+  .horizon-track-grid { grid-template-columns: repeat(2, 1fr); }
+  .friends-circle-grid { grid-template-columns: repeat(2, 1fr); }
+  .present-snapshot-grid { gap: var(--space-md); }
+  .parents-editorial-duo { gap: var(--space-lg); }
+  .school-visual-mosaic { gap: var(--space-md); }
+}
+
+/* --------------------------------------------------------------------------
+   >=760px — TABLET PORTRAIT
+   The montage becomes a static editorial composition rather than a rail.
+   -------------------------------------------------------------------------- */
+@media (min-width: 760px) {
+  .chapter-section { padding: var(--space-2xl) 0; }
+
+  .memory-montage__collage {
+    grid-auto-flow: row;
+    grid-auto-columns: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(11rem, 16rem));
+    overflow-x: visible;
+    scroll-snap-type: none;
+    height: auto;
   }
 
-  .school-visual-mosaic {
-    grid-template-columns: 1fr;
+  .memory-montage__item--childhood { grid-column: 1; grid-row: 1 / 3; }
+  .memory-montage__item--family { grid-column: 2; grid-row: 1; }
+  .memory-montage__item--school { grid-column: 2; grid-row: 2 / 4; }
+  .memory-montage__item--friends { grid-column: 1; grid-row: 3 / 5; }
+  .memory-montage__item--today { grid-column: 2; grid-row: 4; }
+
+  .memory-montage__heading {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.8fr);
+    align-items: end;
+    gap: var(--space-sm) var(--space-xl);
   }
 
-  .school-visual-lead {
-    grid-row: auto;
-    aspect-ratio: 4 / 3;
+  .memory-montage__feature {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+    gap: var(--space-lg);
+  }
+
+  .vault-gallery-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-md);
   }
 
   .siblings-editorial-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
   }
 
-  .friends-circle-grid {
-    grid-template-columns: 1fr;
-  }
+  .horizon-track-grid { grid-template-columns: repeat(4, 1fr); }
+  .best-friend-editorial { padding: var(--space-lg); }
+  .music-studio-deck { padding: var(--space-lg); }
 
-  .present-snapshot-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .horizon-track-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .best-friend-editorial {
-    padding: var(--space-md);
-  }
-
-  .music-studio-deck {
-    padding: var(--space-md);
-  }
-
-  .robert-letter-editorial {
-    width: 100%;
-    padding: var(--space-lg) var(--space-md);
-  }
-
-  .birthday-grand-stage {
-    padding: var(--space-2xl) var(--space-sm);
-  }
-
-  .birthday-stage-eyebrow {
-    gap: 0.45rem;
-    font-size: 0.65rem;
-    letter-spacing: 0.16em;
-  }
-
-  .birthday-stage-title__line {
-    font-size: clamp(1.75rem, 9vw, 2.8rem);
-  }
-
-  .birthday-stage-title__name {
-    font-size: clamp(3.9rem, 22vw, 6.4rem);
-  }
-
-  .birthday-stage-lead {
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  .birthday-song-card {
-    width: 100%;
-    margin-top: var(--space-lg);
-    padding: 0.65rem;
-    border-radius: 1.1rem;
-  }
-
-  .birthday-song-card__head {
-    padding: 0.35rem 0.25rem 0.7rem;
-  }
-
-  .birthday-song-card__video {
-    max-height: none;
-    aspect-ratio: 16 / 10;
-  }
-
-  .chapter-indicator {
-    top: max(0.6rem, env(safe-area-inset-top));
-    font-size: 0.68rem;
-    padding: 0.35rem 0.85rem;
-    max-width: calc(100vw - 1.5rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .music-play-deck {
-    flex-wrap: wrap;
+  .media-modal {
+    width: min(94vw, 60rem);
+    max-height: 92dvh;
+    margin: auto;
     border-radius: var(--radius-lg);
-    padding: var(--space-sm);
-    row-gap: var(--space-xs);
+    padding-top: 0;
+    padding-bottom: 0;
   }
-
-  .music-play-label {
-    white-space: normal;
-    flex: 1 1 100%;
-    text-align: left;
+  .media-modal__header { padding: 0.85rem 1rem; }
+  .media-modal__media-container,
+  .media-modal__media-container img,
+  .media-modal__media-container video {
+    max-height: 72dvh;
   }
-
-  .music-waveform {
-    height: 28px;
-  }
-
-  .chapter-transition__num {
-    font-size: clamp(3.6rem, 22vw, 6rem);
-  }
-
-  .motto-band {
-    padding: var(--space-lg) var(--space-md);
-  }
-
-  .siblings-editorial-section {
-    padding: var(--space-lg) var(--space-md);
-  }
-
-  .birthday-grand-stage {
-    padding: var(--space-2xl) var(--space-sm);
-  }
-
-  .secret-seal {
-    width: 3.75rem;
-    height: 3.75rem;
-    font-size: 1.6rem;
-  }
-
-  .back-to-top {
-    right: max(0.9rem, env(safe-area-inset-right));
-    bottom: max(5.8rem, calc(env(safe-area-inset-bottom) + 5.8rem));
-    width: 3rem;
-    height: 3rem;
-    padding: 0;
-    border-radius: 50%;
-  }
-
-  .back-to-top__label {
-    display: none;
-  }
-
+  .media-modal__caption { padding: 1rem 1.25rem 1.25rem; }
   .media-modal__nav {
     width: 2.75rem;
     height: 2.75rem;
   }
-
-  .media-modal__nav--prev { left: max(0.6rem, env(safe-area-inset-left)); }
-  .media-modal__nav--next { right: max(0.6rem, env(safe-area-inset-right)); }
-
-  .media-modal {
-    width: 100%;
-    max-width: 100%;
-    max-height: 100dvh;
-    margin: 0;
-    border-radius: 0;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .media-modal__header {
-    padding: max(0.7rem, env(safe-area-inset-top)) var(--space-sm) 0.7rem;
-  }
-
-  .media-modal__media-container {
-    max-height: calc(100dvh - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-  }
-
-  .media-modal__media-container img,
-  .media-modal__media-container video {
-    max-height: calc(100dvh - 9rem - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    width: 100%;
-    object-fit: contain;
-  }
-
-  .mobile-chapter-nav:not([hidden]) {
-    display: grid;
-  }
-
-  .prologue__action {
-    width: min(100%, 22rem);
-    margin-inline: auto;
-  }
-
-  .prologue__action .btn {
-    min-height: 3rem;
-  }
-
-  .btn,
-  .vault-filter-btn,
-  .media-modal__close,
-  .media-modal__fullscreen {
-    min-height: 2.75rem;
-  }
-}
-/* Native phone ergonomics: safe areas, app controls, and edge-to-edge dialogs. */
-@media (max-width: 760px), (display-mode: standalone) {
-  .chapter-indicator {
-    top: max(0.65rem, env(safe-area-inset-top));
-  }
-
-  .reading-progress {
-    top: env(safe-area-inset-top);
-  }
+  .media-modal__nav--prev { left: 0.85rem; }
+  .media-modal__nav--next { right: 0.85rem; }
 
   .back-to-top {
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: max(5.8rem, calc(env(safe-area-inset-bottom) + 5.8rem));
-    min-width: 2.9rem;
-    min-height: 2.9rem;
+    right: max(1.5rem, env(safe-area-inset-right));
+    bottom: max(1.5rem, env(safe-area-inset-bottom));
+    width: 3rem;
+    height: 3rem;
+  }
+  .back-to-top__label { display: inline; }
+
+  .birthday-frame { opacity: 1; }
+  .birthday-frame__corner { display: block; }
+}
+
+.memory-montage__heading { padding-inline: var(--space-2xs); }
+.memory-montage__heading h3 { font-size: clamp(2rem, 11vw, 2.85rem); }
+
+/* --------------------------------------------------------------------------
+   >=900px — EDITORIAL TWO-COLUMN SPLITS RETURN
+   -------------------------------------------------------------------------- */
+@media (min-width: 900px) {
+  .roots-editorial-grid,
+  .school-editorial-grid,
+  .faith-editorial-grid,
+  .music-studio-deck,
+  .present-editorial-split {
+    gap: var(--space-2xl);
   }
 
-  .mobile-chapter-nav:not([hidden]) {
+  .chapter-section--roots .roots-editorial-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+  .roots-editorial-grid { grid-template-columns: 1.15fr 1fr; }
+  .school-editorial-grid { grid-template-columns: 1fr 1.25fr; }
+  .school-visual-mosaic {
+    grid-template-columns: 1.2fr 0.9fr;
+    grid-template-rows: auto auto;
+  }
+  .parents-editorial-duo {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+  }
+  .best-friend-editorial {
+    grid-template-columns: 1fr 1.25fr;
+    gap: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
+  }
+  .faith-editorial-grid { grid-template-columns: 1fr 1.15fr; }
+  .music-studio-deck { grid-template-columns: 1.1fr 1fr; }
+  .present-editorial-split { grid-template-columns: 1fr 1.15fr; }
+  .present-snapshot-grid { margin-top: var(--space-lg); }
+  .friends-circle-grid { grid-template-columns: repeat(3, 1fr); }
+  .horizon-track-grid {
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  .vault-gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .siblings-editorial-grid { grid-template-columns: repeat(5, 1fr); }
+
+  .memory-montage {
+    margin-block: var(--space-xl);
+    padding: clamp(1rem, 3vw, 2rem);
+  }
+  .memory-montage__heading h3 { font-size: clamp(2rem, 4.5vw, 3.6rem); }
+  .memory-montage__feature {
+    padding: clamp(1rem, 2.2vw, 1.8rem);
+  }
+
+  .birthday-experience-grid {
+    grid-template-columns: minmax(0, 1.22fr) minmax(18rem, 0.78fr);
+    gap: clamp(1rem, 2.5vw, 1.6rem);
+    margin-top: var(--space-xl);
+  }
+  .birthday-experience-grid .birthday-song-card__video {
+    height: calc(100% - 5.4rem);
+    min-height: 18rem;
+    max-height: none;
+    aspect-ratio: auto;
+  }
+  .birthday-letter-invitation {
     display: grid;
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
   }
-
-  .media-modal {
-    width: calc(100vw - 1rem);
-    max-height: calc(100dvh - max(1rem, env(safe-area-inset-top)) - max(1rem, env(safe-area-inset-bottom)));
-    margin: max(0.5rem, env(safe-area-inset-top)) auto;
-    border-radius: var(--radius-md);
+  .birthday-letter-invitation__portrait {
+    min-height: 22rem;
+    aspect-ratio: auto;
   }
+  .birthday-letter-invitation__copy { padding: var(--space-lg); }
 
-  .media-modal__header {
-    padding: max(0.7rem, env(safe-area-inset-top)) 0.8rem 0.7rem;
-  }
-
-  .media-modal__media-container {
-    width: 100%;
-    max-height: calc(100dvh - 11.5rem);
-  }
-
-  .media-modal__media-container img,
-  .media-modal__media-container video {
-    width: 100%;
-    max-width: 100%;
-    max-height: calc(100dvh - 11.5rem);
-  }
-
-  .media-modal__caption {
-    padding: 0.9rem 1rem max(0.9rem, env(safe-area-inset-bottom));
-  }
-
-  .media-modal__nav {
-    width: 2.9rem;
-    height: 2.9rem;
-  }
-
-  .media-modal__close {
-    width: 2.9rem;
-    height: 2.9rem;
-  }
-
-  .vault-filter-bar {
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding: 0.25rem 0 0.65rem;
-    margin-inline: calc(-1 * var(--space-xs));
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-  }
-
-  .vault-filter-bar::-webkit-scrollbar {
-    display: none;
-  }
-
-  .vault-filter-btn {
-    min-height: 2.9rem;
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-  }
-
-  .btn {
-    min-height: 2.9rem;
+  .robert-letter-editorial {
+    width: min(100%, 46rem);
+    padding: var(--space-xl);
   }
 }
 
-/* Phones keep only the fine edge and slim titlepiece; corner silhouettes
-   would compete with navigation, so they step aside. */
-@media (max-width: 640px) {
-  .birthday-frame { opacity: 0.72; }
-  .birthday-frame::after {
-    inset: 6px;
-    background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
-    background-size: 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px;
+/* --------------------------------------------------------------------------
+   >=1100px — DESKTOP
+   -------------------------------------------------------------------------- */
+@media (min-width: 1100px) {
+  .vault-gallery-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+  /* The full 12-column editorial collage. */
+  .memory-montage__collage {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(9rem, 1fr));
+    height: clamp(30rem, 52vw, 39rem);
+  }
+  .memory-montage__item--childhood {
+    grid-column: 1 / 5;
+    grid-row: 1 / 4;
+    transform: rotate(-0.8deg);
+  }
+  .memory-montage__item--family {
+    grid-column: 5 / 9;
+    grid-row: 1 / 2;
+    transform: rotate(0.6deg);
+  }
+  .memory-montage__item--school {
+    grid-column: 9 / 13;
+    grid-row: 1 / 3;
+    transform: rotate(0.9deg);
+  }
+  .memory-montage__item--friends {
+    grid-column: 5 / 10;
+    grid-row: 2 / 4;
+    transform: rotate(-0.45deg);
+  }
+  .memory-montage__item--today {
+    grid-column: 10 / 13;
+    grid-row: 3 / 4;
+    transform: rotate(0.7deg);
   }
 
-  .birthday-frame__garland {
-    width: min(18rem, 74vw);
-    height: 1.4rem;
-    padding-inline: 0.9rem;
-  }
-
-  .birthday-frame__garland::before { top: 0.4rem; }
-  .birthday-frame__garland span {
-    width: 0.85rem;
-    height: 0.36rem;
-    margin-top: 0.4rem;
-  }
-
-  .birthday-frame__corner { display: none; }
+  /* The pointer rail reappears where a mouse can use it. */
+  .journey-rail { display: grid !important; }
+  .mobile-chapter-nav:not([hidden]) { display: none !important; }
 }
 
-/* Very small phones (max-width: 380px) */
+/* --------------------------------------------------------------------------
+   >=1400px — WIDE DESKTOP
+   -------------------------------------------------------------------------- */
+@media (min-width: 1400px) {
+  .chapter-section { padding-block: clamp(4rem, 7vw, 7rem); }
+}
+
+
+/* --------------------------------------------------------------------------
+   <=380px — narrow-phone safety net (not a layout strategy)
+   -------------------------------------------------------------------------- */
 @media (max-width: 380px) {
+  /* Keep the numerals, drop the words: the bar must never wrap or clip. */
   .chapter-indicator .chapter-indicator__sep,
   .chapter-indicator [data-indicator-name] {
     display: none;
   }
 
-  .siblings-editorial-grid {
-    grid-template-columns: 1fr;
-  }
+  .siblings-editorial-grid { grid-template-columns: repeat(2, 1fr); }
+  .parents-editorial-duo { gap: var(--space-md); }
 
-  .parents-editorial-duo {
-    gap: var(--space-md);
-  }
+  /* Two tiles per row is very tight at 320px; one column reads better. */
+  .vault-gallery-grid { grid-template-columns: 1fr; }
+  .memory-montage__collage { grid-auto-columns: 84%; }
 }
 
-/* ==========================================================================
-   PHASE 2 RESPONSIVE COMPOSITIONS
-   ========================================================================== */
-@media (max-width: 960px) {
-  .memory-montage__heading {
-    grid-template-columns: 1fr;
-  }
-
-  .memory-montage__collage {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: repeat(4, minmax(11rem, 16rem));
-    height: auto;
-  }
-
-  .memory-montage__item--childhood {
-    grid-column: 1;
-    grid-row: 1 / 3;
-  }
-
-  .memory-montage__item--family {
-    grid-column: 2;
-    grid-row: 1;
-  }
-
-  .memory-montage__item--school {
-    grid-column: 2;
-    grid-row: 2 / 4;
-  }
-
-  .memory-montage__item--friends {
-    grid-column: 1;
-    grid-row: 3 / 5;
-  }
-
-  .memory-montage__item--today {
-    grid-column: 2;
-    grid-row: 4;
-  }
-
-  .vault-toolbar {
-    align-items: flex-end;
-    border-radius: var(--radius-lg);
-  }
-
-  .vault-gallery-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .birthday-experience-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .birthday-experience-grid .birthday-song-card__video {
-    height: auto;
-    min-height: 0;
-    aspect-ratio: 16 / 9;
-  }
-
-  .birthday-letter-invitation {
-    display: grid;
-    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1.2fr);
-  }
-
-  .birthday-letter-invitation__portrait {
-    min-height: 22rem;
-  }
+/* The decorative frame reduces to a fine edge: corner silhouettes would
+   compete with navigation and content. */
+.birthday-frame { opacity: 0.72; }
+.birthday-frame::after {
+  inset: 6px;
+  background-position: 0 0, 0 0, 100% 0, 100% 0, 0 100%, 0 100%, 100% 100%, 100% 100%;
+  background-size: 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px, 24px 1px, 1px 24px;
 }
-
-@media (max-width: 640px) {
-  .roots-visual-stage .editorial-frame,
-  .school-visual-lead,
-  .school-visual-sub:nth-child(3),
-  .school-visual-sub:nth-child(4),
-  .present-portrait-stage {
-    transform: none;
-  }
-
-  .parent-editorial-card__frame,
-  .best-friend-editorial__photo,
-  .mentor-spotlight-card .editorial-frame {
-    aspect-ratio: 4 / 5;
-  }
-
-  .memory-montage {
-    margin-block: var(--space-xl);
-    padding: 0.85rem;
-    border-radius: var(--radius-lg);
-  }
-
-  .memory-montage__heading {
-    padding-inline: var(--space-2xs);
-  }
-
-  .memory-montage__heading h3 {
-    font-size: clamp(2rem, 11vw, 2.85rem);
-  }
-
-  .memory-montage__collage {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-    gap: 0.65rem;
-  }
-
-  .memory-montage__item,
-  .memory-montage__item--childhood,
-  .memory-montage__item--family,
-  .memory-montage__item--school,
-  .memory-montage__item--friends,
-  .memory-montage__item--today {
-    grid-column: 1;
-    grid-row: auto;
-    aspect-ratio: 4 / 5;
-    transform: none;
-  }
-
-  .memory-montage__item--school {
-    aspect-ratio: 1;
-  }
-
-  .vault-toolbar {
-    display: block;
-    padding: var(--space-sm);
-  }
-
-  .vault-gallery-status {
-    padding: var(--space-xs) var(--space-2xs) 0;
-    font-size: 0.68rem;
-  }
-
-  .vault-gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .vault-card-item,
-  .vault-card-item--feature {
-    grid-column: auto;
-    grid-row: auto;
-    min-height: 0;
-  }
-
-  .vault-card-item--feature img,
-  .vault-card-item--feature video,
-  .vault-card-item--landscape img,
-  .vault-card-item--landscape video {
-    aspect-ratio: 4 / 5;
-  }
-
-  .vault-card-item__badge {
-    opacity: 1;
-    transform: none;
-  }
-
-  .birthday-experience-grid {
-    margin-top: var(--space-lg);
-  }
-
-  .birthday-letter-invitation {
-    display: flex;
-  }
-
-  .birthday-letter-invitation__portrait {
-    min-height: 20rem;
-    aspect-ratio: 4 / 5;
-  }
+.birthday-frame__garland {
+  width: min(18rem, 74vw);
+  height: 1.4rem;
+  padding-inline: 0.9rem;
 }
+.birthday-frame__garland::before { top: 0.4rem; }
+.birthday-frame__garland span {
+  width: 0.85rem;
+  height: 0.36rem;
+  margin-top: 0.4rem;
+}
+.birthday-frame__corner { display: none; }

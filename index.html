@@ -14,6 +14,23 @@
   <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
   <link rel="icon" href="assets/icons/app-icon-192.png" sizes="192x192">
   <title>Mercy — A Story Worth Celebrating</title>
+
+  <!-- ==========================================================================
+       CRITICAL-FIRST LOADING
+       The first screen must appear immediately, so only genuinely critical
+       assets are fetched up front. Everything else is lazy.
+
+       - The hero photograph is preloaded and marked fetchpriority=high.
+       - The fonts stylesheet is preconnected; the font files themselves are
+         fetched by the browser only when first needed to paint text.
+       - No video is ever preloaded. The video folder is ~33MB.
+       - The manifest is preloaded because the gallery needs it, but it is a
+         few KB and the gallery degrades gracefully without it.
+       ========================================================================== -->
+  <link rel="preload" as="image" href="assets/img/me-currently-852.jpg"
+        imagesrcset="assets/img/me-currently-320.webp 320w, assets/img/me-currently-640.webp 640w" imagesizes="100vw" fetchpriority="high">
+  <link rel="preload" as="fetch" href="js/media-manifest.json" crossorigin>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -34,6 +51,15 @@
       .journey-rail,
       .mobile-chapter-nav,
       .chapter-transition { display: none !important; }
+      /* The kinetic hook is driven by JS, so with no JS the finished state must
+         be the default or the headline would stay invisible forever. */
+      .prologue__word,
+      .prologue__name,
+      .prologue__headline::after,
+      .prologue__lede,
+      .prologue__action,
+      .prologue__hint,
+      .prologue__kicker { opacity: 1 !important; transform: none !important; }
     </style>
   </noscript>
 </head>
@@ -108,41 +134,74 @@
   <!-- APP TOAST FOR SHARE / OFFLINE / MEDIA NOTICES -->
   <div class="app-toast" data-app-toast role="status" aria-live="polite" hidden></div>
 
-  <!-- SECTION 00: CINEMATIC PROLOGUE -->
+  <!-- SECTION 00: CINEMATIC PROLOGUE - animated typography hook.
+       The headline is a real level-one heading whose text is split into
+       masked lines by JS. Without JS the unsplit text remains, so the
+       page still reads. -->
   <section class="prologue" id="prologue" aria-labelledby="prologue-name">
-    <div class="prologue__portrait" aria-hidden="true">
-      <img src="assets/images/ME CURRENTLY.jpg" alt="" loading="eager" decoding="async">
+    <!-- Real photograph layer. One image is eager (the hook); the two
+         alternates are lazy and only decode after the first paint. -->
+    <div class="prologue__backdrop" aria-hidden="true">
+      <div class="prologue__plate is-active" data-prologue-plate>
+        <img src="assets/img/me-currently-852.jpg" class="prologue__photo"  srcset="assets/img/me-currently-320.webp 320w, assets/img/me-currently-640.webp 640w" sizes="100vw" alt="" loading="eager" decoding="async" fetchpriority="high" width="852" height="1280">
+      </div>
+      <div class="prologue__plate" data-prologue-plate>
+        <img src="assets/img/my-childhood-picture-960.jpg" class="prologue__photo"  srcset="assets/img/my-childhood-picture-320.webp 320w, assets/img/my-childhood-picture-640.webp 640w, assets/img/my-childhood-picture-960.webp 960w" sizes="100vw" alt="" loading="lazy" decoding="async" width="960" height="1280">
+      </div>
+      <div class="prologue__plate" data-prologue-plate>
+        <img src="assets/img/me-and-my-lovely-mother-890.jpg" class="prologue__photo"  srcset="assets/img/me-and-my-lovely-mother-320.webp 320w, assets/img/me-and-my-lovely-mother-640.webp 640w" sizes="100vw" alt="" loading="lazy" decoding="async" width="890" height="1280">
+      </div>
     </div>
-    <div class="prologue__backdrop" aria-hidden="true"></div>
-    <div class="prologue__stardust" aria-hidden="true"></div>
+    <div class="prologue__scrim" aria-hidden="true"></div>
+    <div class="prologue__vignette" aria-hidden="true"></div>
+
     <div class="prologue__content">
-      <span class="prologue__kicker">A Story Worth Celebrating</span>
-      <p class="prologue__line">Some stories are written in books.</p>
-      <p class="prologue__line">Others are written in moments.</p>
-      <p class="prologue__line">This is mine.</p>
-      <h1 class="prologue__name" id="prologue-name">MERCY</h1>
-      <div class="prologue__action">
+      <p class="prologue__kicker">A Story Worth Celebrating</p>
+
+      <!-- KINETIC HEADLINE
+           Each phrase is masked and slides up from beneath its own edge.
+           aria-hidden on the visual stack: the accessible name is supplied
+           once by the visually hidden summary below, so a screen reader is
+           not forced through five identical announcements. -->
+      <h1 class="prologue__headline" id="prologue-name" aria-label="A story of faith, family, song, and dreams. Mercy.">
+        <span class="prologue__lines" aria-hidden="true">
+          <span class="prologue__mask"><span class="prologue__word" data-kinetic-word>A story</span></span>
+          <span class="prologue__mask"><span class="prologue__word prologue__word--accent" data-kinetic-word>of faith</span></span>
+          <span class="prologue__mask"><span class="prologue__word" data-kinetic-word>of family</span></span>
+          <span class="prologue__mask"><span class="prologue__word" data-kinetic-word>of song</span></span>
+          <span class="prologue__mask"><span class="prologue__word" data-kinetic-word>of dreams</span></span>
+        </span>
+        <span class="prologue__name" data-kinetic-name>Mercy</span>
+      </h1>
+
+      <p class="prologue__lede" data-kinetic-lede>Some stories are written in books. Hers was written in a Christian home, a school stage, a family that stayed, and a voice meant for the sanctuary.</p>
+
+      <div class="prologue__action" data-kinetic-action>
         <button class="btn btn--pink btn--journey" type="button" data-begin-journey>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 3l14 9-14 9V3z"></path>
-          </svg>
+          <span class="btn__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 3l14 9-14 9V3z"></path>
+            </svg>
+          </span>
           <span data-begin-label>Begin My Journey</span>
+          <span class="btn__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </span>
         </button>
         <button class="btn btn--install" type="button" data-install-app hidden>Add to Phone</button>
         <button class="btn btn--share" type="button" data-share-app>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
-          </svg>
+          <span class="btn__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
+            </svg>
+          </span>
           Share
         </button>
         <p class="install-help" data-install-help role="status" hidden></p>
       </div>
-      <div class="prologue__preview" aria-hidden="true">
-        <div class="prologue__preview-thumb"><img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt=""></div>
-        <div class="prologue__preview-thumb"><img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt=""></div>
-        <div class="prologue__preview-thumb"><img src="assets/images/ME CURRENTLY.jpg" alt=""></div>
-      </div>
-      <p class="prologue__hint">10 chapters &middot; photographs, voices &amp; memories</p>
+      <p class="prologue__hint" data-kinetic-hint>10 chapters &middot; 27 photographs &middot; 13 videos</p>
     </div>
   </section>
 
@@ -164,7 +223,7 @@
           <div class="roots-visual-stage reveal">
             <span class="badge badge--white roots-badge-floating">Chapter 01 &middot; Foundation</span>
             <figure class="editorial-frame">
-              <img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt="Me as a young child" loading="eager">
+              <img src="assets/img/my-childhood-picture-960.jpg" decoding="async"  srcset="assets/img/my-childhood-picture-320.webp 320w, assets/img/my-childhood-picture-640.webp 640w, assets/img/my-childhood-picture-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me as a young child" loading="eager" width="960" height="1280">
               <figcaption class="editorial-frame__caption">
                 <span>Me in my early childhood</span>
                 <span>Where the story started</span>
@@ -210,15 +269,15 @@
           <div class="school-visual-mosaic reveal">
             <figure class="editorial-frame school-visual-lead">
               <span class="badge badge--white">SHS &middot; Best Vocalist Contest</span>
-              <img src="assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg" alt="Me contesting for Best Vocalist in SHS" loading="lazy">
+              <img src="assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-640.jpg" decoding="async"  srcset="assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-320.webp 320w, assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me contesting for Best Vocalist in SHS" loading="lazy" width="640" height="640">
               <figcaption class="editorial-frame__caption"><span>Way back in SHS</span><span>Contesting for Best Vocalist</span></figcaption>
             </figure>
             <figure class="editorial-frame school-visual-sub">
-              <img src="assets/images/WHEN WAS AT JHS SOME YEARS BACK.jpg" alt="Me during my JHS days" loading="lazy">
+              <img src="assets/img/when-was-at-jhs-some-years-back-768.jpg" decoding="async"  srcset="assets/img/when-was-at-jhs-some-years-back-320.webp 320w, assets/img/when-was-at-jhs-some-years-back-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me during my JHS days" loading="lazy" width="768" height="1024">
               <figcaption class="editorial-frame__caption"><span>My JHS days</span></figcaption>
             </figure>
             <figure class="editorial-frame school-visual-sub">
-              <img src="assets/images/MY PICTURE AT SCHOOL.jpg" alt="Me at school" loading="lazy">
+              <img src="assets/img/my-picture-at-school-960.jpg" decoding="async"  srcset="assets/img/my-picture-at-school-320.webp 320w, assets/img/my-picture-at-school-640.webp 640w, assets/img/my-picture-at-school-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me at school" loading="lazy" width="960" height="1280">
               <figcaption class="editorial-frame__caption"><span>A quiet moment at school</span></figcaption>
             </figure>
           </div>
@@ -245,7 +304,7 @@
         <div class="parents-editorial-duo">
           <article class="parent-editorial-card reveal">
             <div class="parent-editorial-card__frame">
-              <img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt="Me with my lovely mother" loading="lazy">
+              <img src="assets/img/me-and-my-lovely-mother-890.jpg" decoding="async"  srcset="assets/img/me-and-my-lovely-mother-320.webp 320w, assets/img/me-and-my-lovely-mother-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me with my lovely mother" loading="lazy" width="890" height="1280">
             </div>
             <div class="parent-editorial-card__body">
               <span class="badge">My Mother</span>
@@ -260,7 +319,7 @@
 
           <article class="parent-editorial-card reveal">
             <div class="parent-editorial-card__frame">
-              <img src="assets/images/ME AND MY LOVELY FATHER.jpg" alt="Me with my lovely father" loading="lazy">
+              <img src="assets/img/me-and-my-lovely-father-890.jpg" decoding="async"  srcset="assets/img/me-and-my-lovely-father-320.webp 320w, assets/img/me-and-my-lovely-father-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me with my lovely father" loading="lazy" width="890" height="1280">
             </div>
             <div class="parent-editorial-card__body">
               <span class="badge badge--blue">My Father</span>
@@ -281,23 +340,23 @@
           </div>
           <div class="siblings-editorial-grid">
             <div class="sibling-portrait-unit">
-              <div class="sibling-portrait-unit__thumb"><img src="assets/images/SISTER CECE.jpg" alt="My sister Cece" loading="lazy"></div>
+              <div class="sibling-portrait-unit__thumb"><img src="assets/img/sister-cece-960.jpg" decoding="async"  srcset="assets/img/sister-cece-320.webp 320w, assets/img/sister-cece-640.webp 640w, assets/img/sister-cece-960.webp 960w" sizes="(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 24vw" alt="My sister Cece" loading="lazy" width="960" height="1280"></div>
               <span>Sister Cece</span>
             </div>
             <div class="sibling-portrait-unit">
-              <div class="sibling-portrait-unit__thumb"><img src="assets/images/SISTER ELIZABETH.jpg" alt="My sister Elizabeth" loading="lazy"></div>
+              <div class="sibling-portrait-unit__thumb"><img src="assets/img/sister-elizabeth-846.jpg" decoding="async"  srcset="assets/img/sister-elizabeth-320.webp 320w, assets/img/sister-elizabeth-640.webp 640w" sizes="(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 24vw" alt="My sister Elizabeth" loading="lazy" width="846" height="1280"></div>
               <span>Sister Elizabeth</span>
             </div>
             <div class="sibling-portrait-unit">
-              <div class="sibling-portrait-unit__thumb"><img src="assets/images/BROTHER KOFI.jpg" alt="My brother Kofi" loading="lazy"></div>
+              <div class="sibling-portrait-unit__thumb"><img src="assets/img/brother-kofi-960.jpg" decoding="async"  srcset="assets/img/brother-kofi-320.webp 320w, assets/img/brother-kofi-640.webp 640w, assets/img/brother-kofi-960.webp 960w" sizes="(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 24vw" alt="My brother Kofi" loading="lazy" width="960" height="1280"></div>
               <span>Brother Kofi</span>
             </div>
             <div class="sibling-portrait-unit">
-              <div class="sibling-portrait-unit__thumb"><img src="assets/images/BROTHER SAMUEL.jpg" alt="My brother Samuel" loading="lazy"></div>
+              <div class="sibling-portrait-unit__thumb"><img src="assets/img/brother-samuel-960.jpg" decoding="async"  srcset="assets/img/brother-samuel-320.webp 320w, assets/img/brother-samuel-640.webp 640w, assets/img/brother-samuel-960.webp 960w" sizes="(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 24vw" alt="My brother Samuel" loading="lazy" width="960" height="1280"></div>
               <span>Brother Samuel</span>
             </div>
             <div class="sibling-portrait-unit">
-              <div class="sibling-portrait-unit__thumb"><img src="assets/images/PICTURE WITH MY YOUNGER SIBLINGS.jpg" alt="Me with my younger siblings" loading="lazy"></div>
+              <div class="sibling-portrait-unit__thumb"><img src="assets/img/picture-with-my-younger-siblings-960.jpg" decoding="async"  srcset="assets/img/picture-with-my-younger-siblings-320.webp 320w, assets/img/picture-with-my-younger-siblings-640.webp 640w, assets/img/picture-with-my-younger-siblings-960.webp 960w" sizes="(max-width: 640px) 45vw, (max-width: 1100px) 30vw, 24vw" alt="Me with my younger siblings" loading="lazy" width="960" height="1280"></div>
               <span>My Younger Siblings</span>
             </div>
           </div>
@@ -323,7 +382,7 @@
 
         <div class="best-friend-editorial reveal">
           <figure class="best-friend-editorial__photo">
-            <img src="assets/images/MY BEST FRIEND ( ELISHA OWUSU ASANTE).jpg" alt="Me and my best friend Elijah Owusu Asante" loading="lazy">
+            <img src="assets/img/my-best-friend-elisha-owusu-asante-960.jpg" decoding="async"  srcset="assets/img/my-best-friend-elisha-owusu-asante-320.webp 320w, assets/img/my-best-friend-elisha-owusu-asante-640.webp 640w, assets/img/my-best-friend-elisha-owusu-asante-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me and my best friend Elijah Owusu Asante" loading="lazy" width="960" height="1280">
           </figure>
           <div>
             <span class="badge badge--blue">My Best Friend</span>
@@ -336,7 +395,7 @@
         <div class="friends-circle-grid">
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/MY FAVORITE PERSON AND I.jpg" alt="Me with my favorite person" loading="lazy">
+              <img src="assets/img/my-favorite-person-and-i-600.jpg" decoding="async"  srcset="assets/img/my-favorite-person-and-i-320.webp 320w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me with my favorite person" loading="lazy" width="600" height="900">
             </div>
             <div class="friend-story-card__body">
               <h4>My Favorite Person</h4>
@@ -346,7 +405,7 @@
 
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/MY FIGHTING PATNER.jpg" alt="Me and my fighting partner" loading="lazy">
+              <img src="assets/img/my-fighting-patner-960.jpg" decoding="async"  srcset="assets/img/my-fighting-patner-320.webp 320w, assets/img/my-fighting-patner-640.webp 640w, assets/img/my-fighting-patner-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me and my fighting partner" loading="lazy" width="960" height="1280">
             </div>
             <div class="friend-story-card__body">
               <h4>My Fighting Partner</h4>
@@ -356,7 +415,7 @@
 
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/MY FRIEND RACHAEL.jpg" alt="My friend Rachael" loading="lazy">
+              <img src="assets/img/my-friend-rachael-810.jpg" decoding="async"  srcset="assets/img/my-friend-rachael-320.webp 320w, assets/img/my-friend-rachael-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="My friend Rachael" loading="lazy" width="810" height="1080">
             </div>
             <div class="friend-story-card__body">
               <h4>Rachael</h4>
@@ -366,7 +425,7 @@
 
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/MY FRIEND SANDRA.jpg" alt="My friend Sandra" loading="lazy">
+              <img src="assets/img/my-friend-sandra-960.jpg" decoding="async"  srcset="assets/img/my-friend-sandra-320.webp 320w, assets/img/my-friend-sandra-640.webp 640w, assets/img/my-friend-sandra-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="My friend Sandra" loading="lazy" width="960" height="1280">
             </div>
             <div class="friend-story-card__body">
               <h4>Sandra</h4>
@@ -376,7 +435,7 @@
 
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/I AND MY LOVELY FRIENDS.jpg" alt="Me and my lovely friends" loading="lazy">
+              <img src="assets/img/i-and-my-lovely-friends-960.jpg" decoding="async"  srcset="assets/img/i-and-my-lovely-friends-320.webp 320w, assets/img/i-and-my-lovely-friends-640.webp 640w, assets/img/i-and-my-lovely-friends-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me and my lovely friends" loading="lazy" width="960" height="1280">
             </div>
             <div class="friend-story-card__body">
               <h4>Circle of Joy</h4>
@@ -390,7 +449,7 @@
 
           <article class="friend-story-card reveal">
             <div class="friend-story-card__media">
-              <img src="assets/images/ME WITH MY FRIENDS 2.jpg" alt="Me with my friends" loading="lazy">
+              <img src="assets/img/me-with-my-friends-2-960.jpg" decoding="async"  srcset="assets/img/me-with-my-friends-2-320.webp 320w, assets/img/me-with-my-friends-2-640.webp 640w, assets/img/me-with-my-friends-2-960.webp 960w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me with my friends" loading="lazy" width="960" height="1280">
             </div>
             <div class="friend-story-card__body">
               <h4>Gathered Together</h4>
@@ -423,7 +482,7 @@
 
           <div class="mentor-spotlight-card reveal">
             <figure class="editorial-frame">
-              <img src="assets/images/PASTOR PAUL OTENG ASAMOAH AND MAMA AGARTHA ASAMOAH.jpg" alt="Pastor Paul Oteng Asamoah and Mama Agartha Asamoah" loading="lazy">
+              <img src="assets/img/pastor-paul-oteng-asamoah-and-mama-agartha-asamoah-796.jpg" decoding="async"  srcset="assets/img/pastor-paul-oteng-asamoah-and-mama-agartha-asamoah-320.webp 320w, assets/img/pastor-paul-oteng-asamoah-and-mama-agartha-asamoah-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Pastor Paul Oteng Asamoah and Mama Agartha Asamoah" loading="lazy" width="796" height="1080">
               <figcaption class="editorial-frame__caption"><span>Pastor Paul &amp; Mama Agartha</span><span>My spiritual parents</span></figcaption>
             </figure>
             <span class="badge badge--glass">Spiritual Father &amp; Mentor</span>
@@ -450,7 +509,10 @@
 
         <div class="music-studio-deck reveal">
           <div class="music-studio-deck__media">
-            <video preload="metadata" controls playsinline poster="assets/images/ME CURRENTLY.jpg" data-studio-video>
+            <!-- preload="none": not one byte of this 5.6MB clip is fetched until
+                 the visitor presses play. The poster is the extracted frame, so
+                 the deck still looks finished before any video is requested. -->
+            <video preload="none" controls playsinline poster="assets/img/my-studio-song-poster.webp" data-studio-video>
               <source src="assets/videos/MY STUDIO SONG.mp4" type="video/mp4">
               Your browser does not support HTML5 video.
             </video>
@@ -493,7 +555,7 @@
       <div class="container">
         <div class="present-editorial-split">
           <figure class="editorial-frame present-portrait-stage reveal">
-            <img src="assets/images/ME CURRENTLY.jpg" alt="Me currently — poised and smiling" loading="lazy">
+            <img src="assets/img/me-currently-852.jpg" decoding="async"  srcset="assets/img/me-currently-320.webp 320w, assets/img/me-currently-640.webp 640w" sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 38vw" alt="Me currently — poised and smiling" loading="lazy" width="852" height="1280">
             <figcaption class="editorial-frame__caption">
               <span>Me currently</span>
               <span>Living each day with gratitude</span>
@@ -592,25 +654,42 @@
             <h3 id="montage-heading">Moments I Keep Returning To</h3>
             <p>Childhood, family, school, friendship, and today — gathered together as one small reminder of how far I have come.</p>
           </div>
+
+          <div class="memory-montage__feature">
+            <div class="memory-montage__feature-video">
+              <!-- preload="none" for the same reason as the studio deck: the
+                   poster carries the visual, the clip waits for a tap. -->
+              <video controls preload="none" playsinline poster="assets/img/my-lovely-mom-video-poster.webp" aria-label="Mercy with her mother in a living memory clip">
+                <source src="assets/videos/MY LOVELY MOM VIDEO.mp4" type="video/mp4">
+                Your browser cannot play this video.
+              </video>
+            </div>
+            <div class="memory-montage__feature-copy">
+              <span class="eyebrow">The Living Memory</span>
+              <h4>Love, laughter, and the season that shaped me.</h4>
+              <p>My favorite memories are not just pictures. They are living reminders of who I am and the people who carried me through each chapter.</p>
+            </div>
+          </div>
+
           <div class="memory-montage__collage">
             <figure class="memory-montage__item memory-montage__item--childhood">
-              <img src="assets/images/MY CHILDHOOD PICTURE.jpg" alt="Mercy as a young child" loading="lazy" decoding="async">
+              <img src="assets/img/my-childhood-picture-960.jpg"  srcset="assets/img/my-childhood-picture-320.webp 320w, assets/img/my-childhood-picture-640.webp 640w, assets/img/my-childhood-picture-960.webp 960w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy as a young child" loading="lazy" decoding="async" width="960" height="1280">
               <figcaption>Where it began</figcaption>
             </figure>
             <figure class="memory-montage__item memory-montage__item--family">
-              <img src="assets/images/ME AND MY LOVELY MOTHER.jpg" alt="Mercy with her mother" loading="lazy" decoding="async">
+              <img src="assets/img/me-and-my-lovely-mother-890.jpg"  srcset="assets/img/me-and-my-lovely-mother-320.webp 320w, assets/img/me-and-my-lovely-mother-640.webp 640w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy with her mother" loading="lazy" decoding="async" width="890" height="1280">
               <figcaption>Love that rooted me</figcaption>
             </figure>
             <figure class="memory-montage__item memory-montage__item--school">
-              <img src="assets/images/WAY BACK IN SHS WHEN I CONTESTED FOR BEST VOCALIST.jpg" alt="Mercy contesting for Best Vocalist in SHS" loading="lazy" decoding="async">
+              <img src="assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-640.jpg"  srcset="assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-320.webp 320w, assets/img/way-back-in-shs-when-i-contested-for-best-vocalist-640.webp 640w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy contesting for Best Vocalist in SHS" loading="lazy" decoding="async" width="640" height="640">
               <figcaption>Where I found my voice</figcaption>
             </figure>
             <figure class="memory-montage__item memory-montage__item--friends">
-              <img src="assets/images/I AND MY LOVELY FRIENDS.jpg" alt="Mercy surrounded by her friends" loading="lazy" decoding="async">
+              <img src="assets/img/i-and-my-lovely-friends-960.jpg"  srcset="assets/img/i-and-my-lovely-friends-320.webp 320w, assets/img/i-and-my-lovely-friends-640.webp 640w, assets/img/i-and-my-lovely-friends-960.webp 960w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy surrounded by her friends" loading="lazy" decoding="async" width="960" height="1280">
               <figcaption>Love that stayed</figcaption>
             </figure>
             <figure class="memory-montage__item memory-montage__item--today">
-              <img src="assets/images/ME CURRENTLY.jpg" alt="Mercy today" loading="lazy" decoding="async">
+              <img src="assets/img/me-currently-852.jpg"  srcset="assets/img/me-currently-320.webp 320w, assets/img/me-currently-640.webp 640w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy today" loading="lazy" decoding="async" width="852" height="1280">
               <figcaption>Grace in this season</figcaption>
             </figure>
           </div>
@@ -647,6 +726,10 @@
 
         <div class="birthday-experience-grid">
           <div class="birthday-experience-grid__song">
+            <button class="btn btn--outline-light birthday-stage-sound-toggle" type="button" data-sound-toggle aria-pressed="true">
+              <span data-sound-label>Celebration sound on</span>
+            </button>
+
             <!-- DEDICATED BIRTHDAY SONG -->
             <figure class="birthday-song-card">
               <figcaption class="birthday-song-card__head">
@@ -657,8 +740,9 @@
               <video
                 class="birthday-song-card__video"
                 controls
-                preload="metadata"
+                preload="none"
                 playsinline
+                poster="assets/img/my-studio-song-poster.webp"
                 src="assets/videos/MY STUDIO SONG.mp4"
                 data-birthday-song-video
                 aria-label="Birthday song for Mercy">
@@ -670,7 +754,7 @@
 
           <aside class="birthday-letter-invitation" aria-label="Robert's birthday dedication">
             <figure class="birthday-letter-invitation__portrait">
-              <img src="assets/images/ME CURRENTLY.jpg" alt="Mercy smiling on her birthday journey" loading="lazy" decoding="async">
+              <img src="assets/img/me-currently-852.jpg"  srcset="assets/img/me-currently-320.webp 320w, assets/img/me-currently-640.webp 640w" sizes="(max-width: 640px) 92vw, 45vw" alt="Mercy smiling on her birthday journey" loading="lazy" decoding="async" width="852" height="1280">
               <figcaption>For every version of you &mdash; then, now, and always.</figcaption>
             </figure>
             <div class="birthday-letter-invitation__copy">
@@ -707,6 +791,59 @@
       </div>
     </section>
   </main>
+
+  <!-- ==========================================================================
+       CLOSING — WISH, SHARE, AND CREATOR CREDIT
+       The visitor finishes by sending Mercy a wish and sharing the experience,
+       then a restrained professional credit closes the page. The credit is
+       deliberately secondary: this is Mercy's day, not the builder's.
+       ========================================================================== -->
+  <section class="closing-stage" id="closing" aria-labelledby="closing-title">
+    <div class="container">
+      <div class="closing-panel">
+        <span class="eyebrow">One Last Thing</span>
+        <h2 id="closing-title" class="closing-title">Send Mercy a Birthday Wish</h2>
+        <p class="closing-lede">If you know her, leave her a word. If you are sharing this with her, pass it on.</p>
+
+        <div class="closing-actions">
+          <!-- Opens the visitor's share sheet with a ready-made message. -->
+          <button class="btn btn--pink closing-btn" type="button" data-share-wish>
+            <span class="btn__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="10.5" x2="15.4" y2="6.5"></line><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line>
+              </svg>
+            </span>
+            Send a Birthday Wish
+          </button>
+
+          <!-- Web Share API when available, clipboard copy as the fallback. -->
+          <button class="btn btn--outline-light closing-btn" type="button" data-share-app>
+            <span class="btn__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line>
+              </svg>
+            </span>
+            <span data-share-label>Share This Journey</span>
+          </button>
+        </div>
+
+        <p class="closing-status" data-closing-status role="status" aria-live="polite"></p>
+      </div>
+
+      <!-- Creator credit: a restrained film-style end title, not a second hero.
+           No photograph is used here so nothing competes with Mercy. -->
+      <footer class="creator-credit" aria-label="Project credit">
+        <p class="creator-credit__label">Created with care for</p>
+        <p class="creator-credit__name">Mercy</p>
+        <p class="creator-credit__meta">
+          Story, design &amp; development by <strong>Robert Mensah</strong>
+        </p>
+        <p class="creator-credit__note">
+          Built mobile-first for the story to travel well &mdash; and to load fast on an ordinary phone.
+        </p>
+      </footer>
+    </div>
+  </section>
 
   <!-- SHARED MEDIA MODAL DIALOG -->
   <dialog class="media-modal" id="media-modal" aria-labelledby="modal-caption">
@@ -754,7 +891,16 @@
 
   <!-- Temporary, non-blocking app/share status message -->
 
+  <!-- Load order matters:
+       data.js      the frozen story registry
+       media.js     the responsive image manifest + srcset helpers
+       sound.js     the synthesised celebration chime
+       prologue.js  the kinetic opening sequence
+       main.js      the story controller (last: it reads the others) -->
   <script src="js/data.js"></script>
+  <script src="js/media.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/prologue.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

@@ -6,32 +6,30 @@
    ========================================================================== */
 
 :root {
-  /* --- PALETTE: MIDNIGHT NAVY FOUNDATION & SURFACE TINTS --- */
-  /* White is reserved for focal copy and controls; the page itself is navy-led. */
+  /* --- PALETTE: DEEP CINEMATIC BLUE FOUNDATION --- */
   --white: #FFFFFF;
-  --bg-primary: #0B1624;            /* Midnight Navy Page */
-  --bg-surface: #13233A;            /* Deep Navy Panel */
-  --bg-subtle: #1B2F4A;             /* Raised Navy Tint */
-  --bg-overlay: rgba(6, 13, 23, 0.86);
+  --bg-primary: #071828;            /* Midnight Blue Base */
+  --bg-surface: #0F2340;            /* Deep Blue Panel */
+  --bg-subtle: #173456;             /* Blue-tinted surface */
+  --bg-overlay: rgba(5, 13, 23, 0.82);
 
-  /* --- PALETTE: DUSTY ROSE & CHAMPAGNE ACCENTS --- */
-  --pink-soft: #3A2130;             /* Deep Rose Wash */
-  --pink-tint: #4A2A3A;             /* Muted Rose Panel */
-  --pink-primary: #E79FB2;          /* Signature Dusty Rose (light, on navy) */
-  --pink-hover: #F2B8C6;            /* Brighter Rose hover */
-  --pink-deep: #C4708A;             /* Accent Rose for large text */
-  --pink-glow: rgba(231, 159, 178, 0.30);
-  --champagne: #F0DCC0;             /* Celebration Accent */
-  --champagne-soft: #C9B393;        /* Muted Champagne */
+  /* --- PALETTE: PINK + BLUE STORY TONES --- */
+  --pink-soft: #f7d8e2;             /* Soft blush field */
+  --pink-tint: #f0a7bb;             /* Pink glow panel */
+  --pink-primary: #ff7ca5;          /* Signature cinematic pink */
+  --pink-hover: #ff9bb9;            /* Brighter pink */
+  --pink-deep: #d94d77;             /* Strong focal rose */
+  --pink-glow: rgba(255, 124, 165, 0.32);
+  --champagne: #f6e7d2;             /* Light warm accent */
+  --champagne-soft: #d7b38a;
 
-  /* --- PALETTE: DIGNIFIED SLATE & MIDNIGHT BLUE --- */
-  --blue-soft: #17293F;             /* Night Sky Mist */
-  --blue-tint: #1E3A5F;             /* Slate Wash */
-  --blue-accent: #7FA8CB;           /* Cornflower Slate (light) */
-  --blue-primary: #2C5382;          /* Royal Slate Blue */
-  --blue-night: #0B1624;            /* Midnight Navy */
-  --blue-deep-contrast: #060D17;    /* Pure Obsidian */
-  --blue-glow: rgba(91, 139, 174, 0.28);
+  --blue-soft: #dfeeff;             /* Soft blue field */
+  --blue-tint: #b8d7ff;             /* Crisp blue panel */
+  --blue-accent: #6ea9ff;           /* Electric blue highlight */
+  --blue-primary: #1f4c9a;           /* Strong royal blue */
+  --blue-night: #08192d;            /* Midnight foundation */
+  --blue-deep-contrast: #030d18;
+  --blue-glow: rgba(110, 169, 255, 0.30);
 
   /* --- NEUTRAL INK & READABILITY --- */
   --text-dark: #F4F7FB;             /* Primary Ink on navy */

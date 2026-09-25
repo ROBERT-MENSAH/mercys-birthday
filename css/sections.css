@@ -4,117 +4,213 @@
    No dead space, strong photographic anchors, intentional typography
    ========================================================================== */
 
-/* --- SECTION 00: CINEMATIC PROLOGUE --- */
+/* --- SECTION 00: CINEMATIC PROLOGUE (MOBILE-FIRST) ---
+   Full-bleed photograph layers that cross-fade plus a masked kinetic headline.
+   Every animation is transform/opacity only. */
 .prologue {
   position: relative;
   min-height: 100svh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   background-color: var(--blue-night);
   color: var(--text-light);
   overflow: hidden;
-  padding: var(--space-xl) var(--space-md);
+  /* Room for the home indicator plus the bottom navigation. */
+  padding:
+    calc(var(--space-2xl) + env(safe-area-inset-top))
+    var(--space-md)
+    calc(var(--space-2xl) + env(safe-area-inset-bottom));
   text-align: center;
+  isolation: isolate;
 }
 
-/* A real portrait gives the opening a quiet photographic anchor.
-   The image is decorative here because the name and story carry the meaning. */
-.prologue__portrait {
+/* --- Photograph layers ------------------------------------------------- */
+.prologue__backdrop {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: var(--blue-night);
 }
 
-.prologue__portrait img {
+.prologue__plate {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1400ms var(--ease-smooth);
+}
+
+.prologue__plate.is-active { opacity: 1; }
+
+.prologue__photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 28%;
-  opacity: 0.38;
-  filter: saturate(0.82) contrast(1.04) brightness(0.78);
-  transform: scale(1.03);
+  /* Faces are never distorted: object-fit: cover with a centre-weighted
+     focus keeps faces intact at every aspect ratio. */
+  object-position: center 24%;
+  filter: saturate(0.86) contrast(1.05) brightness(0.72);
+  transform: scale(1.04);
+  animation: prologueDrift 16s ease-in-out infinite alternate;
 }
 
-.prologue__portrait::after {
-  content: "";
+.prologue__plate:not(.is-active) .prologue__photo {
+  animation-play-state: paused;
+}
+
+@keyframes prologueDrift {
+  from { transform: scale(1.04) translate3d(0, 0, 0); }
+  to   { transform: scale(1.11) translate3d(0, -1.2%, 0); }
+}
+
+/* Two-layer scrim: darkens the top for the kicker and the bottom for the
+   button, so text stays legible over any photograph. */
+.prologue__scrim {
   position: absolute;
   inset: 0;
+  z-index: 1;
+  pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(7, 18, 32, 0.48) 0%, rgba(7, 18, 32, 0.26) 42%, rgba(7, 18, 32, 0.88) 100%),
-    linear-gradient(90deg, rgba(7, 18, 32, 0.38), transparent 62%, rgba(7, 18, 32, 0.42));
+    linear-gradient(180deg, rgba(5, 13, 24, 0.72) 0%, rgba(5, 13, 24, 0.18) 34%, rgba(5, 13, 24, 0.62) 68%, rgba(5, 13, 24, 0.95) 100%),
+    linear-gradient(90deg, rgba(5, 13, 24, 0.55), rgba(5, 13, 24, 0.12) 55%, rgba(5, 13, 24, 0.5));
 }
 
-
-.prologue__backdrop {
+.prologue__vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 35%, rgba(212, 122, 144, 0.22), transparent 60%),
-              radial-gradient(circle at 80% 80%, rgba(91, 139, 174, 0.18), transparent 50%);
+  z-index: 1;
   pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 34%, rgba(5, 13, 24, 0.62) 100%),
+    radial-gradient(circle at 50% 30%, rgba(255, 124, 165, 0.18), transparent 58%);
 }
 
-.prologue__stardust {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-                    radial-gradient(1.5px 1.5px at 120px 160px, rgba(255,255,255,0.7), rgba(0,0,0,0)),
-                    radial-gradient(1px 1px at 240px 90px, #fce7ec, rgba(0,0,0,0));
-  background-size: 320px 320px;
-  opacity: 0.65;
-}
-
+/* --- Content ----------------------------------------------------------- */
 .prologue__content {
   position: relative;
   z-index: 2;
-  max-width: 48rem;
+  width: min(100%, 44rem);
+  margin-inline: auto;
 }
 
-.prologue__line {
-  font-family: var(--font-display);
-  font-size: clamp(1.4rem, 2.6vw, 2.3rem);
-  font-style: italic;
-  font-weight: 300;
-  color: #D3DEEB;
-  margin-bottom: var(--space-xs);
-  opacity: 0;
-  transform: translateY(16px);
-  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
-}
-
-/* The kicker is the first child, so the staggered lines are matched by type. */
-.prologue__line:nth-of-type(1) { animation-delay: 0.2s; }
-.prologue__line:nth-of-type(2) { animation-delay: 1.1s; }
-.prologue__line:nth-of-type(3) { animation-delay: 2.0s; margin-bottom: var(--space-lg); }
-
-.prologue__name {
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  letter-spacing: 0.12em;
+.prologue__kicker {
+  font-family: var(--font-body);
+  font-size: clamp(0.62rem, 2.6vw, 0.74rem);
+  font-weight: 600;
   text-transform: uppercase;
-  color: #FFFFFF;
-  text-shadow: 0 0 50px rgba(255, 255, 255, 0.4);
-  margin-bottom: var(--space-lg);
+  letter-spacing: 0.34em;
+  color: var(--champagne);
+  margin-bottom: var(--space-sm);
+}
+
+/* --- Kinetic headline --------------------------------------------------
+   Each phrase sits inside an overflow-hidden mask and slides up into it.
+   That is the "masked reveal" technique: no layout shift, no reflow, and the
+   text is genuinely hidden until its moment. */
+.prologue__headline {
+  margin: 0 0 var(--space-md);
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.prologue__lines { display: block; }
+
+.prologue__mask {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders so the mask never clips a letter. */
+  padding: 0.06em 0.04em 0.12em;
+  margin: -0.06em -0.04em -0.12em;
+}
+
+.prologue__word {
+  display: block;
+  font-size: clamp(1.75rem, 8.2vw, 3.1rem);
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 2px 30px rgba(4, 11, 20, 0.6);
+  transform: translate3d(0, 110%, 0);
   opacity: 0;
-  transform: scale(0.96);
-  animation: nameReveal 1.1s var(--ease-cinematic) 3.1s forwards;
+}
+
+/* One phrase carries the signature rose so the stack has a focal accent. */
+.prologue__word--accent {
+  color: var(--pink-primary);
+  font-style: normal;
+  font-weight: 700;
+}
+
+/* The name resolves last, and larger than everything above it. */
+.prologue__name {
+  display: block;
+  margin-top: var(--space-2xs);
+  font-size: clamp(3.4rem, 17vw, 7rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 0.95;
+  color: #FFFFFF;
+  text-shadow: 0 6px 60px rgba(255, 124, 165, 0.45), 0 2px 24px rgba(4, 11, 20, 0.7);
+  transform: scale(0.9);
+  opacity: 0;
+}
+
+/* A thin rule that draws itself under the name, tying the stack together. */
+.prologue__headline::after {
+  content: "";
+  display: block;
+  width: 4.5rem;
+  height: 2px;
+  margin: var(--space-sm) auto 0;
+  background: linear-gradient(90deg, transparent, var(--pink-primary), transparent);
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.prologue__lede {
+  max-width: 34rem;
+  margin: 0 auto var(--space-lg);
+  font-size: clamp(0.94rem, 3.6vw, 1.06rem);
+  line-height: 1.65;
+  color: var(--text-light-muted);
+  text-shadow: 0 2px 18px rgba(4, 11, 20, 0.75);
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
 }
 
 .prologue__action {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   gap: var(--space-xs);
   opacity: 0;
-  transform: translateY(12px);
-  animation: prologueFade 1s var(--ease-cinematic) 3.8s forwards;
+  transform: translate3d(0, 14px, 0);
 }
 
-.prologue__action .btn {
-  min-height: 3rem;
+.prologue__action .btn--journey {
+  width: 100%;
+  max-width: 22rem;
+  min-height: 3.25rem;
+  justify-content: center;
+  gap: var(--space-xs);
+  font-size: var(--text-md);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 18px 44px rgba(217, 77, 119, 0.42);
+}
+
+.prologue__hint {
+  margin: var(--space-md) 0 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(200, 213, 228, 0.72);
+  opacity: 0;
 }
 
 .install-help {
@@ -122,35 +218,157 @@
   margin: 0;
 }
 
-@keyframes prologueFade {
-  to { opacity: 1; transform: translateY(0); }
+/* Buttons are icon + text, with the icons aligned to the text. */
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
 }
 
-@keyframes nameReveal {
-  to { opacity: 1; transform: scale(1); }
+.btn__icon svg { display: block; }
+
+/* --- The animation driver ---------------------------------------------
+   The prologue holds a "pre-roll" state. js/prologue.js adds .is-live once the
+   critical photograph has painted, which starts the cascade. Each element's
+   delay is a CSS custom property written by the controller, so the cadence
+   stays correct even if the copy changes length. */
+.prologue.is-live .prologue__kicker {
+  animation: prologueFade 0.8s var(--ease-cinematic) 0.15s forwards;
 }
+
+.prologue.is-live .prologue__word {
+  animation: prologueMaskUp 1.05s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-delay, 0.3s);
+}
+
+.prologue.is-live .prologue__name {
+  animation: prologueNameIn 1.35s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-name-delay, 2.9s);
+}
+
+.prologue.is-live .prologue__headline::after {
+  animation: prologueRule 0.9s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-name-delay, 2.9s);
+}
+
+.prologue.is-live .prologue__lede {
+  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-lede-delay, 3.5s);
+}
+
+.prologue.is-live .prologue__action {
+  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-action-delay, 3.8s);
+}
+
+.prologue.is-live .prologue__hint {
+  animation: prologueFade 0.9s var(--ease-cinematic) forwards;
+  animation-delay: var(--kinetic-hint-delay, 4.2s);
+}
+
+@keyframes prologueFade {
+  to { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes prologueMaskUp {
+  from { transform: translate3d(0, 110%, 0); opacity: 0; }
+  to   { transform: translate3d(0, 0, 0); opacity: 1; }
+}
+
+@keyframes prologueNameIn {
+  from { transform: scale(0.9); opacity: 0; filter: blur(6px); }
+  60%  { filter: blur(0); }
+  to   { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+
+@keyframes prologueRule {
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+/* --- Reduced motion ----------------------------------------------------
+   The hook still shows its photograph and its words, but nothing moves. */
+@media (prefers-reduced-motion: reduce) {
+  .prologue__photo {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .prologue__plate { transition: none; }
+
+  .prologue.is-live .prologue__word,
+  .prologue.is-live .prologue__name,
+  .prologue.is-live .prologue__headline::after,
+  .prologue.is-live .prologue__lede,
+  .prologue.is-live .prologue__action,
+  .prologue.is-live .prologue__hint,
+  .prologue.is-live .prologue__kicker {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
 
 /* --- GENERAL CHAPTER BASE CONTAINERS --- */
 .chapter-section {
-  padding: var(--space-2xl) 0;
   position: relative;
+  overflow: hidden;
+  padding: var(--space-2xl) 0;
   border-bottom: 1px solid var(--border-subtle);
+  isolation: isolate;
+}
+
+.chapter-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 15% 20%, rgba(255,255,255,0.09), transparent 18%),
+              radial-gradient(circle at 80% 75%, rgba(255,255,255,0.06), transparent 22%);
+}
+
+.chapter-section > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .chapter-section--white {
-  background-color: var(--bg-surface);
+  background:
+    radial-gradient(circle at 12% 12%, rgba(255, 124, 165, 0.14), transparent 18%),
+    linear-gradient(180deg, #ebf3ff 0%, #fbeef4 100%);
+  color: #10213a;
+}
+
+.chapter-section--white h2,
+.chapter-section--white h3,
+.chapter-section--white h4,
+.chapter-section--white .eyebrow,
+.chapter-section--white .chapter-numeral {
+  color: #0c2447;
+}
+
+.chapter-section--white p,
+.chapter-section--white .chapter-quote {
+  color: #25476b;
 }
 
 .chapter-section--soft-pink {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--pink-soft) 42%, var(--pink-soft) 78%, var(--bg-primary) 100%);
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255, 124, 165, 0.18), transparent 18%),
+    linear-gradient(180deg, #0a1830 0%, #1d3457 18%, #f5d8e4 62%, #f8e8ee 100%);
 }
 
 .chapter-section--soft-blue {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--blue-soft) 42%, var(--blue-soft) 78%, var(--bg-primary) 100%);
+  background:
+    radial-gradient(circle at 82% 16%, rgba(110, 169, 255, 0.25), transparent 18%),
+    linear-gradient(180deg, #08191f 0%, #123561 18%, #dfeeff 62%, #edf6ff 100%);
 }
 
 .chapter-section--midnight {
-  background: linear-gradient(165deg, #09121E 0%, var(--blue-night) 60%, #060D17 100%);
+  background: linear-gradient(165deg, #071827 0%, #0d2340 40%, #162f52 100%);
   color: var(--white);
   border-bottom: 1px solid var(--border-dark-subtle);
 }
@@ -204,12 +422,21 @@
   padding-bottom: clamp(3.5rem, 8vw, 7rem);
   background:
     radial-gradient(circle at 8% 22%, rgba(212, 122, 144, 0.12), transparent 28%),
-    linear-gradient(135deg, #FFFFFF 0%, var(--blue-soft) 100%);
+    linear-gradient(135deg, #FFFFFF 0%, #dfeeff 100%);
 }
 
+.chapter-section--roots::before {
+  background:
+    radial-gradient(circle at 10% 18%, rgba(255, 124, 165, 0.18), transparent 16%),
+    radial-gradient(circle at 82% 70%, rgba(110, 169, 255, 0.12), transparent 18%);
+}
+
+/* MOBILE-FIRST: single column by default.
+   The two-column editorial split is added in responsive.css at min-width: 900px. */
 .chapter-section--roots .roots-editorial-grid {
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-  gap: clamp(2rem, 5vw, 5rem);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
 }
 
 .chapter-section--roots .roots-editorial-copy h2 {
@@ -231,8 +458,8 @@
 /* --- CHAPTER 01: ROOTS & WHERE IT BEGAN (SPLIT EDITORIAL HERO) --- */
 .roots-editorial-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
   align-items: center;
 }
 
@@ -260,16 +487,16 @@
 /* --- CHAPTER 02: SCHOOL DAYS & BEST VOCALIST (BLUSH EDITORIAL CLUSTER) --- */
 .school-editorial-grid {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
   align-items: center;
 }
 
 .school-visual-mosaic {
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr;
-  grid-template-rows: auto auto;
-  gap: var(--space-md);
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
+  gap: var(--space-sm);
 }
 
 .school-visual-lead {
@@ -292,9 +519,9 @@
 /* --- CHAPTER 03: PILLARS OF LOVE (FAMILY) --- */
 .parents-editorial-duo {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-xl);
-  margin-bottom: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
 .parent-editorial-card {
@@ -355,8 +582,8 @@
 
 .siblings-editorial-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
 }
 
 .sibling-portrait-unit {
@@ -376,8 +603,8 @@
 /* --- CHAPTER 04: FRIENDSHIP (SLATE BLUE EDITORIAL HERO) --- */
 .best-friend-editorial {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
   align-items: center;
   background: var(--bg-surface);
   border-radius: var(--radius-xl);
@@ -465,8 +692,8 @@
 /* --- CHAPTER 05: FAITH & MENTORS (MIDNIGHT SANCTUARY) --- */
 .faith-editorial-grid {
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
   align-items: center;
 }
 
@@ -507,10 +734,12 @@
 /* --- CHAPTER 06: MUSIC MINISTRY (STUDIO VIBE) --- */
 .music-studio-deck {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
   align-items: center;
-  background: linear-gradient(135deg, #131F30 0%, #1A2D45 100%);
+  background:
+    radial-gradient(circle at 10% 12%, rgba(255, 124, 165, 0.14), transparent 18%),
+    linear-gradient(135deg, #131F30 0%, #1A2D45 100%);
   border-radius: var(--radius-xl);
   padding: var(--space-xl);
   box-shadow: var(--shadow-floating);
@@ -539,8 +768,8 @@
 /* --- CHAPTER 07 & 08: PRESENT PROFILE & HORIZON GOALS --- */
 .present-editorial-split {
   display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: var(--space-2xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
   align-items: center;
 }
 
@@ -552,8 +781,8 @@
 .present-snapshot-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-  margin-top: var(--space-lg);
+  gap: var(--space-sm);
+  margin-top: var(--space-md);
 }
 
 .snapshot-pill-card {
@@ -584,9 +813,9 @@
 /* HORIZON MILESTONE CARDS */
 .horizon-track-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-md);
-  margin-top: var(--space-xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
 }
 
 .horizon-card {
@@ -666,10 +895,13 @@
   outline-offset: 2px;
 }
 
+/* MOBILE-FIRST: two compact tiles per row on a phone, so the room feels full
+   rather than a long single-file list. Wider viewports add columns via
+   responsive.css. */
 .vault-gallery-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(285px, 100%), 1fr));
-  gap: var(--space-md);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-sm);
 }
 
 .vault-card-item {
@@ -853,6 +1085,19 @@
   text-wrap: balance;
 }
 
+.birthday-stage-sound-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-lg);
+  min-width: 12.5rem;
+  padding: 0.8rem 1.2rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 16px 34px rgba(7, 15, 27, 0.18);
+}
+
 .birthday-song-card {
   width: min(100%, 48rem);
   margin: var(--space-xl) auto var(--space-lg);
@@ -922,6 +1167,15 @@
   transition: opacity 720ms var(--ease-cinematic), transform 720ms var(--ease-cinematic);
 }
 
+.robert-letter-editorial::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: calc(var(--radius-xl) - 0.4rem);
+  pointer-events: none;
+}
+
 .robert-letter-editorial .badge {
   color: var(--champagne);
   background: rgba(240, 220, 192, 0.09);
@@ -932,9 +1186,12 @@
   color: var(--champagne);
   font-family: var(--font-accent);
   font-size: clamp(2.25rem, 6vw, 3.5rem);
+  letter-spacing: -0.05em;
 }
 
 .robert-letter-editorial p {
+  position: relative;
+  z-index: 1;
   color: var(--text-body);
   line-height: 1.85;
 }
@@ -1267,7 +1524,9 @@
   margin-top: var(--space-2xl);
   padding: var(--space-xl);
   text-align: center;
-  background: linear-gradient(135deg, var(--blue-primary) 0%, #0F2038 100%);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 124, 165, 0.18), transparent 16%),
+    linear-gradient(135deg, var(--blue-primary) 0%, #0F2038 100%);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-elevated);
 }
@@ -1490,6 +1749,142 @@ html.js .reveal.is-revealed {
    A consistent fine keyline and crop language ties the personal archive
    together while preserving each chapter's existing color atmosphere.
    ========================================================================== */
+.roots-visual-stage {
+  position: relative;
+  padding: 1rem 0 1rem 1.25rem;
+}
+
+.roots-visual-stage::before,
+.school-visual-mosaic::before,
+.best-friend-editorial::before,
+.present-portrait-stage::before {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(12px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.roots-visual-stage::before {
+  width: 240px;
+  height: 240px;
+  right: -5%;
+  top: 6%;
+  background: radial-gradient(circle, rgba(255, 124, 165, 0.38), transparent 70%);
+}
+
+.roots-editorial-copy {
+  position: relative;
+}
+
+.roots-editorial-copy::before {
+  content: "";
+  position: absolute;
+  width: 240px;
+  height: 240px;
+  left: -12%;
+  top: -8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(110, 169, 255, 0.22), transparent 70%);
+  z-index: 0;
+}
+
+.roots-editorial-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.roots-editorial-copy .chapter-quote {
+  background: rgba(255, 255, 255, 0.32);
+  border-left-color: var(--pink-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 1.25rem 1.4rem;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.school-visual-mosaic {
+  position: relative;
+  padding: 1rem;
+}
+
+.school-visual-mosaic::before {
+  width: 210px;
+  height: 210px;
+  right: -4%;
+  bottom: -6%;
+  background: radial-gradient(circle, rgba(110, 169, 255, 0.28), transparent 70%);
+}
+
+.school-visual-lead,
+.school-visual-sub {
+  transform: rotate(0deg);
+  box-shadow: 0 24px 60px rgba(7, 24, 40, 0.16);
+}
+
+.school-visual-sub:nth-of-type(2) {
+  transform: translateY(0.5rem);
+}
+
+.school-visual-sub:nth-of-type(3) {
+  transform: translateY(-0.5rem);
+}
+
+.parents-editorial-duo .parent-editorial-card {
+  position: relative;
+}
+
+.parents-editorial-duo .parent-editorial-card:nth-child(odd) {
+  transform: translateY(1rem);
+}
+
+.parents-editorial-duo .parent-editorial-card:nth-child(even) {
+  transform: translateY(-0.5rem);
+}
+
+.best-friend-editorial {
+  position: relative;
+  isolation: isolate;
+}
+
+.best-friend-editorial::before {
+  width: 220px;
+  height: 220px;
+  left: -4%;
+  bottom: -12%;
+  background: radial-gradient(circle, rgba(255, 124, 165, 0.28), transparent 70%);
+  z-index: -1;
+}
+
+.best-friend-editorial__photo {
+  transform: rotate(-2deg);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.friends-circle-grid .friend-story-card {
+  background: linear-gradient(180deg, rgba(11, 22, 36, 0.96), rgba(28, 53, 83, 0.94));
+}
+
+.friend-story-card__media {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.present-portrait-stage {
+  position: relative;
+}
+
+.present-portrait-stage::before {
+  width: 170px;
+  height: 170px;
+  right: -8%;
+  top: -6%;
+  background: radial-gradient(circle, rgba(255, 124, 165, 0.28), transparent 70%);
+}
+
+.present-portrait-stage {
+  transform: rotate(-1.5deg);
+}
+
 .editorial-frame::after,
 .portrait-frame::after {
   content: "";
@@ -1576,9 +1971,8 @@ html.js .reveal.is-revealed {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.8fr);
-  align-items: end;
-  gap: var(--space-sm) var(--space-xl);
+  grid-template-columns: 1fr;
+  gap: var(--space-sm);
   margin-bottom: var(--space-lg);
 }
 
@@ -1601,22 +1995,93 @@ html.js .reveal.is-revealed {
   line-height: 1.75;
 }
 
+.memory-montage__feature {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-md);
+  align-items: center;
+  margin-bottom: var(--space-lg);
+  padding: clamp(0.9rem, 2vw, 1.4rem);
+  border: 1px solid rgba(26, 54, 77, 0.12);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(226, 236, 245, 0.76));
+  box-shadow: 0 24px 48px rgba(11, 22, 36, 0.08);
+}
+
+.memory-montage__feature-video {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 18px 38px rgba(11, 22, 36, 0.12);
+}
+
+.memory-montage__feature-video video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #0a1421;
+}
+
+.memory-montage__feature-copy {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.memory-montage__feature-copy .eyebrow {
+  color: var(--pink-primary);
+}
+
+.memory-montage__feature-copy h4 {
+  margin: 0;
+  color: var(--blue-primary);
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.memory-montage__feature-copy p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* MOBILE-FIRST: a swipeable horizontal rail on phones. The dense 12-column
+   editorial collage is layered on at min-width: 760px, where there is room for
+   it. Horizontal overflow is contained by the scroller, never the document. */
 .memory-montage__collage {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(9rem, 1fr));
-  gap: clamp(0.55rem, 1.4vw, 0.9rem);
-  height: clamp(30rem, 52vw, 39rem);
+  grid-auto-flow: column;
+  grid-auto-columns: 72%;
+  grid-template-columns: none;
+  grid-template-rows: none;
+  gap: var(--space-xs);
+  height: auto;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.35rem;
 }
 
+.memory-montage__collage::-webkit-scrollbar {
+  display: none;
+}
+
+/* In the mobile rail the collage is auto-placed, so every item must release the
+   explicit desktop grid coordinates and scroll-snap instead. */
 .memory-montage__item {
   position: relative;
   min-width: 0;
   margin: 0;
   overflow: hidden;
-  border: 5px solid rgba(255, 255, 255, 0.88);
+  scroll-snap-align: center;
+  aspect-ratio: 4 / 5;
+  border: 4px solid rgba(255, 255, 255, 0.88);
   border-radius: var(--radius-md);
   background: var(--blue-soft);
   box-shadow: 0 14px 32px rgba(11, 22, 36, 0.18);
@@ -1648,39 +2113,40 @@ html.js .reveal.is-revealed {
 }
 
 .memory-montage__item--childhood {
-  grid-column: 1 / 5;
-  grid-row: 1 / 4;
-  transform: rotate(-0.8deg);
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
 }
 
 .memory-montage__item--childhood img { object-position: center 24%; }
 
 .memory-montage__item--family {
-  grid-column: 5 / 9;
-  grid-row: 1 / 2;
-  transform: rotate(0.6deg);
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
 }
 
 .memory-montage__item--family img { object-position: center 22%; }
 
 .memory-montage__item--school {
-  grid-column: 9 / 13;
-  grid-row: 1 / 3;
-  transform: rotate(0.9deg);
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
+  aspect-ratio: 1;
 }
 
 .memory-montage__item--friends {
-  grid-column: 5 / 10;
-  grid-row: 2 / 4;
-  transform: rotate(-0.45deg);
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
 }
 
 .memory-montage__item--friends img { object-position: center 30%; }
 
 .memory-montage__item--today {
-  grid-column: 10 / 13;
-  grid-row: 3 / 4;
-  transform: rotate(0.7deg);
+  grid-column: auto;
+  grid-row: auto;
+  transform: none;
 }
 
 .memory-montage__item--today img { object-position: center 20%; }
@@ -1838,6 +2304,124 @@ html.js .reveal.is-revealed {
 /* ==========================================================================
    PHASE 2 — FINALE: SONG, PORTRAIT, AND DEDICATION
    ========================================================================== */
+
+/* ==========================================================================
+   CLOSING STAGE — WISH, SHARE, AND CREATOR CREDIT (MOBILE-FIRST)
+   ========================================================================== */
+.closing-stage {
+  position: relative;
+  padding:
+    calc(var(--space-2xl) + env(safe-area-inset-top))
+    0
+    calc(var(--space-2xl) + env(safe-area-inset-bottom) + 3.5rem);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 124, 165, 0.16), transparent 45%),
+    linear-gradient(180deg, #0a1b2f 0%, #071828 100%);
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.closing-panel {
+  max-width: 34rem;
+  margin-inline: auto;
+}
+
+.closing-title {
+  font-size: clamp(1.9rem, 8vw, 3rem);
+  line-height: 1.05;
+  margin-bottom: var(--space-sm);
+  color: var(--white);
+}
+
+.closing-lede {
+  margin-bottom: var(--space-lg);
+  color: var(--text-light-muted);
+  font-size: var(--text-sm);
+}
+
+/* Stacked full-width buttons on a phone: the primary action is reachable with
+   a thumb, and both clear 44px. */
+.closing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  align-items: stretch;
+}
+
+.closing-btn {
+  width: 100%;
+  min-height: 3.25rem;
+  justify-content: center;
+  gap: var(--space-xs);
+}
+
+.closing-status {
+  min-height: 1.25rem;
+  margin-top: var(--space-md);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--champagne);
+}
+
+/* --- Creator credit ----------------------------------------------------
+   Intentionally quiet. This is an end title, not a second hero, and it uses
+   no photograph so nothing competes with Mercy for attention. */
+.creator-credit {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.creator-credit__label {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  color: var(--text-muted);
+}
+
+.creator-credit__name {
+  margin: var(--space-2xs) 0 var(--space-xs);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 6vw, 2rem);
+  font-weight: 600;
+  color: var(--champagne);
+}
+
+.creator-credit__meta {
+  margin: 0 0 var(--space-2xs);
+  font-size: var(--text-sm);
+  color: var(--text-light-muted);
+}
+
+.creator-credit__meta strong {
+  color: var(--text-light);
+  font-weight: 600;
+}
+
+.creator-credit__note {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 30rem;
+  margin-inline: auto;
+}
+
+/* Once there is room, the two closing actions sit side by side. */
+@media (min-width: 560px) {
+  .closing-actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .closing-btn {
+    width: auto;
+    min-width: 15rem;
+  }
+}
 .birthday-stage-content {
   width: min(100%, 72rem);
 }
@@ -1850,10 +2434,10 @@ html.js .reveal.is-revealed {
 
 .birthday-experience-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.22fr) minmax(18rem, 0.78fr);
+  grid-template-columns: 1fr;
   align-items: stretch;
-  gap: clamp(1rem, 2.5vw, 1.6rem);
-  margin-top: var(--space-xl);
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
   text-align: left;
 }
 

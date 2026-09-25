@@ -1,4 +1,4 @@
-﻿const http = require('http');
+const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const types = { '.html':'text/html', '.css':'text/css', '.js':'text/javascript' };
@@ -10,7 +10,27 @@ const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': types[path.extname(f)] || 'application/octet-stream' });
   res.end(fs.readFileSync(f));
 });
-const targets = ['/', '/css/variables.css', '/css/base.css', '/css/components.css', '/css/decorations.css', '/css/sections.css', '/css/responsive.css', '/js/data.js', '/js/main.js'];
+const targets = [
+  '/',
+  '/index.html',
+  '/sw.js',
+  '/manifest.webmanifest',
+  '/css/variables.css',
+  '/css/base.css',
+  '/css/components.css',
+  '/css/decorations.css',
+  '/css/sections.css',
+  '/css/responsive.css',
+  '/js/data.js',
+  '/js/media.js',
+  '/js/sound.js',
+  '/js/prologue.js',
+  '/js/main.js',
+  '/js/media-manifest.json',
+  // At least one generated image, to prove the optimised pipeline is served.
+  '/assets/img/me-currently-640.webp',
+  '/assets/img/my-studio-song-poster.webp'
+];
 function get(p) {
   return new Promise((resolve, reject) => {
     const req = http.get({ host: '127.0.0.1', port: 8081, path: p, agent: false }, res => {
