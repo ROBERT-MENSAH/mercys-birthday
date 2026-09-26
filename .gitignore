@@ -7,3 +7,4 @@ bt*.log
 bt*.err
 browse.txt
 all.txt
+.env*
