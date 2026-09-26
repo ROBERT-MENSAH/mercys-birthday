@@ -642,22 +642,42 @@
 
     var ctx = null;
     var playing = false;
+    var starting = false;
+    var master = null;
     var nodes = [];
     var timers = [];
 
     var N = {
-      C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0,
-      A4: 440.0, B4: 493.88, C5: 523.25, G3: 196.0, C3: 130.81, G2: 98.0
+      C4: 261.63, D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.0,
+      A4: 440.0, B4: 493.88, C5: 523.25, D5: 587.33,
+      G2: 98.0, C3: 130.81, D3: 146.83
     };
 
-    /* "Happy Birthday to You" in G major. [frequency, beats] */
+    /* "Happy Birthday to You", G major. [frequency, beats]
+       Each row is one line of the song. The old version of this array was
+       wrong (it opened on G instead of D and never used an F#), so it did not
+       sound like the birthday song at all. Correct line-by-line:
+         Hap-py  birth-day  to    you  ->  D D  E D  G    F#
+         Hap-py  birth-day  to    you  ->  D D  E D  A    G
+         Hap-py  birth-day  dear Mercy ->  D D  D' B  G F# E
+         Hap-py  birth-day  to    you  ->  C C  B G  A    G          */
     var SONG = [
-      [N.G4, 0.5], [N.G4, 0.25], [N.G4, 0.25], [N.G4, 0.25], [N.A4, 0.5], [N.A4, 0.5],
-      [N.G4, 0.25], [N.G4, 0.25], [N.C5, 1.0],
-      [N.F4, 0.5], [N.F4, 0.25], [N.F4, 0.25], [N.E4, 0.25], [N.E4, 0.25], [N.D4, 0.5], [N.D4, 0.5],
-      [N.C4, 0.5], [N.C4, 0.5], [N.G4, 0.5], [N.G4, 0.5], [N.E4, 0.5], [N.E4, 0.5],
-      [N.D4, 0.5], [N.D4, 0.5], [N.C4, 1.0]
+      [N.D4, 0.5], [N.D4, 0.5], [N.E4, 1.0], [N.D4, 1.0], [N.G4, 1.0], [N.Fs4, 2.0],
+      [N.D4, 0.5], [N.D4, 0.5], [N.E4, 1.0], [N.D4, 1.0], [N.A4, 1.0], [N.G4, 2.0],
+      [N.D4, 0.5], [N.D4, 0.5], [N.D5, 1.5], [N.B4, 0.5], [N.G4, 1.0], [N.Fs4, 0.5], [N.E4, 1.0],
+      [N.C5, 0.5], [N.C5, 0.5], [N.B4, 1.0], [N.G4, 1.0], [N.A4, 1.0], [N.G4, 2.0]
     ];
+
+    /* A single master bus: one place to set the overall level, and one place
+       for stopAll() to cut everything cleanly. */
+    function ensureMaster() {
+      if (!master) {
+        master = ctx.createGain();
+        master.gain.value = 0.9;
+        master.connect(ctx.destination);
+      }
+      return master;
+    }
 
     function note(freq, start, dur, gainVal, type) {
       var osc = ctx.createOscillator();
@@ -667,18 +687,27 @@
       g.gain.setValueAtTime(0.0001, start);
       g.gain.exponentialRampToValueAtTime(gainVal, start + 0.04);
       g.gain.exponentialRampToValueAtTime(0.0001, start + dur * 0.95);
-      osc.connect(g).connect(ctx.destination);
+      osc.connect(g).connect(ensureMaster());
       osc.start(start);
       osc.stop(start + dur);
+      /* Let each node go once it has finished. Without this every play leaves
+         50+ spent oscillators wired into the graph and the song gets heavier. */
+      osc.onended = function () {
+        try { osc.disconnect(); g.disconnect(); } catch (e) {}
+      };
       nodes.push(osc);
     }
 
     function stopAll() {
-      nodes.forEach(function (n) { try { n.stop(); } catch (e) {} });
+      nodes.forEach(function (n) {
+        try { n.stop(); } catch (e) {}
+        try { n.disconnect(); } catch (e) {}
+      });
       nodes = [];
       timers.forEach(clearTimeout);
       timers = [];
       playing = false;
+      starting = false;
       btn.setAttribute("aria-pressed", "false");
       var lbl = btn.querySelector("[data-song-label]");
       if (lbl) lbl.textContent = "Play the birthday song";
@@ -688,38 +717,66 @@
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) { toast("Audio is not supported on this device."); return; }
       if (!ctx) ctx = new AC();
-      if (ctx.state === "suspended") ctx.resume();
 
-      playing = true;
-      btn.setAttribute("aria-pressed", "true");
-      var lbl = btn.querySelector("[data-song-label]");
-      if (lbl) lbl.textContent = "Stop the birthday song";
+      /* resume() is ASYNCHRONOUS, and it is REJECTED outright when the tap did
+         not count as a user gesture. The old code fired it and moved straight
+         on to scheduling notes: if the promise rejected, the context stayed
+         suspended, nothing was ever audible, yet the button still read
+         "Stop the birthday song". So await it, check the state, and only then
+         claim that the song is playing. */
+      var ready = ctx.state === "running"
+        ? Promise.resolve()
+        : Promise.resolve().then(function () { return ctx.resume(); }).catch(function () {});
 
-      var beat = 0.28;
-      var t = ctx.currentTime + 0.08;
-      for (var i = 0; i < SONG.length; i++) {
-        note(SONG[i][0], t, SONG[i][1] * beat, 0.16, "triangle");
-        t += SONG[i][1] * beat;
-      }
-      var total = t - ctx.currentTime;
+      starting = true;
+      return ready.then(function () {
+        starting = false;
+        if (ctx.state !== "running") {
+          /* Honest failure: say so instead of pretending to play. */
+          toast("Tap once more and the song will play.");
+          return;
+        }
 
-      /* gentle accompaniment so it sounds like a gift, not a test tone */
-      var bt = ctx.currentTime + 0.08;
-      for (var b = 0; b < 10; b++) {
-        note(N.G2, bt, beat * 1.7, 0.05, "sine");
-        note(N.C3, bt + beat, beat * 1.7, 0.04, "sine");
-        bt += beat * 2;
-      }
-      var at = ctx.currentTime + 0.08;
-      for (var k = 0; k * beat < total; k += 2) {
-        note([N.C4, N.E4, N.G4, N.E4][(k / 2) % 4], at + k * beat, beat * 1.4, 0.028, "sine");
-      }
+        playing = true;
+        btn.setAttribute("aria-pressed", "true");
+        var lbl = btn.querySelector("[data-song-label]");
+        if (lbl) lbl.textContent = "Stop the birthday song";
+        ensureMaster();
 
-      timers.push(setTimeout(stopAll, total * 1000 + 250));
+        /* A real beat length. The old 0.28s-per-beat crammed the whole tune
+           into ~3.5s, which is why it sounded like a click rather than a song. */
+        var beat = 0.42;
+        var t = ctx.currentTime + 0.12;
+        for (var i = 0; i < SONG.length; i++) {
+          note(SONG[i][0], t, SONG[i][1] * beat, 0.22, "triangle");
+          t += SONG[i][1] * beat;
+        }
+        var total = t - ctx.currentTime;
+
+        /* Gentle accompaniment, derived from the tune's real length instead of
+           a hardcoded count: root/fifth walking bass under the whole thing... */
+        var bassRoots = [N.G2, N.D3, N.G2, N.C3];
+        var steps = Math.ceil(total / (beat * 2));
+        for (var b = 0; b < steps; b++) {
+          var bt = ctx.currentTime + 0.12 + b * beat * 2;
+          note(bassRoots[(b >> 1) % bassRoots.length], bt, beat * 1.8, 0.09, "sine");
+        }
+        /* ...plus a quiet sparkle an octave up so it feels like a gift. */
+        for (var k = 0; k * beat * 2 < total; k++) {
+          note([N.D5, N.G4, N.B4, N.G4][k % 4],
+               ctx.currentTime + 0.12 + k * beat * 2, beat * 1.5, 0.03, "sine");
+        }
+
+        timers.push(setTimeout(stopAll, total * 1000 + 400));
+      });
     }
 
     btn.addEventListener("click", function () {
-      if (playing) { stopAll(); } else { play(); }
+      if (playing) { stopAll(); return; }
+      /* Ignore repeat taps while a resume is still in flight, otherwise the
+         tune gets scheduled twice on top of itself. */
+      if (starting) return;
+      play();
     });
   })();
 

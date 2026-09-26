@@ -741,22 +741,65 @@ async function main() {
   await page.goto(`${BASE}/birthday/`, { settle: 700 });
 
   const song = await page.eval(`(async () => {
+    const errs = [];
+    window.addEventListener('error', (e) => errs.push(String((e.error && e.error.stack) || e.message || e)));
+    const Orig = window.AudioContext;
+    if (!Orig) return { error: 'no AudioContext constructor' };
+    let created = 0;
+    function Wrapped() {
+      const c = new (Function.prototype.bind.apply(Orig, [null].concat([...arguments])))();
+      window.__ctx = c;
+      const co = c.createOscillator.bind(c);
+      c.createOscillator = function () { created++; return co(); };
+      return c;
+    }
+    Wrapped.prototype = Orig.prototype;
+    window.AudioContext = Wrapped;
+    window.webkitAudioContext = Wrapped;
+
     const btn = document.querySelector('[data-song]');
     if (!btn) return { error: 'no [data-song]' };
     const label = btn.querySelector('[data-song-label]');
     const before = { pressed: btn.getAttribute('aria-pressed'), text: label ? label.textContent : '' };
     btn.click();
-    await new Promise(r => setTimeout(r, 600));
-    const during = { pressed: btn.getAttribute('aria-pressed'), text: label ? label.textContent : '' };
+    await new Promise(r => setTimeout(r, 700));
+    const c = window.__ctx;
+    const t0 = c ? c.currentTime : 0;
+    /* Wait 5s. A real "Happy Birthday" runs ~10s; the old broken tune finished
+       in ~3.5s, so a short wait is the cheapest way to catch it collapsing
+       back into a blip. */
+    await new Promise(r => setTimeout(r, 4600));
+    const during = {
+      pressed: btn.getAttribute('aria-pressed'),
+      text: label ? label.textContent : '',
+      ctxState: c ? c.state : null,
+      oscillators: created,
+      timeAdvanced: c ? (c.currentTime - t0) > 0.1 : false,
+      stillPlayingAfter5s: btn.getAttribute('aria-pressed') === 'true',
+    };
     btn.click();
     await new Promise(r => setTimeout(r, 400));
     const after = { pressed: btn.getAttribute('aria-pressed'), text: label ? label.textContent : '' };
-    return { before, during, after };
+    return { before, during, after, errs };
   })()`);
   record(
     !song.error && song.during.pressed === "true" && song.during.text !== song.before.text && song.after.pressed === "false",
     "birthday song starts and stops",
     JSON.stringify(song),
+  );
+  /* A flipped aria-pressed only proves the handler ran - it says nothing about
+     sound. Assert the audio graph is really built and the context is running. */
+  record(
+    !song.error && song.during.oscillators > 0 && song.during.ctxState === "running" && song.during.timeAdvanced,
+    "birthday song actually produces audio",
+    JSON.stringify(song && song.during) + (song && song.errs ? " errors=" + JSON.stringify(song.errs) : ""),
+  );
+  /* The tune must still be going after 5s - i.e. it is a real song, not a
+     3-second click that happens to flip a button. */
+  record(
+    !song.error && song.during.stillPlayingAfter5s === true,
+    "birthday song runs for a real length of time",
+    JSON.stringify(song && song.during),
   );
 
   const cake = await page.eval(`(async () => {
