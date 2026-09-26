@@ -321,7 +321,7 @@ function birthday() {
       <p class="prose" style="margin-top:var(--s-4)">${esc(celebration.lead)}</p>
 
       <div style="margin-top:var(--s-6)">
-        <button class="cake" type="button" data-cake aria-label="${esc(celebration.candleLabel)}">
+        <button class="cake" type="button" data-cake data-label-on="${esc(celebration.candleLabel)}" data-label-off="${esc(celebration.candleLabelOut)}" aria-label="${esc(celebration.candleLabel)}">
           <svg viewBox="0 0 240 200" role="img" aria-label="A birthday cake with lit candles">
             <ellipse cx="120" cy="182" rx="78" ry="10" fill="rgba(0,0,0,.35)"/>
             <rect x="42" y="112" width="156" height="62" rx="12" fill="#F75FA5"/>
@@ -335,7 +335,7 @@ function birthday() {
             </g>
           </svg>
         </button>
-        <p class="prose" style="margin-top:var(--s-3);font-size:var(--t-sm)">${esc(celebration.candleNote)}</p>
+        <p class="prose" data-cake-note data-note-on="${esc(celebration.candleNote)}" data-note-off="${esc(celebration.candleNoteOut)}" style="margin-top:var(--s-3);font-size:var(--t-sm)">${esc(celebration.candleNote)}</p>
       </div>
 
       <div class="songbox" style="margin-top:var(--s-6)">

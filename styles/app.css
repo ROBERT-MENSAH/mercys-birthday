@@ -1287,8 +1287,11 @@ html.is-gated, html.is-gated body { overflow: hidden; }
   from { transform: scaleY(0.9) scaleX(1.04); opacity: 0.85; }
   to { transform: scaleY(1.12) scaleX(0.95); opacity: 1; }
 }
-.cake.is-out .cake__flame { animation: none; opacity: 0.18; }
-.cake.is-out { transform: scale(0.97); }
+/* Blown out. The flames used to drop to 18% opacity, which still read as three
+   lit candles at a glance - so the tap looked like it had done nothing. Take
+   them right down and desaturate them so the state is unmistakable. */
+.cake.is-out .cake__flame { animation: none; opacity: 0.07; filter: grayscale(1); }
+.cake.is-out { transform: scale(0.96); }
 
 .songbox {
   display: flex;

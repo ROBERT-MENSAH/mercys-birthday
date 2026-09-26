@@ -813,14 +813,26 @@
   (function candles() {
     var cake = $("[data-cake]");
     if (!cake) return;
-    cake.addEventListener("click", function () {
-      if (cake.classList.contains("is-out")) {
-        cake.classList.remove("is-out");
-        toast("Another wish? Tap the cake.");
-      } else {
-        cake.classList.add("is-out");
-        toast("Wish made. Happy birthday, Mercy!");
+    var note = $("[data-cake-note]");
+
+    /* Blowing the candles out used to change almost nothing on screen: the
+       flames dimmed a little, the toast vanished after 2.6s, and the caption
+       still said "Tap the cake to make a wish." - so to a real visitor the tap
+       looked like it had done nothing. Reflect the state in the words too. */
+    function render(out) {
+      cake.classList.toggle("is-out", out);
+      var label = out ? cake.getAttribute("data-label-off") : cake.getAttribute("data-label-on");
+      if (label) cake.setAttribute("aria-label", label);
+      if (note) {
+        var text = out ? note.getAttribute("data-note-off") : note.getAttribute("data-note-on");
+        if (text) note.textContent = text;
       }
+    }
+
+    cake.addEventListener("click", function () {
+      var out = !cake.classList.contains("is-out");
+      render(out);
+      toast(out ? "Wish made. Happy birthday, Mercy!" : "Another wish? Tap the cake.");
     });
   })();
 

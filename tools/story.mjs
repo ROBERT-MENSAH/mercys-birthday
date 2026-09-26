@@ -311,6 +311,8 @@ export const celebration = {
   songTitle: "Happy Birthday to You",
   songNote: "A little tune, made for you. Press play.",
   candleLabel: "Blow out the candles",
-  candleNote: "Tap the cake to make a wish.",
+  candleLabelOut: "Relight the candles",
+  candleNote: "Tap the cake to blow out the candles and make a wish.",
+  candleNoteOut: "Wish made! Tap the cake to relight them.",
   confetti: "Celebrate",
 };

@@ -15,6 +15,7 @@
     "start": "npm run build && node tools/serve.mjs",
     "serve": "node tools/serve.mjs",
     "browser": "node tools/browsertest.mjs",
+    "tap": "node tools/tapprobe.mjs",
     "dev": "node tools/build.mjs && node tools/check.mjs",
     "all": "node tools/makeicons.mjs && node tools/build.mjs && node tools/check.mjs && node tools/selftest.mjs && node tools/browsertest.mjs"
   },

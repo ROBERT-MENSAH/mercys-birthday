@@ -805,13 +805,44 @@ async function main() {
   const cake = await page.eval(`(async () => {
     const cake = document.querySelector('[data-cake]');
     if (!cake) return { error: 'no [data-cake]' };
+    const note = document.querySelector('[data-cake-note]');
+    const before = { text: note && note.textContent, label: cake.getAttribute('aria-label') };
+    /* Can a real finger actually reach it, or is something painted on top? */
+    const hit = (() => {
+      const r = cake.getBoundingClientRect();
+      const h = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return !!(h && (h === cake || cake.contains(h) || h.contains(cake)));
+    })();
     cake.click(); await new Promise(r => setTimeout(r, 250));
-    const out = cake.classList.contains('is-out');
-    const toast1 = document.querySelector('[data-toast]').classList.contains('is-on');
+    const out = {
+      isOut: cake.classList.contains('is-out'),
+      toast: document.querySelector('[data-toast]').classList.contains('is-on'),
+      text: note && note.textContent,
+      label: cake.getAttribute('aria-label'),
+    };
     cake.click(); await new Promise(r => setTimeout(r, 250));
-    return { out, toast1, relit: !cake.classList.contains('is-out') };
+    return {
+      before, out, hit,
+      relit: !cake.classList.contains('is-out'),
+      textBack: note && note.textContent,
+      labelBack: cake.getAttribute('aria-label'),
+    };
   })()`);
-  record(!cake.error && cake.out && cake.relit && cake.toast1, "cake blows out and relights", JSON.stringify(cake));
+  /* The class flipping is not enough on its own: the original bug was that the
+     tap worked but changed almost nothing a visitor could see. Assert the
+     instruction text and the accessible label both change too. */
+  record(
+    !cake.error && cake.out.isOut && cake.relit && cake.out.toast &&
+    cake.out.text !== cake.before.text && cake.textBack === cake.before.text &&
+    cake.out.label !== cake.before.label,
+    "cake blows out, relights, and says so in words",
+    JSON.stringify(cake),
+  );
+  record(
+    !cake.error && cake.hit === true,
+    "cake is actually tappable (no overlay swallowing the tap)",
+    JSON.stringify(cake && cake.hit),
+  );
   await page.shot("phone-390__cake-out");
 
   const confetti = await page.eval(`(async () => {
