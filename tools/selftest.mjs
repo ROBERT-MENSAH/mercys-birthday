@@ -107,6 +107,48 @@ for (const [path, expect, type] of ASSETS) {
     console.log("  ERR       " + path + "  " + e.message);
   }
 }
+/* The app icons are cut from a photograph, not drawn. A flat generated
+   monogram compresses to a couple of KB, so an icon that is a real square of
+   plausible photographic weight is the cheapest guard against someone running
+   tools/makeicons.mjs again and silently putting the abstract mark back. */
+const ICON_SPECS = [
+  ["/icons/favicon-32.png", 32],
+  ["/icons/apple-touch-icon.png", 180],
+  ["/icons/app-icon-192.png", 192],
+  ["/icons/app-icon-512.png", 512],
+  ["/icons/app-icon-maskable-192.png", 192],
+  ["/icons/app-icon-maskable-512.png", 512],
+];
+const pngSize = (buf) => {
+  const sig = [137, 80, 78, 71, 13, 10, 26, 10];
+  for (let i = 0; i < sig.length; i++) if (buf[i] !== sig[i]) return null;
+  return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+};
+for (const [path, edge] of ICON_SPECS) {
+  try {
+    const r = await fetch(BASE + path, { signal: AbortSignal.timeout(8000) });
+    const buf = Buffer.from(await r.arrayBuffer());
+    const dim = pngSize(buf);
+    /* Below ~180px a 32px crop of a photograph is legitimately tiny, so the
+       weight floor only applies once there is room for real detail. */
+    const floor = edge >= 180 ? 20000 : 0;
+    const ok = dim && dim.w === edge && dim.h === edge && buf.byteLength > floor;
+    console.log(
+      "  " + (ok ? "ok  " : "BAD ") + "icon " + (dim ? dim.w + "x" + dim.h : "not a png").padEnd(9) +
+        String(buf.byteLength).padStart(7) + "b  " + path
+    );
+    if (!ok) {
+      fail.push(
+        path + " is " + (dim ? dim.w + "x" + dim.h : "not a PNG") + " / " + buf.byteLength +
+          "b, expected a " + edge + "x" + edge + " photo icon of over " + floor + "b" +
+          " (run: npm run icons:photo)"
+      );
+    }
+  } catch (e) {
+    fail.push(`${path} -> ${e.message}`);
+    console.log("  ERR       " + path + "  " + e.message);
+  }
+}
 
 /* range request, so <video> can seek */
 try {

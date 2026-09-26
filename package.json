@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "node tools/build.mjs",
-    "icons": "node tools/makeicons.mjs",
+    "icons": "node tools/makeicons-photo.mjs",
+    "icons:monogram": "node tools/makeicons.mjs",
     "check": "node tools/check.mjs",
     "test": "node tools/selftest.mjs",
     "start": "npm run build && node tools/serve.mjs",
@@ -17,7 +18,7 @@
     "browser": "node tools/browsertest.mjs",
     "tap": "node tools/tapprobe.mjs",
     "dev": "node tools/build.mjs && node tools/check.mjs",
-    "all": "node tools/makeicons.mjs && node tools/build.mjs && node tools/check.mjs && node tools/selftest.mjs && node tools/browsertest.mjs"
+    "all": "node tools/makeicons-photo.mjs && node tools/build.mjs && node tools/check.mjs && node tools/selftest.mjs && node tools/browsertest.mjs"
   },
   "keywords": ["birthday", "static-site", "no-dependencies"],
   "license": "UNLICENSED"
