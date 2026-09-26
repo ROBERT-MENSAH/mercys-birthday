@@ -590,18 +590,20 @@ img[data-failed] { opacity: 0; }
   color: var(--rose-200);
 }
 
-/* ---------- bottom tab bar (phones) ----------
+/* ---------- bottom tab bar ----------
    A fixed, thumb-reach tab bar. It shares the NAV source with the top bar, so
-   labels and icons can never drift apart. Hidden from 860px up, where the
-   left rail and inline links take over.
+   labels and icons can never drift apart. Shown at every width.
 
    - fixed to the viewport, never scrolls with content and never auto-hides,
      so the bar is always exactly where the thumb expects it
    - reserves env(safe-area-inset-bottom) so it clears the home indicator
    - every tab is a 56px+ touch target
    - .tabs-safe on body keeps the last line of every page clear of it        */
+/* the bar shows at every width. The desktop rail still exists above it, so on a
+   wide screen the two are redundant - but the bottom bar is the one place a
+   thumb can always reach, and it is the same five destinations everywhere. */
 .tabs {
-  display: none;
+  display: block;
   position: fixed;
   left: 0;
   right: 0;
@@ -716,23 +718,14 @@ img[data-failed] { opacity: 0; }
   .tab__ico { width: 32px; height: 25px; }
   .tab__dot { width: 16px; }
 }
-/* the bar is phone-only - the desktop rail and inline links take over */
-@media (min-width: 860px) {
-  .tabs { display: none !important; }
-}
-@media (max-width: 859px) {
-  .tabs { display: block; }
-  /* never sit under a full-screen overlay (lightbox / drawer) */
-  body.lb-open .tabs { display: none; }
-  .top__drawer[open] ~ .tabs { display: none; }
-}
+/* never sit under a full-screen overlay (lightbox / drawer) */
+body.lb-open .tabs { display: none; }
+.top__drawer[open] ~ .tabs { display: none; }
 
 /* keep page content clear of the fixed bar while it is on screen */
-@media (max-width: 859px) {
-  body.tabs-safe { padding-bottom: calc(var(--safe-b) + 58px + var(--s-5)); }
-  /* no bar while an overlay owns the screen - reclaim the space */
-  body.lb-open.tabs-safe { padding-bottom: var(--s-5); }
-}
+body.tabs-safe { padding-bottom: calc(var(--safe-b) + 58px + var(--s-5)); }
+/* no bar while an overlay owns the screen - reclaim the space */
+body.lb-open.tabs-safe { padding-bottom: var(--s-5); }
 
 /* ---------- editorial bits ---------- */
 .prose {
@@ -2140,5 +2133,7 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
     border-top: 1px solid var(--line);
   }
   .top__act .top__cta { flex: 1; justify-content: center; }
-  .top__menu, .top__drawer, .tabs { display: none !important; }
+  /* the bottom bar stays: it is a left:0/right:0 bar, so it spans the full
+     viewport and clears the 252px rail rather than sitting under it. */
+  .top__menu, .top__drawer { display: none !important; }
 }

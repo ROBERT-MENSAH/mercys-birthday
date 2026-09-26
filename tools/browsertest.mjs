@@ -489,7 +489,15 @@ async function main() {
     if (r.bodyPad < 58) tabIssues.push(`${r.v} ${r.name}: body padding ${r.bodyPad}px < 58px bar height`);
   }
   for (const r of desk) {
-    if (!r.error && r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar should be hidden on desktop`);
+    if (r.error) { tabIssues.push(`${r.v} ${r.name}: ${r.error}`); continue; }
+    /* the bar is shown at every width, so the same guarantees apply on desktop */
+    if (!r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar not shown on desktop`);
+    if (r.position !== "fixed") tabIssues.push(`${r.v} ${r.name}: position=${r.position} (want fixed)`);
+    if (!r.onScreen) tabIssues.push(`${r.v} ${r.name}: bar off-screen h=${r.height}`);
+    if (r.count !== 5) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want 5)`);
+    if (r.overflowX > 1) tabIssues.push(`${r.v} ${r.name}: overflows by ${r.overflowX}px`);
+    if (r.activeCount > 1) tabIssues.push(`${r.v} ${r.name}: ${r.activeCount} active tabs`);
+    if (r.bodyPad < 58) tabIssues.push(`${r.v} ${r.name}: body padding ${r.bodyPad}px < 58px bar height`);
   }
   record(tabIssues.length === 0, `tab bar across 3 viewports x 3 pages`, JSON.stringify(tabReport));
   for (const i of tabIssues) console.log(`      ! ${i}`);
