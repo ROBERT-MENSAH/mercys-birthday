@@ -2140,5 +2140,5 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
     border-top: 1px solid var(--line);
   }
   .top__act .top__cta { flex: 1; justify-content: center; }
-  .top__menu, .top__drawer, .tabbar { display: none !important; }
+  .top__menu, .top__drawer, .tabs { display: none !important; }
 }
