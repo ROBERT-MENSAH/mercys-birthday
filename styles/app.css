@@ -1342,22 +1342,25 @@ html.is-gated, html.is-gated body { overflow: hidden; }
 }
 .installbar__note[hidden] { display: none; }
 .installbar__note .ic { flex: none; }
-/* The dismiss control has to stay reachable by thumb and by keyboard. */
+/* The dismiss control has to stay reachable by thumb and by keyboard, so the
+   box is a full 44px target even though the glyph inside it is small. The
+   surface behind it keeps the X legible where the page's decorations pass
+   underneath, which they do on the home page. */
 .installbar__x {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   flex: none;
-  margin: -0.25rem -0.3rem -0.25rem 0;
+  margin: -0.6rem -0.6rem -0.6rem 0;
   border: 0;
   border-radius: var(--r-full);
   color: var(--text-mute);
-  background: transparent;
+  background: color-mix(in srgb, var(--ink-900) 88%, transparent);
   cursor: pointer;
   transition: color 0.18s ease, background 0.18s ease;
 }
-.installbar__x:hover { color: var(--text); background: rgba(255, 255, 255, 0.07); }
+.installbar__x:hover { color: var(--text); background: var(--ink-900); }
 .installbar__x:focus-visible { outline: 2px solid var(--rose-400); outline-offset: 2px; }
 .installbar.is-installed { display: none !important; }
 /* On a narrow phone the bar has to stack, or the button crowds the words out
@@ -1369,7 +1372,10 @@ html.is-gated, html.is-gated body { overflow: hidden; }
   .installbar__btn { width: 100%; justify-content: center; }
   .installbar__steps { flex-wrap: wrap; }
   .installbar__note { max-width: none; }
-  .installbar__x { position: absolute; top: 0.5rem; right: 0.5rem; }
+  /* The dismiss button is absolutely placed so it never forces another line
+     onto an already-stacked bar, so the text has to keep clear of it. */
+  .installbar__x { position: absolute; top: 0.1rem; right: 0.15rem; }
+  .installbar__text, .installbar__act { padding-right: 2.5rem; }
 }
 /* ---------- birthday page ---------- */
 .bday { text-align: center; }
