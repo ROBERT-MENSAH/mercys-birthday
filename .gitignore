@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.browse/
+.vercel/
+
+bt*.log
+bt*.err
+browse.txt
+all.txt

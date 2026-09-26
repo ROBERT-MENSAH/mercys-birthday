@@ -1,0 +1,362 @@
+/**
+ * Shared HTML shell and reusable components.
+ *
+ * Every URL is emitted relative to the page depth so the site works when
+ * opened from a sub-folder or a local file path, not just a domain root.
+ */
+import { site, contact, creator } from "./content.mjs";
+import { icon, sprite } from "./iconsprite.mjs";
+import { media } from "./media.mjs";
+
+/* Phone tabs (thumb reach) + desktop links (top bar). One source, no drift. */
+export const NAV = [
+  { href: "/", label: "Home", icon: "home", short: "Home" },
+  { href: "/journey/", label: "Journey", icon: "compass", short: "Journey" },
+  { href: "/memories/", label: "Memories", icon: "images", short: "Memories" },
+  { href: "/birthday/", label: "Birthday", icon: "cake", hero: true, short: "Party" },
+  { href: "/wishes/", label: "Wishes", icon: "heart", short: "Wishes" },
+];
+
+export const DESK = [
+  ...NAV.slice(0, 3),
+  NAV[3],
+  NAV[4],
+  { href: "/gifts/", label: "Gifts", icon: "gift", short: "Gifts" },
+  { href: "/creator/", label: "Creator", icon: "user", short: "Creator" },
+];
+
+export const esc = (s = "") =>
+  String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+/** "../" repeated `depth` times - keeps every link portable. */
+export const base = (depth = 0) => (depth ? "../".repeat(depth) : "./");
+
+/**
+ * Prefix a site-root-relative path with the page's base so it resolves
+ * correctly from any folder depth. Use for assets and cross-page links.
+ */
+export const rel = (depth, p = "") => base(depth) + String(p).replace(/^\/+/, "");
+
+/* The folder depth of the page currently being rendered. Components read
+   this so every emitted asset URL resolves from wherever the page lives.
+   `node tools/build.mjs` calls setDepth() before each page is built. */
+let ASSET_BASE = "./";
+export const setDepth = (d) => { ASSET_BASE = base(d); };
+export const asset = (p) => ASSET_BASE + String(p).replace(/^\/+/, "");
+
+const wa = (text) =>
+  `https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent(text)}`;
+
+/* -------------------------------------------------------------------------- */
+/* Components                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * A responsive photo inside a fixed-ratio frame.
+ * The frame reserves space so nothing shifts while the image loads.
+ */
+export function picture(p, { ratio = "4/5", sizes = "(max-width: 720px) 92vw, 44vw", eager = false, cls = "", lightbox = true } = {}) {
+  if (!p) return "";
+  const srcset = p.srcset
+    ? p.srcset
+        .split(", ")
+        .map((c) => {
+          const [file, w] = c.split(" ");
+          return `${asset(file)} ${w}`;
+        })
+        .join(", ")
+    : "";
+  const tag = `<img class="ph__img" src="${asset(p.src)}"${srcset ? ` srcset="${srcset}"` : ""} sizes="${sizes}" alt="${esc(p.alt)}" loading="${eager ? "eager" : "lazy"}"${eager ? ' fetchpriority="high"' : ""} decoding="async">`;
+  const frame = `<figure class="ph ${cls}" style="--ar:${ratio}">`;
+
+  /* No lightbox: render the image on its own. This is what covers, heroes and
+     anything already wrapped in a link must use - a <button> inside an <a> is
+     invalid HTML and fires both the zoom and the navigation. */
+  if (!lightbox) return `${frame}${tag}</figure>`;
+
+  const capAttr = p.caption ? ` data-caption="${esc(p.caption)}"` : "";
+  return `${frame}<button class="ph__btn" type="button" data-zoom="${p.id}"${capAttr} aria-label="View larger: ${esc(p.caption || p.alt)}">${tag}<span class="ph__zoom" aria-hidden="true">${icon("plus", { size: 16 })}</span></button></figure>`;
+}
+
+/** A captioned photo. */
+export function figure(p, { caption = "", ratio = "4/5", cls = "", eager = false, sizes } = {}) {
+  if (!p) return "";
+  return `<figure class="shot ${cls}">
+    ${picture(p, { ratio, eager, sizes })}
+    ${caption ? `<figcaption class="shot__cap">${esc(caption)}</figcaption>` : ""}
+  </figure>`;
+}
+
+/** A row of photos. n = 2 or 3. */
+export function strip(ids, { ratio, captions, cls = "", eagerFirst = false } = {}) {
+  const list = ids.map((id) => media.photos[id]).filter(Boolean);
+  if (!list.length) return "";
+  const r = ratio || (list.length === 3 ? "1/1" : "3/4");
+  const cells = list
+    .map((p, i) => {
+      const cap = captions?.[i] || p.caption;
+      return `<figure class="shot shot--strip">
+        ${picture(p, {
+          ratio: r,
+          eager: eagerFirst && i === 0,
+          sizes: list.length === 3 ? "(max-width: 720px) 30vw, 20vw" : "(max-width: 720px) 45vw, 22vw",
+        })}
+        ${cap ? `<figcaption class="shot__cap">${esc(cap)}</figcaption>` : ""}
+      </figure>`;
+    })
+    .join("\n      ");
+  return `<div class="strip strip--${list.length} ${cls}">\n      ${cells}\n    </div>`;
+}
+
+/**
+ * Poster-first video. No <video> element and no network request for the mp4
+ * until the visitor presses play.
+ */
+export function videoCard(id, { ratio = "16/10", cls = "", inline = false } = {}) {
+  const v = media.videos[id];
+  if (!v) return "";
+  return `<figure class="vcard ${cls}" data-video="${v.id}" data-src="${asset(v.src)}" data-title="${esc(v.title)}"${v.poster ? ` data-poster="${asset(v.poster)}"` : ""}>
+        <div class="vcard__frame" style="--ar:${ratio}">
+          ${v.poster ? `<img class="vcard__poster" src="${asset(v.poster)}" alt="${esc(v.alt)}" width="960" height="600" loading="lazy" decoding="async">` : `<span class="vcard__poster vcard__poster--none"></span>`}
+          <button class="vcard__play" type="button" data-play aria-label="Play video: ${esc(v.title)}">
+            <span class="vcard__ring">${icon("play", { size: inline ? 26 : 22 })}</span>
+            <span class="vcard__playlabel">Play</span>
+          </button>
+        </div>
+        <figcaption class="vcard__cap">
+          <span class="vcard__title">${esc(v.title)}</span>
+          <span class="vcard__sub">${esc(v.caption)}</span>
+        </figcaption>
+      </figure>`;
+}
+
+/** WhatsApp wish launcher. */
+export function wishBox(prompt, { text, label = "Send a wish", cls = "" } = {}) {
+  return `<div class="wishbox ${cls}">
+        <div class="wishbox__head">${icon("whatsapp", { size: 20 })}<h3>${esc(prompt)}</h3></div>
+        <p class="wishbox__note">Wishes open in WhatsApp so they arrive straight on Mercy's phone.</p>
+        <a class="btn btn--wa" href="${wa(text)}" target="_blank" rel="noopener">${icon("whatsapp", { size: 18 })}<span>${esc(label)}</span></a>
+      </div>`;
+}
+
+/** Large editorial pull-quote. */
+export const aphorism = (text) =>
+  `<blockquote class="aph"><p>${esc(text)}</p></blockquote>`;
+
+export const prose = (text) => `<p class="prose">${esc(text)}</p>`;
+
+/** Section heading used on every page for consistent rhythm. */
+export const sectionHead = (kicker, title, { center = false } = {}) =>
+  `<header class="shead ${center ? "shead--center" : ""}">
+        ${kicker ? `<p class="shead__kick">${esc(kicker)}</p>` : ""}
+        <h2 class="shead__title">${esc(title)}</h2>
+        <span class="shead__rule" aria-hidden="true"></span>
+      </header>`;
+
+/* -------------------------------------------------------------------------- */
+/* Page shell — EPIC STRUCTURE                                                */
+/*                                                                            */
+/* Every page uses the same landmark order, mobile-first:                    */
+/*   1. skip link        — keyboard / screen-reader fast path                 */
+/*   2. ambient bg       — decorative only, outside landmarks                 */
+/*   3. header.top       — brand + desktop nav + quick actions                */
+/*   4. main#main.wrap   — the one unique content region per page             */
+/*   5. footer.foot      — sitemap + credit                                   */
+/*   6. lightbox + toast — app-level overlays                                 */
+/*                                                                            */
+/* Breakpoints: base = phone (360px), ≥600px = large phone,                  */
+/* ≥860px = laptop, ≥1100px = wide. Base never depends on queries.           */
+/* -------------------------------------------------------------------------- */
+
+export const DESK_LINKS = DESK;
+
+const headHtml = (current, b) =>
+  `<a class="skip" href="#main">Skip to content</a>
+    <div class="bg" aria-hidden="true">
+      <span class="bg__orb bg__orb--a"></span><span class="bg__orb bg__orb--b"></span>
+      <span class="bg__balloon bg__balloon--a"></span><span class="bg__balloon bg__balloon--b"></span>
+      <span class="bg__flower bg__flower--a"></span><span class="bg__flower bg__flower--b"></span>
+    </div>
+    <header class="top" data-top>
+      <span class="top__progress" data-scroll-progress aria-hidden="true"></span>
+      <div class="top__in">
+        <a class="brand" href="${b}" aria-label="${esc(site.name)} — home">
+          <span class="brand__mark" aria-hidden="true">M</span>
+          <span class="brand__txt"><b>${site.shortName}</b><i>${site.tagline}</i></span>
+        </a>
+        <nav class="top__nav" aria-label="Sections">
+          <span class="top__pill" data-nav-pill aria-hidden="true"></span>
+          <ul>
+            ${DESK_LINKS.map(
+              (n) =>
+                `<li><a class="top__link${n.hero ? " top__link--hero" : ""} ${n.href === current ? "is-on" : ""}" href="${b}${n.href.slice(1)}"${n.href === current ? ' aria-current="page"' : ""} data-nav-link><span class="top__linkico">${icon(n.icon, { size: 18 })}</span><span>${n.label}</span></a></li>`,
+            ).join("")}
+          </ul>
+        </nav>
+        <div class="top__act">
+          <button class="ibtn" type="button" data-share aria-label="Share this page" title="Share this page">${icon("share", { size: 19 })}</button>
+          <a class="btn btn--primary btn--sm top__cta" href="${b}birthday/" aria-label="Go to the birthday celebration">${icon("cake", { size: 16 })}<span>Celebrate</span></a>
+          <button class="ibtn top__menu" type="button" data-menu-btn aria-label="Open menu" aria-expanded="false" aria-controls="site-menu">${icon("menu", { size: 19 })}<span class="top__menutext">Menu</span></button>
+        </div>
+      </div>
+      <dialog class="top__drawer" id="site-menu" data-menu aria-label="Site navigation">
+        <div class="drawer__panel">
+          <div class="drawer__head">
+            <span class="drawer__title">Explore</span>
+            <button class="ibtn drawer__close" type="button" data-menu-close aria-label="Close navigation">${icon("close", { size: 19 })}</button>
+          </div>
+          <nav aria-label="All sections">
+            <ul>
+              ${DESK_LINKS.map(
+                (n) =>
+                  `<li><a class="drawer__link ${n.href === current ? "is-on" : ""}" href="${b}${n.href.slice(1)}"${n.href === current ? ' aria-current="page"' : ""}><span class="drawer__ico">${icon(n.icon, { size: 19 })}</span><span>${n.label}</span>${icon("arrow-right", { size: 15 })}</a></li>`,
+              ).join("\n              ")}
+            </ul>
+          </nav>
+          <div class="drawer__foot">
+            <button class="btn btn--sm" type="button" data-share>${icon("share", { size: 16 })}<span>Share</span></button>
+            <a class="btn btn--sm btn--wa" href="https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent("Happy birthday Mercy!")}" target="_blank" rel="noopener">${icon("whatsapp", { size: 16 })}<span>Wish</span></a>
+          </div>
+        </div>
+      </dialog>
+    </header>`;
+
+const footHtml = (b, current = "") =>
+  `<footer class="foot">
+    <span class="foot__glow" aria-hidden="true"></span>
+    <div class="foot__in">
+      <div class="foot__main">
+        <div class="foot__idn">
+          <a class="brand brand--foot" href="${b}" aria-label="${esc(site.name)} — home">
+            <span class="brand__mark" aria-hidden="true">M</span>
+            <span class="brand__txt"><b>${esc(site.name)}</b><i>${esc(site.tagline)}</i></span>
+          </a>
+          <p class="foot__line">Made with real photographs and real memories.</p>
+          <div class="foot__social">
+            <button class="ibtn" type="button" data-share aria-label="Share this celebration" title="Share">${icon("share", { size: 18 })}</button>
+            <a class="ibtn" href="https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent("Happy birthday Mercy!")}" target="_blank" rel="noopener" aria-label="Send a birthday wish on WhatsApp" title="WhatsApp">${icon("whatsapp", { size: 18 })}</a>
+            <a class="ibtn" href="${b}creator/" aria-label="Meet the creator" title="Creator">${icon("user", { size: 18 })}</a>
+          </div>
+        </div>
+        <nav class="foot__nav" aria-label="Footer">
+          <div class="foot__grp">
+            <h3 class="foot__h">Explore</h3>
+            <ul class="foot__links">
+              ${NAV.map((n) => `<li><a class="${n.href === current ? "is-on" : ""}" href="${b}${n.href.slice(1)}"${n.href === current ? ' aria-current="page"' : ""}>${n.label}</a></li>`).join("")}
+            </ul>
+          </div>
+          <div class="foot__grp">
+            <h3 class="foot__h">Celebrate</h3>
+            <ul class="foot__links">
+              <li><a class="${current === "/birthday/" ? "is-on" : ""}" href="${b}birthday/"${current === "/birthday/" ? ' aria-current="page"' : ""}>Birthday party</a></li>
+              <li><a class="${current === "/wishes/" ? "is-on" : ""}" href="${b}wishes/"${current === "/wishes/" ? ' aria-current="page"' : ""}>Send a wish</a></li>
+              <li><a class="${current === "/gifts/" ? "is-on" : ""}" href="${b}gifts/"${current === "/gifts/" ? ' aria-current="page"' : ""}>Gifts</a></li>
+              <li><a class="${current === "/memories/" ? "is-on" : ""}" href="${b}memories/"${current === "/memories/" ? ' aria-current="page"' : ""}>Memory room</a></li>
+            </ul>
+          </div>
+        </nav>
+        <div class="foot__acts">
+          <p class="foot__eyebrow">${icon("cake", { size: 14 })} Make a wish for Mercy.</p>
+          <div class="foot__cta-act">
+            <a class="btn btn--primary btn--sm" href="${b}birthday/">${icon("cake", { size: 16 })}<span>Celebrate</span></a>
+            <a class="btn btn--sm" href="${b}wishes/">${icon("heart", { size: 16 })}<span>Send a wish</span></a>
+            <button class="btn btn--sm" type="button" data-share>${icon("share", { size: 16 })}<span>Share</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="foot__bottom">
+        <div class="foot__copy">
+          <p>&copy; ${new Date().getFullYear()} ${esc(site.name)} &middot; ${esc(site.tagline)}</p>
+          <p class="foot__by">Created with love &middot; ${esc(creator.name)} &middot; ${esc(creator.role)}</p>
+        </div>
+        <div class="foot__bar-act">
+          <a class="foot__creator" href="${b}creator/">Meet the creator ${icon("arrow-right", { size: 14 })}</a>
+          <a class="foot__top" href="#top">${icon("arrow-up", { size: 14 })}<span>Back to top</span></a>
+        </div>
+      </div>
+    </div>
+  </footer>`;
+
+const lightboxHtml = () =>
+  `<div class="lb" data-lightbox hidden>
+      <div class="lb__scrim" data-lb-close></div>
+      <figure class="lb__fig" role="dialog" aria-modal="true" aria-label="Enlarged photograph">
+        <img class="lb__img" alt="">
+        <figcaption class="lb__cap"><b class="lb__title"></b><span class="lb__desc"></span><span class="lb__count"></span></figcaption>
+        <button class="lb__x" type="button" data-lb-close aria-label="Close">${icon("close", { size: 20 })}</button>
+        <button class="lb__nav lb__nav--p" type="button" data-lb-prev aria-label="Previous">${icon("chevron-left", { size: 22 })}</button>
+        <button class="lb__nav lb__nav--n" type="button" data-lb-next aria-label="Next">${icon("chevron-right", { size: 22 })}</button>
+      </figure>
+    </div>`;
+
+/**
+ * Full HTML document — the epic, best structure.
+ * `current` is the NAV href of the active tab, or "" for pages off-nav.
+ *
+ * <head> order is deliberate:
+ *   charset → viewport → title → description → theme → PWA icons →
+ *   social cards → preload hero → stylesheet → page JSON-LD.
+ * <body> order is deliberate:
+ *   sprite → skip → bg → header → main → footer → overlays → JS.
+ */
+export function page({
+  title,
+  description = site.description,
+  current = "",
+  depth = 0,
+  body,
+  bodyClass = "",
+  ogImage = "img/my-picture-1-960.jpg",
+  jsonLd = null,
+  preloadHero = null,
+}) {
+  const b = base(depth);
+  const full = title === site.name ? title : `${title} - ${site.name}`;
+  const canonical = `${b}${current ? current.slice(1) : ""}`;
+  const foot = footHtml(b, current);
+  return `<!doctype html>
+<html lang="en" dir="ltr" id="top">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(full)}</title>
+  <meta name="description" content="${esc(description)}">
+  <link rel="canonical" href="${canonical}">
+  <meta name="theme-color" content="${site.themeColor}" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="${site.themeColor}" media="(prefers-color-scheme: light)">
+  <meta name="color-scheme" content="dark light">
+  <link rel="manifest" href="${b}manifest.webmanifest">
+  <link rel="icon" href="${b}icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="${b}icons/apple-touch-icon.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="${site.shortName}">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="${esc(site.name)}">
+  <meta property="og:title" content="${esc(full)}">
+  <meta property="og:description" content="${esc(description)}">
+  <meta property="og:image" content="${ogImage}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${esc(full)}">
+  <meta name="twitter:description" content="${esc(description)}">
+  ${preloadHero ? `<link rel="preload" as="image" href="${asset(preloadHero.src)}"${preloadHero.srcset ? ` imagesrcset="${preloadHero.srcset.split(", ").map((c) => { const [f, w] = c.split(" "); return `${asset(f)} ${w}`; }).join(", ")}" imagesizes="(max-width: 860px) 92vw, 44vw"` : ""} fetchpriority="high">` : ""}
+  <link rel="stylesheet" href="${b}styles/app.css">
+  ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ""}
+</head>
+<body class="${bodyClass}">
+  ${sprite()}
+  ${headHtml(current, b)}
+  <main id="main" class="wrap" tabindex="-1">
+${body}
+  </main>
+  ${foot}
+  ${lightboxHtml()}
+  <div class="toast" data-toast role="status" aria-live="polite"></div>
+  <script src="${b}scripts/app.js" defer></script>
+  <noscript><p class="note" style="text-align:center;padding:1rem">This celebration works best with JavaScript on — photos and wishes still work without it.</p></noscript>
+</body>
+</html>`;
+}
+
