@@ -120,7 +120,7 @@ export const chapters = [
         type: "figure",
         photo: "my-best-friend-elisha-owusu-asante",
         size: "half",
-        caption: "Elijah Owusu Asante, her best friend.",
+        caption: "Elijah Owusu Asante, Mercy's best friend.",
       },
       {
         type: "prose",

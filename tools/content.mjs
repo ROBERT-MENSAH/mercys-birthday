@@ -118,7 +118,7 @@ export const photos = [
   {
     id: "my-best-friend-elisha-owusu-asante",
     group: "people",
-    caption: "Mercy and Elijah Owusu Asante, her best friend.",
+    caption: "Mercy and Elijah Owusu Asante, Mercy's best friend.",
     alt: "Elijah Owusu Asante in a light blue polo shirt, adjusting his sunglasses indoors",
   },
   {
