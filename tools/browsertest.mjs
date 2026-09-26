@@ -213,19 +213,23 @@ const P_SW = `(async () => {
   } catch (e) { return { error: String(e.message || e) }; }
 })()`;
 
-const P_TABBAR = `(() => {
-  const bar = document.querySelector('.tabbar');
+const P_NAV = `(() => {
+  const bar = document.querySelector('.top');
   if (!bar) return { present: false };
-  const list = bar.querySelector('.tabbar__list');
-  const tabs = [...bar.querySelectorAll('.tab')];
+  const nav = bar.querySelector('.top__nav');
+  const links = nav ? [...nav.querySelectorAll('.top__link')] : [];
+  const menuBtn = bar.querySelector('.top__menu');
+  const shown = (el) => !!el && getComputedStyle(el).display !== 'none' && el.getClientRects().length > 0;
   const r = bar.getBoundingClientRect();
+  const inl = bar.querySelector('.top__in');
   return {
     present: true,
-    count: tabs.length,
-    onScreen: r.top >= -1 && r.bottom <= window.innerHeight + 1,
+    count: links.length,
+    mode: shown(nav) ? 'inline' : (shown(menuBtn) ? 'drawer' : 'none'),
+    onScreen: r.top >= -1 && r.bottom <= window.innerHeight + 1 && r.height > 20,
     height: Math.round(r.height),
-    clipped: list ? list.scrollWidth > list.clientWidth + 1 : false,
-    current: tabs.filter(t => t.hasAttribute('aria-current')).length,
+    clipped: inl ? inl.scrollWidth > inl.clientWidth + 1 : false,
+    current: links.filter(t => t.hasAttribute('aria-current')).length,
   };
 })()`;
 
@@ -272,7 +276,10 @@ process.on("exit", cleanup);
 
 const VIEWS = [
   { name: "phone-320", w: 320, h: 640, mobile: true },
+  { name: "phone-360", w: 360, h: 740, mobile: true },
+  { name: "phone-375", w: 375, h: 812, mobile: true },
   { name: "phone-390", w: 390, h: 844, mobile: true },
+  { name: "phone-412", w: 412, h: 915, mobile: true },
   { name: "phone-430", w: 430, h: 932, mobile: true },
   { name: "tablet-768", w: 768, h: 1024, mobile: true },
   { name: "desktop-1280", w: 1280, h: 900, mobile: false },
@@ -339,7 +346,7 @@ async function main() {
       await page.goto(BASE + url, { settle: 350 });
       const ov = await page.eval(P_OVERFLOW);
       const imgs = await page.eval(P_IMAGES);
-      const bar = await page.eval(P_TABBAR);
+      const bar = await page.eval(P_NAV);
 
       if (ov.scrollW > ov.innerW + 1) {
         layoutIssues.push(`${v.name} ${url}: horizontal overflow ${ov.scrollW} > ${ov.innerW} [${ov.offenders.join(", ")}]`);
@@ -347,10 +354,11 @@ async function main() {
       if (imgs.broken.length) {
         layoutIssues.push(`${v.name} ${url}: ${imgs.broken.length}/${imgs.total} images never decoded: ${imgs.broken.join(", ")}`);
       }
-      if (!bar.present) layoutIssues.push(`${v.name} ${url}: no .tabbar`);
+      if (!bar.present) layoutIssues.push(`${v.name} ${url}: no .top nav`);
       else {
-        if (!bar.onScreen) layoutIssues.push(`${v.name} ${url}: tabbar off-screen (h=${bar.height})`);
-        if (bar.clipped) layoutIssues.push(`${v.name} ${url}: tabbar list clipped/scrollable`);
+        if (!bar.onScreen) layoutIssues.push(`${v.name} ${url}: header off-screen (h=${bar.height})`);
+        if (bar.clipped) layoutIssues.push(`${v.name} ${url}: header content clipped/scrollable`);
+        if (bar.mode === 'none') layoutIssues.push(`${v.name} ${url}: no nav links and no menu button`);
         if (bar.current !== 1) layoutIssues.push(`${v.name} ${url}: aria-current count = ${bar.current}`);
       }
 
@@ -360,11 +368,277 @@ async function main() {
   record(layoutIssues.length === 0, `responsive sweep (${VIEWS.length} viewports x ${PAGES.length} pages)`);
   for (const i of layoutIssues) console.log(`      ! ${i}`);
 
+  /* ---- perf snapshot: first load must be quick, and scrolling must be smooth ---- */
+  console.log("\nPerformance");
+  for (const v of [VIEWS[3], VIEWS[7]]) {
+    await setViewport(v);
+    for (const url of ["/", "/memories/"]) {
+      await page.goto(BASE + url, { settle: 1200 });
+      const m = await page.eval(`(() => {
+        const nav = performance.getEntriesByType('navigation')[0] || {};
+        const res = performance.getEntriesByType('resource');
+        let total = 0, vids = 0;
+        for (const r of res) {
+          total += (r.transferSize || 0);
+          /* the extension has to be the END of the path, otherwise
+             "/manifest.webmanifest" would match on "mov". */
+          if (/\\.(mp4|webm|m4v)$/i.test(new URL(r.name).pathname)) vids++;
+        }
+        const fcp = performance.getEntriesByName('first-contentful-paint')[0];
+        const media = res.filter(r => /\\.(mp4|webm|m4v)$/i.test(new URL(r.name).pathname))
+                         .map(r => r.name.replace(location.origin, ''));
+        return {
+          fcp: fcp ? Math.round(fcp.startTime) : null,
+          dcl: Math.round(nav.domContentLoadedEventEnd || 0),
+          kb: Math.round(total / 1024), req: res.length, videoReqs: vids,
+          media,
+        };
+      })()`);
+      const f = await page.eval(`(async () => {
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+        let frames = 0, running = true;
+        const tick = () => { if (running) { frames++; requestAnimationFrame(tick); } };
+        requestAnimationFrame(tick);
+        const t0 = performance.now();
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        for (let i = 0; i <= 40; i++) { window.scrollTo(0, (max * i) / 40); await sleep(50); }
+        const dur = performance.now() - t0;
+        running = false;
+        return Math.round((frames / dur) * 1000);
+      })()`);
+      console.log(
+        `  ${v.name.padEnd(13)} ${url.padEnd(12)} fcp=${String(m.fcp).padStart(4)}ms dcl=${String(m.dcl).padStart(4)}ms ` +
+        `${String(m.kb).padStart(4)}KB / ${String(m.req).padStart(2)} req  videoReqs=${m.videoReqs} ${m.media.join(",")}  scrollFps=${f}`
+      );
+    }
+  }
+
+  /* ---- install card states: report exactly what a visitor would see ---- */
+  console.log("\nInstall card state");
+  await setViewport(VIEWS[3]);
+  await page.goto(`${BASE}/`, { settle: 1500 });
+  const installState = await page.eval(`(async () => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const snap = (tag) => {
+      const card = document.querySelector('[data-install]');
+      const btn = card.querySelector('[data-install-btn]');
+      const steps = card.querySelector('[data-install-steps]');
+      const note = card.querySelector('[data-install-note]');
+      const vis = (el) => !!el && !el.hidden && getComputedStyle(el).display !== 'none';
+      return tag + ': ' + JSON.stringify({
+        cls: card.className.replace('installcard', '').trim(),
+        button: vis(btn), iosSteps: vis(steps), note: vis(note),
+        label: (card.querySelector('[data-install-label]')?.textContent || '').trim(),
+        body: (card.querySelector('[data-install-body]')?.textContent || '').trim().slice(0, 70),
+      });
+    };
+    const out = [snap('as-loaded')];
+    await sleep(4200);
+    out.push(snap('after-4s-settle'));
+    return out;
+  })()`);
+  for (const line of installState) console.log("  " + line);
+
+  /* ---- bottom tab bar: app-quality on phones, absent on desktop ---- */
+  console.log("\nBottom navigation");
+  const tabReport = [];
+  for (const v of [VIEWS[0], VIEWS[3], VIEWS[7]]) {
+    await setViewport(v);
+    for (const [name, url] of [["home", "/"], ["wishes", "/wishes/"], ["gifts", "/gifts/"]]) {
+      await page.goto(BASE + url, { settle: 600 });
+      const t = await page.eval(`(() => {
+        const bar = document.querySelector('[data-tabs]');
+        if (!bar) return { error: 'no tab bar' };
+        const cs = getComputedStyle(bar);
+        const r = bar.getBoundingClientRect();
+        const tabs = [...bar.querySelectorAll('[data-tab]')];
+        const tapHeights = tabs.map(a => Math.round(a.getBoundingClientRect().height));
+        const labels = tabs.map(a => (a.querySelector('.tab__label')?.textContent || '').trim());
+        const active = tabs.filter(a => a.getAttribute('aria-current') === 'page');
+        const bodyPad = parseFloat(getComputedStyle(document.body).paddingBottom) || 0;
+        return {
+          shown: cs.display !== 'none',
+          position: cs.position,
+          onScreen: r.bottom <= window.innerHeight + 1 && r.top >= -1 && r.height > 20,
+          height: Math.round(r.height),
+          overflowX: document.documentElement.scrollWidth - window.innerWidth,
+          count: tabs.length,
+          minTap: Math.min(...tapHeights),
+          labels,
+          activeCount: active.length,
+          activeLabel: active[0] ? (active[0].querySelector('.tab__label')?.textContent || '').trim() : null,
+          bodyPad: Math.round(bodyPad),
+        };
+      })()`);
+      tabReport.push({ v: v.name, name, ...t });
+    }
+  }
+  const phone = tabReport.filter((r) => r.v.startsWith("phone"));
+  const desk = tabReport.filter((r) => r.v === "desktop-1280");
+  const tabIssues = [];
+  for (const r of phone) {
+    if (r.error) { tabIssues.push(`${r.v} ${r.name}: ${r.error}`); continue; }
+    if (!r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar not shown on phone`);
+    if (r.position !== "fixed") tabIssues.push(`${r.v} ${r.name}: position=${r.position} (want fixed)`);
+    if (!r.onScreen) tabIssues.push(`${r.v} ${r.name}: bar off-screen h=${r.height}`);
+    if (r.count !== 5) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want 5)`);
+    if (r.minTap < 44) tabIssues.push(`${r.v} ${r.name}: tap target ${r.minTap}px < 44px`);
+    if (r.overflowX > 1) tabIssues.push(`${r.v} ${r.name}: overflows by ${r.overflowX}px`);
+    if (r.activeCount > 1) tabIssues.push(`${r.v} ${r.name}: ${r.activeCount} active tabs`);
+    /* the page must reserve room, so the last content is never behind the bar */
+    if (r.bodyPad < 58) tabIssues.push(`${r.v} ${r.name}: body padding ${r.bodyPad}px < 58px bar height`);
+  }
+  for (const r of desk) {
+    if (!r.error && r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar should be hidden on desktop`);
+  }
+  record(tabIssues.length === 0, `tab bar across 3 viewports x 3 pages`, JSON.stringify(tabReport));
+  for (const i of tabIssues) console.log(`      ! ${i}`);
+
+  /* the bar must stay pinned at the page bottom too - lazy images and videos
+     keep growing the document, so this is checked after everything settles */
+  for (const v of [VIEWS[0], VIEWS[3]]) {
+    await setViewport(v);
+    await page.goto(`${BASE}/`, { settle: 900 });
+    await page.shot(`tabs-${v.name}`);
+    await page.eval(`(async () => {
+      const sleep = ms => new Promise(r => setTimeout(r, ms));
+      /* step down in increments so lazy content cannot outrun us, then settle */
+      for (let y = 0; y < document.documentElement.scrollHeight; y += window.innerHeight / 2) {
+        window.scrollTo(0, y);
+        await sleep(120);
+      }
+      window.scrollTo(0, document.documentElement.scrollHeight);
+      await sleep(900);
+    })()`);
+    const pinned = await page.eval(`(() => {
+      const bar = document.querySelector('[data-tabs]');
+      if (!bar) return { error: 'missing' };
+      const r = bar.getBoundingClientRect();
+      return { cls: bar.className, shown: getComputedStyle(bar).display !== 'none',
+        onScreen: r.bottom <= window.innerHeight + 1 && r.top >= -1 && r.height > 20,
+        h: Math.round(r.height) };
+    })()`);
+    const bottomOk = pinned.shown && pinned.onScreen && !/\bis-hide\b/.test(pinned.cls || "");
+    record(bottomOk, `tab bar stays pinned at page bottom (${v.name})`, JSON.stringify(pinned));
+    await page.shot(`tabs-${v.name}-bottom`);
+  }
+  await setViewport(VIEWS[3]);
   /* ---- service worker on a nested route ---- */
-  await setViewport(VIEWS[1]);
+  await setViewport(VIEWS[3]);
   await page.goto(`${BASE}/story/faith/`, { settle: 800 });
   const sw = await page.eval(P_SW);
   record(!sw.error && sw.scope === `${BASE}/`, "service worker registers with root scope on /story/faith/", JSON.stringify(sw));
+
+  /* ---- PWA: manifest, installability, install card states ---- */
+  console.log("\nPWA / install");
+  await setViewport(VIEWS[3]);
+  await page.goto(`${BASE}/`, { settle: 900 });
+
+  const manifest = await page.eval(`(async () => {
+    const href = document.querySelector('link[rel="manifest"]')?.href;
+    if (!href) return { error: 'no manifest link' };
+    const res = await fetch(href);
+    if (!res.ok) return { error: 'manifest fetch ' + res.status };
+    const m = await res.json();
+    const sizes = (m.icons || []).map(i => i.sizes);
+    return {
+      name: m.name, short: m.short_name, display: m.display,
+      startUrl: m.start_url, scope: m.scope,
+      theme: m.theme_color, bg: m.background_color,
+      has192: sizes.includes('192x192'), has512: sizes.includes('512x512'),
+      hasMaskable: (m.icons || []).some(i => (i.purpose || '').includes('maskable')),
+      hasApple: sizes.includes('180x180'),
+      orientation: m.orientation,
+    };
+  })()`);
+  const manifestOk =
+    !manifest.error &&
+    manifest.name === "Mercy's Birthday" &&
+    manifest.display === "standalone" &&
+    manifest.has192 && manifest.has512 && manifest.hasMaskable &&
+    !!manifest.theme && !!manifest.bg;
+  record(manifestOk, "manifest is installable", JSON.stringify(manifest));
+
+  /* The install card must always resolve to exactly one honest state - a real
+     button, iOS steps, an installed confirmation, or a plain note. Never a
+     dead button. */
+  const install = await page.eval(`(() => {
+    const card = document.querySelector('[data-install]');
+    if (!card) return { error: 'no install card' };
+    const btn = card.querySelector('[data-install-btn]');
+    const steps = card.querySelector('[data-install-steps]');
+    const note = card.querySelector('[data-install-note]');
+    const visible = (el) => !!el && !el.hidden && getComputedStyle(el).display !== 'none';
+    const r = btn && !btn.hidden ? btn.getBoundingClientRect() : null;
+    return {
+      present: true,
+      btn: visible(btn), steps: visible(steps), note: visible(note),
+      state: card.className,
+      tapHeight: r ? Math.round(r.height) : null,
+      body: (card.querySelector('[data-install-body]')?.textContent || '').trim().slice(0, 60),
+    };
+  })()`);
+  const installOk = !install.error && (install.btn || install.steps || install.note);
+  record(installOk, "install card resolves to a real action", JSON.stringify(install));
+  record(!install.btn || (install.tapHeight ?? 46) >= 44, "install button meets 44px touch target",
+    install.btn ? `h=${install.tapHeight}` : "button not shown in this browser (expected)");
+
+  /* Opening hook: must show once, then leave the DOM and unlock scrolling.
+     sessionStorage is cleared and the page reloaded first, so a previous run
+     in the same profile cannot make the hook (correctly) stay hidden. */
+  await page.goto(`${BASE}/`, { settle: 400 });
+  await page.eval(`(() => { try { sessionStorage.removeItem('mb-gate-seen'); } catch (e) {} })()`);
+  await page.goto(`${BASE}/`, { settle: 600 });
+  const gate = await page.eval(`(async () => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const el = document.querySelector('[data-gate]');
+    if (!el) return { error: 'no gate' };
+    const shownAtStart = !el.hidden;
+    await sleep(3600);
+    const gone = !document.querySelector('[data-gate]');
+    const locked = document.documentElement.classList.contains('is-gated');
+    return { shownAtStart, gone, locked };
+  })()`);
+  record(!gate.error && gate.shownAtStart && gate.gone && !gate.locked,
+    "opening hook shows then removes itself", JSON.stringify(gate));
+
+  /* A second visit in the same session must go straight to the content. */
+  await page.goto(`${BASE}/`, { settle: 700 });
+  const revisit = await page.eval(`(() => {
+    const el = document.querySelector('[data-gate]');
+    return { hiddenOrGone: !el || el.hidden };
+  })()`);
+  record(revisit.hiddenOrGone, "opening hook does not repeat on revisit", JSON.stringify(revisit));
+
+  /* Scroll must work after the hook clears. */
+  const scrolled = await page.eval(`(async () => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const y0 = window.scrollY;
+    window.scrollTo(0, 600);
+    await sleep(300);
+    return { moved: window.scrollY > y0 + 100, y: window.scrollY };
+  })()`);
+  record(scrolled.moved, "page scrolls after the opening hook", JSON.stringify(scrolled));
+
+  /* Video cards must expose the structure a finished video needs, and must
+     not preload any mp4 before the visitor presses play. Checked on
+     /memories/, which carries all thirteen. */
+  await page.goto(`${BASE}/memories/`, { settle: 900 });
+  const vids = await page.eval(`(() => {
+    const cards = [...document.querySelectorAll('[data-video]')];
+    const vids = [...document.querySelectorAll('video')];
+    return {
+      cards: cards.length,
+      withTitle: cards.filter(c => c.querySelector('.vcard__title')?.textContent.trim()).length,
+      withPoster: cards.filter(c => c.querySelector('.vcard__poster')).length,
+      withPlay: cards.filter(c => c.querySelector('[data-play]')).length,
+      withState: cards.filter(c => c.querySelector('[data-vstate]')).length,
+      liveVideos: vids.length,
+    };
+  })()`);
+  record(vids.cards > 0 && vids.withTitle === vids.cards && vids.withPlay === vids.cards && vids.withState === vids.cards,
+    `video cards complete (${vids.cards} cards)`, JSON.stringify(vids));
+  record(vids.liveVideos === 0, "no <video> created before play", JSON.stringify({ liveVideos: vids.liveVideos }));
 
   /* ---- interactions, at phone width ---- */
   console.log("\nInteractions (390x844)");
@@ -523,7 +797,7 @@ async function main() {
   })()`);
   record(wa.count > 0 && wa.bad.length === 0, `WhatsApp wish links (${wa.count} links, ${wa.encoded} pre-filled)`, JSON.stringify(wa));
 
-  /* ---- keyboard: tabbar links reachable, skip link works ---- */
+  /* ---- keyboard: focusables reachable, skip link works ---- */
   await page.goto(`${BASE}/`, { settle: 500 });
   const a11y = await page.eval(`(() => {
     const skip = document.querySelector('.skip');

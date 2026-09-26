@@ -111,6 +111,11 @@ export function strip(ids, { ratio, captions, cls = "", eagerFirst = false } = {
 /**
  * Poster-first video. No <video> element and no network request for the mp4
  * until the visitor presses play.
+ *
+ * Structure supports everything a finished card needs: title, description,
+ * poster, play button, duration, and a "Why I included this" note. `why` is
+ * deliberately optional - until Robert writes the real reason, the block is
+ * not rendered at all, so no placeholder text ships to visitors.
  */
 export function videoCard(id, { ratio = "16/10", cls = "", inline = false } = {}) {
   const v = media.videos[id];
@@ -122,12 +127,86 @@ export function videoCard(id, { ratio = "16/10", cls = "", inline = false } = {}
             <span class="vcard__ring">${icon("play", { size: inline ? 26 : 22 })}</span>
             <span class="vcard__playlabel">Play</span>
           </button>
+          <span class="vcard__state" data-vstate aria-live="polite"></span>
         </div>
         <figcaption class="vcard__cap">
           <span class="vcard__title">${esc(v.title)}</span>
           <span class="vcard__sub">${esc(v.caption)}</span>
+          ${v.why ? `<span class="vcard__why"><b>Why I included this</b><span>${esc(v.why)}</span></span>` : ""}
         </figcaption>
       </figure>`;
+}
+
+/**
+ * Fixed bottom tab bar for phones. Built from the same NAV source as the top
+ * bar, so the two can never disagree about labels, icons or ordering.
+ *
+ * Only five destinations fit a thumb reach; the rest of the site stays
+ * reachable through the menu button. `aria-current` marks the active tab, the
+ * bar reserves the safe-area inset, and body padding (see .tabs-safe in CSS)
+ * keeps the last line of every page clear of it.
+ */
+export const tabBar = (b, current = "") =>
+  `<nav class="tabs" data-tabs aria-label="Main">
+      <ul class="tabs__list">
+        ${NAV.map((n) => {
+          const on = n.href === current;
+          return `<li><a class="tab${on ? " is-on" : ""}" href="${b}${n.href.slice(1)}"${on ? ' aria-current="page"' : ""} data-tab>
+            <span class="tab__ico">${icon(n.icon, { size: 21 })}<span class="tab__dot" aria-hidden="true"></span></span>
+            <span class="tab__label">${esc(n.short || n.label)}</span>
+          </a></li>`;
+        }).join("\n        ")}
+      </ul>
+    </nav>`;
+
+/**
+ * Opening gate. A short, word-by-word hook that sits in front of the real
+ * page for a few seconds and then lifts away. It is not a loading screen:
+ * the page behind it is already built and interactive, and the gate is
+ * removed from the DOM (not merely hidden) so it can never trap scroll,
+ * focus, or the back button.
+ *
+ * Skipped for reduced-motion visitors and for anyone who has already seen it
+ * this session, so repeat visits go straight to the content.
+ */
+export function openingGate() {
+  return `<div class="gate" data-gate hidden>
+      <div class="gate__in">
+        <p class="gate__line" data-gate-line>For a moment...</p>
+        <p class="gate__line gate__line--big" data-gate-line>Pause.</p>
+        <p class="gate__line gate__line--big" data-gate-line>This one is for <em>Mercy</em>.</p>
+      </div>
+      <button class="gate__skip" type="button" data-gate-skip>Skip</button>
+    </div>`;
+}
+
+/**
+ * Install card. Progressive enhancement: the markup is always present and
+ * always useful, but the exact action is decided by scripts/app.js from what
+ * the browser actually supports -
+ *   native prompt  -> [ Install App ] triggers beforeinstallprompt
+ *   iOS Safari     -> "Share -> Add to Home Screen" instructions
+ *   already in app -> swapped for a confirmation state
+ *   unsupported    -> a short, honest note (never a button that does nothing)
+ */
+export function installCard({ cls = "" } = {}) {
+  return `<section class="installcard ${cls}" data-install aria-labelledby="installcard-h">
+        <div class="installcard__glow" aria-hidden="true"></div>
+        <p class="installcard__eyebrow">Make it yours</p>
+        <h2 class="installcard__title" id="installcard-h">Keep this on your<br>home screen</h2>
+        <p class="installcard__body" data-install-body>Install Mercy's Birthday and it opens full screen, like an app.</p>
+        <div class="installcard__act">
+          <button class="btn btn--primary installcard__btn" type="button" data-install-btn hidden>
+            ${icon("download", { size: 18 })}<span data-install-label>Install App</span>
+          </button>
+          <ol class="installcard__steps" data-install-steps hidden>
+            <li><span class="installcard__stepico">${icon("share", { size: 15 })}</span>Tap <b>Share</b></li>
+            <li><span class="installcard__stepico">${icon("plus", { size: 15 })}</span>Choose <b>Add to Home Screen</b></li>
+            <li><span class="installcard__stepico">${icon("check", { size: 15 })}</span>Tap <b>Add</b></li>
+          </ol>
+        </div>
+        <p class="installcard__note" data-install-note hidden>${icon("info", { size: 14 })}<span data-install-note-text></span></p>
+      </section>`;
 }
 
 /** WhatsApp wish launcher. */
@@ -216,6 +295,12 @@ const headHtml = (current, b) =>
           <div class="drawer__foot">
             <button class="btn btn--sm" type="button" data-share>${icon("share", { size: 16 })}<span>Share</span></button>
             <a class="btn btn--sm btn--wa" href="https://wa.me/${contact.whatsappNumber}?text=${encodeURIComponent("Happy birthday Mercy!")}" target="_blank" rel="noopener">${icon("whatsapp", { size: 16 })}<span>Wish</span></a>
+          </div>
+          <div class="drawer__install" data-install-drawer>
+            <button class="btn btn--sm btn--block" type="button" data-install-btn>
+              ${icon("download", { size: 16 })}<span data-install-label>Install App</span>
+            </button>
+            <p class="drawer__installnote" data-install-note hidden>${icon("info", { size: 13 })}<span data-install-note-text></span></p>
           </div>
         </div>
       </dialog>
@@ -347,11 +432,14 @@ export function page({
 </head>
 <body class="${bodyClass}">
   ${sprite()}
+  ${openingGate()}
   ${headHtml(current, b)}
   <main id="main" class="wrap" tabindex="-1">
+    <p class="netbar" data-net role="status" aria-live="polite" hidden></p>
 ${body}
   </main>
   ${foot}
+  ${tabBar(b, current)}
   ${lightboxHtml()}
   <div class="toast" data-toast role="status" aria-live="polite"></div>
   <script src="${b}scripts/app.js" defer></script>

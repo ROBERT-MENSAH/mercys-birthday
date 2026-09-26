@@ -25,10 +25,10 @@ export const site = {
 
 /* Real numbers supplied by the project owner. Never invent numbers. */
 export const contact = {
-  whatsappDisplay: "059 726 9758",
-  whatsappNumber: "233597269758", // international, digits only - for wa.me
-  phoneDisplay: "059 726 9758",
-  phoneHref: "+233597269758",
+  whatsappDisplay: "059 626 9758",
+  whatsappNumber: "233596269758", // international, digits only - for wa.me
+  phoneDisplay: "059 626 9758",
+  phoneHref: "+233596269758",
 };
 
 export const creator = {

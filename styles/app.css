@@ -273,15 +273,20 @@ p { text-wrap: pretty; }
 .bg__orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(60px);
   opacity: 0.5;
+  /* The gradient already fades to transparent, so a blur() filter added
+     nothing but cost: re-rasterising a 60px blur on a 60vmax layer on every
+     frame of an infinite animation. The softer stops below give the same
+     look for free. */
+  will-change: transform;
+  transform: translateZ(0);
 }
 .bg__orb--a {
   width: 60vmax;
   height: 60vmax;
   top: -22vmax;
   left: -18vmax;
-  background: radial-gradient(circle, rgba(232, 62, 140, 0.5), transparent 65%);
+  background: radial-gradient(circle, rgba(232, 62, 140, 0.5) 0%, rgba(232, 62, 140, 0.24) 42%, transparent 78%);
   animation: drift 26s var(--ease) infinite alternate;
 }
 .bg__orb--b {
@@ -289,7 +294,7 @@ p { text-wrap: pretty; }
   height: 52vmax;
   bottom: -20vmax;
   right: -16vmax;
-  background: radial-gradient(circle, rgba(111, 168, 255, 0.32), transparent 65%);
+  background: radial-gradient(circle, rgba(111, 168, 255, 0.32) 0%, rgba(111, 168, 255, 0.15) 44%, transparent 80%);
   animation: drift 32s var(--ease) infinite alternate-reverse;
 }
 @keyframes drift {
@@ -506,6 +511,227 @@ p { text-wrap: pretty; }
   border: 1.5px solid rgba(255, 255, 255, 0.5);
   box-shadow: var(--sh-rose);
   transition: transform 0.25s var(--ease-out), background 0.25s var(--ease);
+}
+
+/* video loading + failure states: never a dead black rectangle */
+.vcard__state {
+  position: absolute;
+  left: 50%;
+  bottom: 0.7rem;
+  z-index: 4;
+  transform: translateX(-50%);
+  padding: 0.28rem 0.7rem;
+  border-radius: var(--r-full);
+  background: rgba(4, 6, 18, 0.78);
+  border: 1px solid var(--line-2);
+  color: #fff;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.vcard__state:empty { display: none; }
+.vcard.is-loading .vcard__play { opacity: 0.35; pointer-events: none; }
+.vcard.is-loading .vcard__ring { animation: vbPulse 1.1s var(--ease) infinite alternate; }
+@keyframes vbPulse { from { opacity: 0.55; } to { opacity: 1; } }
+.vcard.is-error .vcard__poster { opacity: 0.35; filter: grayscale(1); }
+.vcard.is-error .vcard__play { display: none; }
+.vcard.is-error .vcard__state::after { content: "Video unavailable"; }
+
+/* a failed photo becomes a labelled placeholder, not a broken icon */
+.is-broken .ph__img,
+.is-broken .vcard__poster,
+img[data-failed] { opacity: 0; }
+.is-broken::before {
+  content: "Photo unavailable";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  text-align: center;
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+  background: linear-gradient(140deg, var(--ink-800), var(--ink-700));
+}
+.vcard__frame.is-broken::before,
+.ph.is-broken::before { border-radius: inherit; }
+
+/* offline notice: quiet, never a blocking error screen */
+.netbar {
+  margin: 0 0 var(--s-4);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--gold-400) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--gold-400) 34%, transparent);
+  color: var(--gold-200);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+.netbar[hidden] { display: none; }
+
+/* "Why I included this" - only rendered when a real reason exists */
+.vcard__why {
+  display: block;
+  margin-top: 0.55rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--t-xs);
+  color: var(--text-dim);
+  text-align: left;
+}
+.vcard__why b {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--rose-200);
+}
+
+/* ---------- bottom tab bar (phones) ----------
+   A fixed, thumb-reach tab bar. It shares the NAV source with the top bar, so
+   labels and icons can never drift apart. Hidden from 860px up, where the
+   left rail and inline links take over.
+
+   - fixed to the viewport, never scrolls with content and never auto-hides,
+     so the bar is always exactly where the thumb expects it
+   - reserves env(safe-area-inset-bottom) so it clears the home indicator
+   - every tab is a 56px+ touch target
+   - .tabs-safe on body keeps the last line of every page clear of it        */
+.tabs {
+  display: none;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 70;
+  padding-bottom: var(--safe-b);
+  /* glass, warmed with a trace of rose so the bar belongs to this palette
+     instead of reading as a generic dark overlay */
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--rose-700) 16%, transparent), transparent 58%),
+    color-mix(in srgb, var(--ink-950) 86%, transparent);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  border-top: 1px solid var(--line-2);
+  /* a hairline highlight along the top edge sells it as a lit surface */
+  box-shadow:
+    0 -1px 0 color-mix(in srgb, var(--rose-300) 16%, transparent),
+    0 -10px 30px rgba(4, 6, 18, 0.5);
+  animation: tabs-in 0.42s var(--ease-out) both;
+}
+/* the bar only ever animates in - it is never translated off-screen */
+@keyframes tabs-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+.tabs__list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  align-items: stretch;
+  height: 58px;
+  max-width: var(--maxw);
+  margin-inline: auto;
+}
+.tab {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 56px;
+  padding: 0.4rem 0.15rem 0.3rem;
+  color: var(--text-mute);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--dur) var(--ease);
+}
+.tab__ico {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 28px;
+  border-radius: var(--r-full);
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease),
+    transform 0.18s var(--ease);
+}
+.tab__label {
+  line-height: 1.1;
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease);
+}
+/* active tab: solid rose gradient behind the icon, label turns pink and bold */
+.tab.is-on { color: var(--rose-100); font-weight: 700; }
+.tab.is-on .tab__ico {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--rose-400) 92%, transparent),
+    color-mix(in srgb, var(--rose-600) 88%, transparent)
+  );
+  color: #fff;
+  box-shadow:
+    0 4px 14px -4px rgba(232, 62, 140, 0.7),
+    0 0 0 1px color-mix(in srgb, var(--rose-200) 40%, transparent) inset,
+    0 1px 0 rgba(255, 255, 255, 0.35) inset;
+}
+/* the active marker: a short bar riding the top edge of the bar, which reads
+   more cleanly than a dot squeezed between icon and label */
+.tab__dot {
+  position: absolute;
+  left: 50%;
+  top: -0.4rem;
+  width: 20px;
+  height: 3px;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--rose-400), var(--rose-200));
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s var(--ease-out);
+}
+.tab.is-on .tab__dot { transform: translateX(-50%) scaleX(1); }
+.tab:active { color: var(--rose-100); }
+.tab:active .tab__ico { transform: scale(0.9); }
+.tab:focus-visible {
+  outline: 2px solid var(--rose-300);
+  outline-offset: -4px;
+  border-radius: var(--r-sm);
+}
+/* hover only where a real pointer exists - never a sticky hover on touch */
+@media (hover: hover) and (pointer: fine) {
+  .tab:not(.is-on):hover { color: var(--text-soft); }
+  .tab:not(.is-on):hover .tab__ico { background: var(--card-2); }
+}
+/* very small phones: tighten so 5 tabs never crowd or clip */
+@media (max-width: 359px) {
+  .tab { font-size: 0.62rem; padding-inline: 0.1rem; }
+  .tab__ico { width: 32px; height: 25px; }
+  .tab__dot { width: 16px; }
+}
+/* the bar is phone-only - the desktop rail and inline links take over */
+@media (min-width: 860px) {
+  .tabs { display: none !important; }
+}
+@media (max-width: 859px) {
+  .tabs { display: block; }
+  /* never sit under a full-screen overlay (lightbox / drawer) */
+  body.lb-open .tabs { display: none; }
+  .top__drawer[open] ~ .tabs { display: none; }
+}
+
+/* keep page content clear of the fixed bar while it is on screen */
+@media (max-width: 859px) {
+  body.tabs-safe { padding-bottom: calc(var(--safe-b) + 58px + var(--s-5)); }
+  /* no bar while an overlay owns the screen - reclaim the space */
+  body.lb-open.tabs-safe { padding-bottom: var(--s-5); }
 }
 
 /* ---------- editorial bits ---------- */
@@ -894,6 +1120,162 @@ body.lb-open { overflow: hidden; }
 .wishbox__head h3 { font-size: var(--t-lg); }
 .wishbox__note { margin: 0.5rem 0 1rem; font-size: var(--t-sm); color: var(--text-dim); }
 
+/* ---------- opening gate ----------
+   A brief hook in front of the real page. Fixed overlay, lifts away, and is
+   removed from the DOM by script - it is never a blocking loader. */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: var(--gut);
+  background:
+    radial-gradient(120% 80% at 50% 0%, #1B2450 0%, transparent 62%),
+    linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease);
+}
+.gate[hidden] { display: none; }
+.gate.is-in { opacity: 1; }
+.gate.is-out { opacity: 0; pointer-events: none; }
+/* while the gate is up the page behind must not scroll */
+html.is-gated, html.is-gated body { overflow: hidden; }
+.gate__in { text-align: center; max-width: 22ch; }
+.gate__line {
+  margin: 0 0 0.35rem;
+  font-family: var(--f-display);
+  font-size: var(--t-lg);
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.gate__line--big {
+  font-size: clamp(1.75rem, 1.1rem + 3.4vw, 2.75rem);
+  color: var(--text);
+  line-height: 1.12;
+  margin-bottom: 0.5rem;
+}
+.gate__line--big em {
+  font-style: italic;
+  background: linear-gradient(120deg, var(--rose-200), var(--gold-300));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.gate__line.is-on { opacity: 1; transform: none; }
+.gate__skip {
+  position: absolute;
+  right: var(--gut);
+  bottom: calc(var(--safe-b) + 1.1rem);
+  min-height: 40px;
+  padding: 0.4rem 1rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-2);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-dim);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease) 1.2s, color var(--dur) var(--ease);
+}
+.gate.is-in .gate__skip { opacity: 1; }
+.gate__skip:hover { color: #fff; }
+
+/* ---------- install card ----------
+   Progressive enhancement: markup ships on every platform, script decides
+   whether a real button, iOS steps, an installed state, or a plain note shows. */
+.installcard {
+  position: relative;
+  overflow: hidden;
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--r-lg);
+  text-align: center;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--rose-600) 18%, transparent), var(--card));
+  border: 1px solid color-mix(in srgb, var(--rose-400) 26%, transparent);
+}
+.installcard__glow {
+  position: absolute;
+  inset: -60% -20% auto;
+  height: 85%;
+  background: radial-gradient(closest-side, rgba(232, 62, 140, 0.2), transparent 70%);
+  pointer-events: none;
+}
+.installcard__eyebrow {
+  position: relative;
+  margin: 0 0 0.4rem;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rose-200);
+}
+.installcard__title {
+  position: relative;
+  margin: 0 0 0.5rem;
+  font-size: var(--t-lg);
+  line-height: 1.18;
+}
+.installcard__body {
+  position: relative;
+  margin: 0 auto 1.1rem;
+  max-width: 34ch;
+  font-size: var(--t-sm);
+  color: var(--text-dim);
+}
+.installcard__act { position: relative; }
+.installcard__btn { min-height: 46px; }
+/* iOS "Share -> Add to Home Screen" */
+.installcard__steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-sm);
+  color: var(--text-dim);
+}
+.installcard__steps[hidden] { display: none; }
+.installcard__steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.installcard__steps b { color: var(--text); font-weight: 600; }
+.installcard__stepico {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--rose-500) 24%, transparent);
+  color: var(--rose-200);
+}
+.installcard__note {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 0.9rem auto 0;
+  max-width: 36ch;
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+}
+.installcard__note[hidden] { display: none; }
+.installcard__note .ic { flex: none; margin-top: 0.1rem; }
+/* installed: calm confirmation, no button */
+.installcard.is-installed { border-color: color-mix(in srgb, var(--gold-400) 40%, transparent); }
+.installcard.is-installed .installcard__eyebrow { color: var(--gold-300); }
+.installcard__btn[hidden] { display: none; }
+
 /* ---------- birthday page ---------- */
 .bday { text-align: center; }
 .cake {
@@ -1125,6 +1507,10 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
   }
   .rv { opacity: 1; transform: none; }
   .bg__orb { animation: none; }
+  /* the opening hook is skipped entirely in script, but never animate it either */
+  .gate, .gate__line, .gate__skip { display: none !important; }
+  .gate__line.is-on { opacity: 1; transform: none; }
+  .vcard.is-loading .vcard__ring { animation: none; opacity: 1; }
 }
 
 @media (prefers-contrast: more) {
@@ -1134,16 +1520,11 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
 
 /* ---------- print ---------- */
 @media print {
-  .top, .tabbar, .bg, .foot, .toast, .lb, .confetti { display: none !important; }
+  .top, .tabs, .bg, .foot, .toast, .lb, .confetti { display: none !important; }
   body { background: #fff; color: #111; padding: 0; }
   .prose, .aph p, .shead__title, .vcard__title { color: #111; }
 }
 
-  font-size: var(--t-xs);
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--rose-300);
-}
 .chap__title { font-size: var(--t-2xl); }
 .chap__intro { margin-top: 0.3rem; font-size: var(--t-sm); color: var(--text-soft); }
 .chap__body { display: grid; gap: var(--s-6); }
@@ -1205,9 +1586,11 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
   position: absolute;
   inset: -55% -20% auto;
   height: 80%;
+  /* radial-gradient already fades out, so the blur(30px) was pure cost on an
+     infinitely pulsing layer. Removed - the gradient alone looks the same. */
   background: radial-gradient(closest-side, rgba(232,62,140,0.22), transparent 70%);
-  filter: blur(30px);
   pointer-events: none;
+  will-change: transform, opacity;
   animation: footPulse 9s var(--ease) infinite alternate;
 }
 @keyframes footPulse {
@@ -1653,6 +2036,19 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
 }
 .drawer__ico { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 10px; background: var(--card-2); border: 1px solid var(--line); color: var(--rose-200); }
 .drawer__foot { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; padding-bottom: 0.25rem; }
+/* compact install action inside the menu - same state as the home card */
+.drawer__install { padding-bottom: 0.25rem; }
+.drawer__installnote {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+  line-height: 1.45;
+}
+.drawer__installnote[hidden] { display: none; }
+.drawer__installnote .ic { flex: none; margin-top: 0.1rem; }
 .ibtn {
   display: grid;
   place-items: center;

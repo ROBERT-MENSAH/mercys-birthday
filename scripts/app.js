@@ -33,6 +33,7 @@
   (function navbar() {
     var top = $("[data-top]");
     if (!top) return;
+    var tabs = $("[data-tabs]");
     var progress = $("[data-scroll-progress]", top);
     var pill = $("[data-nav-pill]", top);
     var menuBtn = $("[data-menu-btn]", top);
@@ -118,6 +119,8 @@
 
     onScroll();
     movePill();
+    /* Reserve room for the fixed bar so no page's last line hides behind it. */
+    if (tabs) document.body.classList.add("tabs-safe");
     window.addEventListener("scroll", requestScroll, { passive: true });
     var onResize = function () {
       /* laptop owns inline links: never leave the phone drawer open */
@@ -249,6 +252,14 @@
     e.preventDefault();
     var card = play.closest("[data-video]");
     if (!card) return;
+    /* already playing - don't stack a second element on top */
+    if (card.classList.contains("is-playing")) return;
+
+    var state = $("[data-vstate]", card);
+    var setState = function (msg) {
+      if (state) state.textContent = msg || "";
+      card.classList.toggle("is-loading", !!msg);
+    };
 
     var v = document.createElement("video");
     v.src = card.getAttribute("data-src");
@@ -259,12 +270,57 @@
     var poster = card.getAttribute("data-poster");
     if (poster) v.setAttribute("poster", poster);
     v.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:3";
+    v.addEventListener("loadstart", function () { setState("Loading video..."); });
+    v.addEventListener("canplay", function () { setState(""); });
+    v.addEventListener("waiting", function () { setState("Loading video..."); });
+    v.addEventListener("playing", function () { setState(""); });
     v.addEventListener("play", function () { card.classList.add("is-playing"); });
     v.addEventListener("ended", function () { card.classList.remove("is-playing"); });
+    /* A failed video must never leave a dead black rectangle behind. */
+    v.addEventListener("error", function () {
+      setState("");
+      card.classList.add("is-error");
+      if (v.parentNode) v.parentNode.removeChild(v);
+      toast("This video could not load. Check your connection and try again.");
+    });
     card.querySelector(".vcard__frame").appendChild(v);
+    setState("Loading video...");
     var pr = v.play();
-    if (pr && pr.catch) pr.catch(function () { toast("Tap play again to start the video."); });
+    if (pr && pr.catch) {
+      pr.catch(function () {
+        /* Autoplay refusal is fine - controls are present, so let them retry. */
+        setState("");
+        toast("Tap play to start the video.");
+      });
+    }
   });
+
+  /* ------------------------------------------------- image + offline states
+     A missing photograph must degrade to a labelled placeholder, never a
+     broken-image icon or an empty grey box. */
+  (function mediaStates() {
+    $$("img").forEach(function (img) {
+      var mark = function () {
+        var host = img.closest(".ph, .vcard__frame, figure") || img.parentNode;
+        if (host) host.classList.add("is-broken");
+        img.setAttribute("data-failed", "1");
+      };
+      if (img.complete && img.naturalWidth === 0) mark();
+      else img.addEventListener("error", mark, { once: true });
+    });
+
+    /* Connection state, shown quietly so it never looks like an error screen. */
+    var net = $("[data-net]");
+    if (!net) return;
+    var syncNet = function () {
+      var off = !navigator.onLine;
+      net.hidden = !off;
+      if (off) net.textContent = "You're offline. The app shell still works; photos and videos need a connection.";
+    };
+    window.addEventListener("online", syncNet);
+    window.addEventListener("offline", syncNet);
+    syncNet();
+  })();
 
   /* ------------------------------------------------------ memory filters */
   var chips = $$("[data-filter]");
@@ -351,6 +407,231 @@
       fallbackShare();
     }
   });
+
+  /* ------------------------------------------------------------ opening gate
+     A brief hook in front of the real page. It is intentionally NOT a loading
+     screen: the page is already built, and the gate removes itself from the
+     DOM so it can never trap scroll, focus, or the back button. */
+  (function gate() {
+    var el = $("[data-gate]");
+    if (!el) return;
+    var skip = $("[data-gate-skip]", el);
+    var lines = $$("[data-gate-line]", el);
+    var KEY = "mb-gate-seen";
+    var seen = false;
+    try { seen = window.sessionStorage.getItem(KEY) === "1"; } catch (e) { seen = false; }
+
+    /* Reduced motion, a repeat visit, or a non-home page: never show it. */
+    var home = document.body.classList.contains("p-home");
+    if (reduceMotion || seen || !home) return;
+
+    var timers = [];
+    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+    function close() {
+      clearTimers();
+      if (!el.parentNode) return;
+      document.documentElement.classList.remove("is-gated");
+      el.classList.add("is-out");
+      try { window.sessionStorage.setItem(KEY, "1"); } catch (e) { /* private mode */ }
+      var done = function () { if (el.parentNode) el.parentNode.removeChild(el); };
+      if (reduceMotion) done();
+      else setTimeout(done, 620);
+    }
+
+    /* Unlock scroll only while the gate is up, so the page behind never
+       scrolls behind it by accident. */
+    document.documentElement.classList.add("is-gated");
+    el.hidden = false;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.add("is-in"); });
+    });
+
+    /* Stagger the lines, then lift. Total ~2.6s - an invitation, not a wait. */
+    lines.forEach(function (line, i) {
+      timers.push(setTimeout(function () { line.classList.add("is-on"); }, 180 + i * 620));
+    });
+    timers.push(setTimeout(close, 2600));
+
+    if (skip) {
+      skip.addEventListener("click", close);
+      /* Any deliberate interaction also moves things along. */
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" || e.key === "Enter" || e.key === " ") close();
+      });
+    }
+    /* Safety net: if anything goes wrong, never leave the gate covering the app. */
+    timers.push(setTimeout(function () {
+      document.documentElement.classList.remove("is-gated");
+    }, 3200));
+  })();
+
+  /* ----------------------------------------------------------- PWA install
+     One card, four honest states, decided from what the browser really
+     supports. There is never a button that quietly does nothing:
+       - native prompt available -> button triggers the real install flow
+       - iOS/iPadOS Safari        -> short "Share -> Add to Home Screen" steps
+       - already installed        -> swapped for a confirmation state
+       - nothing supported        -> a plain note explaining why, no button   */
+  (function install() {
+    /* Two surfaces: the home card and a compact button in the menu. Both are
+       driven by the same state, so they can never disagree. */
+    var cards = $$("[data-install], [data-install-drawer]");
+    if (!cards.length) return;
+
+    var isStandalone = function () {
+      return (
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        window.matchMedia("(display-mode: minimal-ui)").matches ||
+        navigator.standalone === true
+      );
+    };
+    var isIOS = function () {
+      var ua = navigator.userAgent || "";
+      var iOS = /iPad|iPhone|iPod/.test(ua);
+      /* iPadOS 13+ reports as a Mac, so check for touch support too */
+      var iPadOS = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+      return iOS || iPadOS;
+    };
+    var isInApp = function () {
+      var ua = navigator.userAgent || "";
+      return /FBAN|FBAV|Instagram|Line\/|Twitter|LinkedInApp|Snapchat/.test(ua);
+    };
+
+    var deferred = null;      /* the BeforeInstallPromptEvent, held until tapped */
+    var installed = false;    /* became true once the app is on the home screen  */
+
+    function each(fn) { cards.forEach(fn); }
+
+    function parts(card) {
+      return {
+        btn: $("[data-install-btn]", card),
+        label: $("[data-install-label]", card),
+        steps: $("[data-install-steps]", card),
+        note: $("[data-install-note]", card),
+        noteText: $("[data-install-note-text]", card),
+        body: $("[data-install-body]", card),
+      };
+    }
+
+    function showInstalled() {
+      installed = true;
+      each(function (card) {
+        var p = parts(card);
+        card.classList.add("is-installed");
+        if (p.body) p.body.textContent = "Mercy's Birthday is installed. Open it from your home screen.";
+        if (p.label) p.label.textContent = "Installed";
+        if (p.btn) { p.btn.hidden = true; p.btn.disabled = true; }
+        if (p.steps) p.steps.hidden = true;
+        if (p.note) {
+          p.note.hidden = false;
+          if (p.noteText) p.noteText.textContent = "You can launch it like any other app.";
+        }
+      });
+    }
+
+    function showIOSSteps() {
+      each(function (card) {
+        var p = parts(card);
+        card.classList.add("is-ios");
+        if (p.body) p.body.textContent = "On iPhone and iPad, add it from the Share menu.";
+        if (p.btn) p.btn.hidden = true;
+        if (p.steps) p.steps.hidden = false;
+        if (p.note) p.note.hidden = true;
+      });
+    }
+
+    function showButton() {
+      each(function (card) {
+        var p = parts(card);
+        card.classList.add("is-native");
+        if (p.body) p.body.textContent = "Install Mercy's Birthday and it opens full screen, like an app.";
+        if (p.btn) p.btn.hidden = false;
+        if (p.steps) p.steps.hidden = true;
+        if (p.note) p.note.hidden = true;
+      });
+    }
+
+    function showUnsupported() {
+      /* No native prompt, not iOS, not installed: say so plainly. The menu
+         button and the home card get different wording, because the card can
+         afford an explanation and the menu cannot. */
+      each(function (card) {
+        var p = parts(card);
+        var compact = card.hasAttribute("data-install-drawer");
+        card.classList.add("is-unsupported");
+        if (p.body) p.body.textContent = "This browser can't install apps, but the whole experience still works here.";
+        if (p.btn) p.btn.hidden = true;
+        if (p.steps) p.steps.hidden = true;
+        if (p.note) {
+          p.note.hidden = false;
+          if (p.noteText) {
+            p.noteText.textContent = isInApp()
+              ? "Open in your normal browser to install."
+              : (compact
+                  ? "Use your browser menu to add it."
+                  : "Use your browser menu and choose “Add to Home screen”.");
+          }
+        }
+      });
+    }
+
+    function render() {
+      if (installed || isStandalone()) return showInstalled();
+      if (deferred) return showButton();
+      if (isIOS()) return showIOSSteps();
+      if (isInApp()) return showUnsupported();
+      /* Optimistic: the page is fully loaded, so the prompt is either already
+         here or will never come. Show nothing rather than a dead button. */
+      showButton();
+      each(function (card) { var b = $("[data-install-btn]", card); if (b) b.hidden = true; });
+    }
+
+    window.addEventListener("beforeinstallprompt", function (e) {
+      e.preventDefault();
+      deferred = e;
+      render();
+    });
+
+    window.addEventListener("appinstalled", function () {
+      deferred = null;
+      showInstalled();
+      toast("Mercy's Birthday is installed.");
+    });
+
+    $$("[data-install-btn]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        if (!deferred) {
+          /* The prompt was dismissed or already used - don't fake success. */
+          toast("Open your browser menu to install.");
+          return;
+        }
+        var ev = deferred;
+        deferred = null;
+        btn.disabled = true;
+        ev.prompt();
+        ev.userChoice.then(function (choice) {
+          btn.disabled = false;
+          if (choice && choice.outcome === "accepted") {
+            toast("Installing Mercy's Birthday...");
+          } else {
+            /* declined: fall back to honest instructions, never nagging */
+            if (isIOS()) showIOSSteps(); else showUnsupported();
+          }
+        }).catch(function () {
+          btn.disabled = false;
+          if (isIOS()) showIOSSteps(); else showUnsupported();
+        });
+      });
+    });
+
+    render();
+    /* If no prompt arrives shortly, settle on the honest fallback wording. */
+    setTimeout(function () {
+      if (!installed && !deferred && !isStandalone() && !isIOS()) showUnsupported();
+    }, 4000);
+  })();
 
   /* -------------------------------------------------- "Happy Birthday" tune
      Rendered live with the Web Audio API, so the site ships no audio file

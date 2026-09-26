@@ -34,8 +34,14 @@ const variantsFor = (id) => {
     const m = f.match(re);
     if (m) found.push({ w: Number(m[1]), ext: m[2] === "jpeg" ? "jpg" : m[2] });
   }
-  // webp first at equal widths, then ascending width
-  return found.sort((a, b) => a.w - b.w || (a.ext === "webp" ? -1 : 1));
+  /* One entry per width, webp preferred. Without this the same width appeared
+     twice in srcset ("...-960.webp 960w, ...-960.jpg 960w") - duplicate width
+     descriptors are invalid, and `largest` resolved to the heavier JPEG. */
+  const byWidth = new Map();
+  for (const v of found.sort((a, b) => a.w - b.w || (a.ext === "webp" ? -1 : 1))) {
+    if (!byWidth.has(v.w)) byWidth.set(v.w, v);
+  }
+  return [...byWidth.values()];
 };
 
 export const media = { photos: {}, videos: {} };
