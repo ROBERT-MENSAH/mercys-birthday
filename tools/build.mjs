@@ -9,7 +9,7 @@ import { mkdirSync, writeFileSync, cpSync, rmSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { site, contact, creator, photos, photoGroups, videos } from "./content.mjs";
+import { site, contact, creator, photos, photoGroups, videos, bibleVerses } from "./content.mjs";
 import { chapters, wishPrompts, celebration, personalMessage } from "./story.mjs";
 import { media, cover, problems } from "./media.mjs";
 import { icon } from "./iconsprite.mjs";
@@ -121,6 +121,42 @@ function home() {
       <div class="btnrow" style="margin-top:var(--s-5)">
         <a class="btn btn--primary" href="birthday/">${icon("cake", { size: 18 })}<span>Go to the celebration</span></a>
       </div>
+    </section>
+
+    <section class="section section--tight">
+      ${sectionHead(bibleVerses.kicker, bibleVerses.title)}
+      <p class="prose rv">${esc(bibleVerses.lead)}</p>
+
+      <figure class="vmain rv">
+        <p class="vmain__label">${icon("book", { size: 15 })} ${esc(bibleVerses.main.label)}</p>
+        <blockquote class="vmain__text">${esc(bibleVerses.main.text)}</blockquote>
+        <figcaption class="vmain__ref">${esc(bibleVerses.main.ref)}</figcaption>
+      </figure>
+
+      <p class="vmore__label rv">${esc(bibleVerses.moreLabel)}</p>
+      <div class="vrail" data-vrail>
+        <ul class="vrail__track">
+          ${bibleVerses.more
+            .map(
+              (v) => `<li class="vcard">
+            <p class="vcard__text">${esc(v.text)}</p>
+            <p class="vcard__ref">${esc(v.ref)}</p>
+          </li>`,
+            )
+            .join("\n          ")}
+        </ul>
+        <ul class="vrail__track" aria-hidden="true">
+          ${bibleVerses.more
+            .map(
+              (v) => `<li class="vcard">
+            <p class="vcard__text">${esc(v.text)}</p>
+            <p class="vcard__ref">${esc(v.ref)}</p>
+          </li>`,
+            )
+            .join("\n          ")}
+        </ul>
+      </div>
+      <p class="vnote rv">Bible text: ${esc(bibleVerses.translation)}.</p>
     </section>
 
     <section class="section section--tight">
@@ -368,7 +404,7 @@ function birthday() {
       ${sectionHead(personalMessage.kicker, personalMessage.title)}
       <div class="card rv" style="max-width:620px">
         ${personalMessage.paragraphs.map((t) => `<p style="font-size:var(--t-base);line-height:1.65;margin-bottom:1rem">${esc(t)}</p>`).join("\n        ")}
-        <p style="font-size:var(--t-base);margin-top:1.2rem;color:var(--rose-300);font-weight:600">- ${esc(personalMessage.signoff)}</p>
+        <p style="font-size:var(--t-base);margin-top:1.2rem;color:var(--rose-300);font-weight:600">&mdash; ${esc(personalMessage.signoff)}</p>
       </div>
     </section>
 

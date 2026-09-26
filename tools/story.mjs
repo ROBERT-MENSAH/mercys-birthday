@@ -282,14 +282,16 @@ export const chapters = [
    that has not been established. */
 export const personalMessage = {
   kicker: "A message from Robert",
-  title: "Mercy,",
+  title: "Happy birthday, Mercy ❤️",
   paragraphs: [
-    "We have had our good moments, and we have had our misunderstandings. We have had times when we did not understand each other. But I am still grateful that our paths crossed.",
-    "So for your birthday I put this together from what I know about you: your family, your friends, your faith, your music, where you are now, and the goals you are working towards. I have left out anything I was not sure about, because I would rather it be accurate than impressive.",
-    "Today I just want you to be happy. I pray that God gives you peace, protects you, and guides you. I hope you keep growing in your faith, in your music, in your education, and in everything you are working towards.",
-    "Happy birthday, Mercy.",
+    "You are a very good friend, and honestly, knowing you has been something I really appreciate. Knowing you and sharing different moments with you over the years has been amazing.",
+    "Today, I just want to celebrate you and wish you a very happy birthday.",
+    "I pray that God continues to bless you, protect you and guide you in everything you do. May He bless your education, your music, your faith and all the things you are working towards.",
+    "Keep growing, keep smiling and keep being yourself.",
+    "I hope you enjoy your day and make beautiful memories.",
+    "Happy birthday once again, Mercy. ❤️",
   ],
-  signoff: "From Robert",
+  signoff: "Robert",
 };
 
 /* Wishes that can be sent straight to Mercy on WhatsApp. */

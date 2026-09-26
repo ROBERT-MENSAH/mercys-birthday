@@ -2397,3 +2397,130 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
 /* prompt cards: a button, so it needs the full reset the other buttons get */
 .chatseed { font: inherit; color: inherit; text-align: left; width: 100%; cursor: pointer; }
 .chatseed:hover { transform: translateY(-3px); }
+/* ---------- home: bible verse section ----------
+   One featured verse (Mercy's own choice) sits still and centred. The rest
+   drift slowly left to right in a single long loop. Built entirely from the
+   existing tokens so it reads as part of the same page. */
+
+.vmain {
+  max-width: 40rem;
+  margin: var(--s-5) auto 0;
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.vmain__label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-size: var(--t-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--rose-300);
+  font-weight: 700;
+}
+.vmain__text {
+  margin: var(--s-3) 0 0;
+  font-size: var(--t-md);
+  line-height: 1.6;
+  color: var(--text);
+}
+.vmain__ref {
+  margin-top: var(--s-3);
+  font-size: var(--t-sm);
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.vmore__label {
+  margin-top: var(--s-6);
+  text-align: center;
+  font-size: var(--t-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+
+/* the rail clips the drift; the two identical tracks are what make the loop
+   seamless, so the group is translated exactly one track-width */
+.vrail {
+  display: flex;
+  width: 100%;
+  margin-top: var(--s-4);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.vrail__track {
+  display: flex;
+  flex: none;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: vslide 90s linear infinite;
+  will-change: transform;
+}
+
+/* Reduced motion: no continuous drift. The verses are laid out as a plain
+   readable grid instead, and the duplicate track is dropped so each verse is
+   only read once. */
+@media (prefers-reduced-motion: reduce) {
+  .vrail {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-4);
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .vrail__track {
+    display: contents;
+    animation: none !important;
+    transform: none !important;
+  }
+  .vrail__track[aria-hidden="true"] { display: none; }
+  .vcard { width: auto; }
+}
+
+.vcard {
+  flex: none;
+  width: min(19rem, 74vw);
+  padding: var(--s-4);
+  border-radius: var(--r);
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.vcard__text {
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--text-soft);
+}
+.vcard__ref {
+  margin-top: var(--s-2);
+  font-size: var(--t-xs);
+  color: var(--rose-300);
+  font-weight: 700;
+}
+
+.vnote {
+  margin-top: var(--s-4);
+  text-align: center;
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+}
+
+@keyframes vslide {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-100%, 0, 0); }
+}
+
+/* slow, calm: ease the start and stop so it never feels mechanical */
+.vrail:hover .vrail__track,
+.vrail:focus-within .vrail__track,
+.vrail.is-paused .vrail__track { animation-play-state: paused; }
+

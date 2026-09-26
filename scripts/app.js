@@ -378,6 +378,22 @@
     }
   }
 
+  /* The home-page verse rail drifts continuously. It only animates while it is
+     actually on screen, so it costs nothing while the visitor is reading the
+     rest of the page. With reduced motion the CSS already lays the verses out
+     statically, so nothing is attached here at all. */
+  if (!reduceMotion) {
+    var vrail = document.querySelector("[data-vrail]");
+    if (vrail && "IntersectionObserver" in window) {
+      var vio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          en.target.classList.toggle("is-paused", !en.isIntersecting);
+        });
+      }, { threshold: 0.01 });
+      vio.observe(vrail);
+    }
+  }
+
 
   /* ------------------------------------------------------------- sharing */
   function shareText() {

@@ -42,6 +42,54 @@ export const creator = {
 };
 
 /* --------------------------------------------------------------------------
+   Bible verses for the home page.
+
+   ONLY Philippians 4:6 is Mercy's own choice - she named it herself, so it is
+   the featured verse. Everything in `more` was chosen by the site owner to fit
+   a birthday blessing, and is labelled that way on the page. Never present the
+   `more` list as verses Mercy picked.
+
+   Text is New International Version (NIV), 2011 revision, as printed by
+   Bible Gateway. Do not mix in wording from another translation.
+
+   NIV is (c) 1973, 1978, 1984, 2011 Biblica. Used by permission.
+   -------------------------------------------------------------------------- */
+export const bibleVerses = {
+  translation: "New International Version (NIV)",
+  kicker: "Words she holds close",
+  title: "A verse close to her heart",
+  lead: "Faith is an important part of Mercy's life. Philippians 4:6 is the Bible verse she chose, and the other verses here are a small birthday blessing for her.",
+  main: {
+    label: "Mercy's favourite Bible verse",
+    ref: "Philippians 4:6",
+    text: "Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.",
+  },
+  moreLabel: "More words for her birthday",
+  more: [
+    {
+      ref: "Numbers 6:24-26",
+      text: "The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you; the Lord turn his face toward you and give you peace.",
+    },
+    {
+      ref: "Proverbs 3:5-6",
+      text: "Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight.",
+    },
+    {
+      ref: "Jeremiah 29:11",
+      text: "For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.",
+    },
+    {
+      ref: "Psalm 37:4",
+      text: "Take delight in the Lord, and he will give you the desires of your heart.",
+    },
+    {
+      ref: "Isaiah 41:10",
+      text: "So do not fear, for I am with you; do not be dismayed, for I am your God. I will strengthen you and help you; I will uphold you with my righteous right hand.",
+    },
+  ],
+};
+
+/* -------------------------------------------------------------------------- 
    Photographs
    group   -> chapter / memory-room filter
    caption -> editorial caption in the Memory Room
