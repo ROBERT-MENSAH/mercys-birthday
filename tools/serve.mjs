@@ -31,11 +31,27 @@ const TYPES = {
   ".txt": "text/plain; charset=utf-8",
 };
 
+/* Mirrors the cache policy in vercel.json. Media and the icons are cached for
+   30 days so a return visit downloads none of them, but deliberately NOT
+   "immutable" for a year: the filenames are slugs, not content hashes, so a
+   photo swapped under an existing name has to be able to expire. HTML, CSS
+   and JS always revalidate so an edit shows up on refresh. */
+const LONG = /^\/(img|videos|audio|icons)\//;
+const REVALIDATE = /\.(html|css|js)$/;
+
+const cacheControlFor = (rel) => {
+  if (REVALIDATE.test(rel)) return "public, max-age=0, must-revalidate";
+  if (LONG.test(rel)) return "public, max-age=2592000, stale-while-revalidate=86400";
+  return "public, max-age=3600";
+};
+
 const send = async (res, code, file) => {
   const ext = path.extname(file).toLowerCase();
+  const rel = "/" + path.relative(DIST, file).split(path.sep).join("/");
   res.writeHead(code, {
     "content-type": TYPES[ext] || "application/octet-stream",
-    "cache-control": [".html", ".css", ".js"].includes(ext) ? "no-cache" : "public, max-age=3600",
+    "cache-control": cacheControlFor(rel),
+    "x-content-type-options": "nosniff",
   });
   res.end(await readFile(file));
 };
