@@ -21,6 +21,7 @@ export const DESK = [
   ...NAV.slice(0, 3),
   NAV[3],
   NAV[4],
+  { href: "/chat/", label: "Chat", icon: "quote", short: "Chat" },
   { href: "/gifts/", label: "Gifts", icon: "gift", short: "Gifts" },
   { href: "/creator/", label: "Creator", icon: "user", short: "Creator" },
 ];
@@ -372,6 +373,7 @@ const footHtml = (b, current = "") =>
             <ul class="foot__links">
               <li><a class="${current === "/birthday/" ? "is-on" : ""}" href="${b}birthday/"${current === "/birthday/" ? ' aria-current="page"' : ""}>Birthday party</a></li>
               <li><a class="${current === "/wishes/" ? "is-on" : ""}" href="${b}wishes/"${current === "/wishes/" ? ' aria-current="page"' : ""}>Send a wish</a></li>
+              <li><a class="${current === "/chat/" ? "is-on" : ""}" href="${b}chat/"${current === "/chat/" ? ' aria-current="page"' : ""}>Live chat wall</a></li>
               <li><a class="${current === "/gifts/" ? "is-on" : ""}" href="${b}gifts/"${current === "/gifts/" ? ' aria-current="page"' : ""}>Gifts</a></li>
               <li><a class="${current === "/memories/" ? "is-on" : ""}" href="${b}memories/"${current === "/memories/" ? ' aria-current="page"' : ""}>Memory room</a></li>
             </ul>
@@ -431,6 +433,9 @@ export function page({
   ogImage = "img/my-picture-1-960.jpg",
   jsonLd = null,
   preloadHero = null,
+  /* Extra per-page scripts, loaded after app.js. Kept opt-in so the 14 other
+     pages do not download a chat bundle they never use. */
+  scripts = null,
 }) {
   const b = base(depth);
   const full = title === site.name ? title : `${title} - ${site.name}`;
@@ -480,6 +485,7 @@ ${body}
   ${lightboxHtml()}
   <div class="toast" data-toast role="status" aria-live="polite"></div>
   <script src="${b}scripts/app.js" defer></script>
+  ${scripts ? scripts.map((s) => `<script src="${b}scripts/${s}" defer></script>`).join("\n  ") : ""}
   <noscript><p class="note" style="text-align:center;padding:1rem">This celebration works best with JavaScript on — photos and wishes still work without it.</p></noscript>
 </body>
 </html>`;

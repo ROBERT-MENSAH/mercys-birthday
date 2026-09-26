@@ -426,8 +426,13 @@ function wishes() {
           <span class="row__t"><b>Call Mercy</b><span>${esc(contact.phoneDisplay)}</span></span>
           <span class="row__go">${icon("arrow-up-right", { size: 18 })}</span>
         </a>
+        <a class="row" href="../chat/">
+          <span class="row__ico">${icon("quote", { size: 19 })}</span>
+          <span class="row__t"><b>Leave it on the message wall</b><span>Say what she is honestly like</span></span>
+          <span class="row__go">${icon("arrow-right", { size: 18 })}</span>
+        </a>
       </div>
-      <div class="note" style="margin-top:var(--s-4);max-width:460px;margin-inline:auto">${icon("info", { size: 18 })}<p>Wishes are delivered by you, from your own WhatsApp. Nothing is stored on this site.</p></div>
+      <div class="note" style="margin-top:var(--s-4);max-width:460px;margin-inline:auto">${icon("info", { size: 18 })}<p>Wishes sent by WhatsApp are delivered by you, from your own phone. Nothing is stored on this site.</p></div>
     </section>`;
 
   return at(1, () => body, {
@@ -478,6 +483,111 @@ function gifts() {
     title: "Gift Ideas",
     description: "Ways to celebrate Mercy's birthday.",
     current: "/gifts/",
+  });
+}
+
+/* --- Live chat ------------------------------------------------------------
+   A message wall where visitors leave what Mercy is honestly like, and what
+   they like most about her.
+
+   The page is complete and interactive, but it is HONEST about its storage:
+   there is no server behind this site, so messages are kept in the visitor's
+   own browser. They are not visible to anyone else, and leaving one does not
+   notify Mercy. The copy says so plainly rather than implying a shared feed.
+
+   The store is an injectable driver (scripts/chat.js), so a real datastore can
+   replace the local one without touching this page or the UI. */
+function chat() {
+  setDepth(1);
+  const prompts = [
+    "She is the friend you call when everything is going wrong.",
+    "She makes a room lighter just by walking into it.",
+    "She is honest with you even when it is not what you want to hear.",
+    "Her laugh is contagious and you will be thinking about it tomorrow.",
+    "She shows up, every single time, and that is rarer than people think.",
+    "She has a good heart and she lives that, she does not just claim it.",
+  ];
+
+  const body = `    <section class="section section--tight">
+      ${sectionHead("Live chat", "Leave Mercy a message")}
+      <p class="prose rv">Tell her what she is honestly like, and what you like most about her. No filter needed &mdash; the honest version is the one she wants.</p>
+    </section>
+
+    <section class="section--tight">
+      <form class="chatform rv" data-chat-form novalidate>
+        <div class="chatform__row">
+          <p class="field">
+            <label class="field__lab" for="chat-name">Your name</label>
+            <input class="field__in" id="chat-name" name="name" type="text"
+                   data-chat-name maxlength="40" autocomplete="name" placeholder="e.g. Ama, or her cousin, or a friend">
+          </p>
+          <p class="field">
+            <label class="field__lab" for="chat-relation">How you know her <span class="field__opt">(optional)</span></label>
+            <input class="field__in" id="chat-relation" name="relation" type="text"
+                   data-chat-relation maxlength="40" placeholder="e.g. schoolmate, sister, friend">
+          </p>
+        </div>
+        <p class="field">
+          <label class="field__lab" for="chat-text">Your honest truth about Mercy</label>
+          <textarea class="field__in field__in--area" id="chat-text" name="text" rows="5"
+                    data-chat-text maxlength="600" required
+                    placeholder="What she is really like, and what makes her the most likeable person you know."></textarea>
+        </p>
+        <p class="field__meta">
+          <span class="field__count" data-chat-counter>0 / 600</span>
+          <button class="btn btn--primary" type="submit" data-chat-submit>${icon("heart", { size: 18 })}<span>Post message</span></button>
+        </p>
+      </form>
+    </section>
+
+    <section class="section--tight">
+      <div class="chathead">
+        <h3 class="chathead__t">The wall</h3>
+        <span class="chathead__n" data-chat-count>0 messages</span>
+      </div>
+      <p class="chatempty" data-chat-empty>${icon("quote", { size: 20 })}<span>No messages yet. Be the first to say something.</span></p>
+      <ul class="chatwall" data-chat-wall aria-live="polite"></ul>
+    </section>
+
+    <section class="section--tight">
+      ${sectionHead("Need a bigger reach", "Send it straight to her")}
+      <p class="prose rv">These messages stay in your browser, so if you want Mercy to actually read yours, send it to her directly.</p>
+      <div class="rows">
+        <a class="row" href="${waLink("Happy birthday Mercy! ")}" target="_blank" rel="noopener">
+          <span class="row__ico">${icon("whatsapp", { size: 19 })}</span>
+          <span class="row__t"><b>Send your message on WhatsApp</b><span>WhatsApp &middot; ${esc(contact.whatsappDisplay)}</span></span>
+          <span class="row__go">${icon("arrow-up-right", { size: 18 })}</span>
+        </a>
+        <a class="row" href="tel:${contact.phoneHref}">
+          <span class="row__ico">${icon("phone", { size: 19 })}</span>
+          <span class="row__t"><b>Call her</b><span>${esc(contact.phoneDisplay)}</span></span>
+          <span class="row__go">${icon("arrow-up-right", { size: 18 })}</span>
+        </a>
+      </div>
+      <div class="note" style="margin-top:var(--s-4);max-width:520px;margin-inline:auto">${icon("info", { size: 18 })}<p><b>How this works right now.</b> This site is a set of static pages with no server, so a message you post here is saved in this browser only. It is not sent to Mercy, and nobody else can see it. It will disappear if you clear your browser data. To make it a real shared wall, a database and a moderation step have to be added &mdash; that is the next stage, not something this page pretends to have.</p></div>
+    </section>
+
+    <section class="section">
+      ${sectionHead("Stuck?", "Something honest to say")}
+      <div class="lgrid">
+        ${prompts
+          .map(
+            (t) => `<button class="card chatseed" type="button" data-chat-seed="${esc(t)}">
+          <p style="font-size:var(--t-base);line-height:1.55;text-align:left">${esc(t)}</p>
+        </button>`,
+          )
+          .join("\n        ")}
+      </div>
+      <p class="prose rv" style="text-align:center;margin-top:var(--s-4)">Tap one to start from, then make it your own.</p>
+    </section>`;
+
+  return at(1, () => body, {
+    title: "Live Chat",
+    description: "Leave Mercy an honest message - what she is really like, and what makes her the most likeable person you know.",
+    current: "/chat/",
+    /* Store first, then the UI that depends on MBChat. Both are defer, so
+       order of execution follows document order. */
+    scripts: ["chat.js", "chat-ui.js"],
   });
 }
 
@@ -561,6 +671,7 @@ chapters.forEach((ch) => write(`story/${ch.slug}/index.html`, chapter(ch)));
 write("memories/index.html", memories());
 write("birthday/index.html", birthday());
 write("wishes/index.html", wishes());
+write("chat/index.html", chat());
 write("gifts/index.html", gifts());
 write("creator/index.html", creatorPage());
 write("404.html", notFound());
@@ -605,6 +716,7 @@ const manifest = {
     { name: "Memory Room", url: "./memories/", icons: [{ src: "icons/app-icon-192.png", sizes: "192x192" }] },
     { name: "Birthday", url: "./birthday/", icons: [{ src: "icons/app-icon-192.png", sizes: "192x192" }] },
     { name: "Send a wish", url: "./wishes/", icons: [{ src: "icons/app-icon-192.png", sizes: "192x192" }] },
+    { name: "Live chat", url: "./chat/", icons: [{ src: "icons/app-icon-192.png", sizes: "192x192" }] },
   ],
 };
 write("manifest.webmanifest", JSON.stringify(manifest, null, 2));
@@ -613,7 +725,7 @@ write("manifest.webmanifest", JSON.stringify(manifest, null, 2));
    Shell only. Media is intentionally left to the browser cache so a
    first visit never pulls down 30 MB of photographs and video. */
 const sw = `/* Generated by tools/build.mjs - do not edit by hand. */
-const CACHE = "mercy-birthday-v14";
+const CACHE = "mercy-birthday-v16";
 const SHELL = [
   "./", "./index.html",
   "./journey/index.html",
@@ -621,24 +733,39 @@ ${chapters.map((c) => `  "./story/${c.slug}/index.html",`).join("\n")}
   "./memories/index.html",
   "./birthday/index.html",
   "./wishes/index.html",
+  "./chat/index.html",
   "./gifts/index.html",
   "./creator/index.html",
   "./manifest.webmanifest",
   "./styles/app.css",
   "./scripts/app.js",
-  // The launcher reads the installed icon straight out of this cache, so the
-  // photo icons are part of the shell rather than fetched lazily on demand.
+  // Only the chat page needs these, but they are tiny and it must work
+  // offline like every other page does.
+  "./scripts/chat.js",
+  "./scripts/chat-ui.js",
+  // The small icons are in the shell because the browser asks for them on the
+  // very first paint. The two 512px icons are deliberately NOT here: together
+  // they are 675 KB, and they are only ever read at install time, which is a
+  // deliberate action on a connection that is by definition online. Precaching
+  // them made every first visit pay for an app most visitors never install.
   "./icons/favicon-32.png",
   "./icons/apple-touch-icon.png",
   "./icons/app-icon-192.png",
-  "./icons/app-icon-512.png",
-  "./icons/app-icon-maskable-192.png",
-  "./icons/app-icon-maskable-512.png"
+  "./icons/app-icon-maskable-192.png"
 ];
 
+/* addAll() is all-or-nothing: one 404 and the worker never installs, so the
+   site silently loses offline support. Each entry is cached on its own and a
+   missing icon is reported rather than fatal. */
 self.addEventListener("install", (e) => {
   e.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then((c) => Promise.all(SHELL.map((url) =>
+        c.add(new Request(url, { cache: "reload" })).catch((err) => {
+          console.warn("[sw] could not precache", url, err);
+        })
+      )))
+      .then(() => self.skipWaiting())
   );
 });
 

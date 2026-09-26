@@ -2248,3 +2248,152 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
      viewport and clears the 252px rail rather than sitting under it. */
   .top__menu, .top__drawer { display: none !important; }
 }
+
+/* ---------- live chat ---------- */
+/* A message wall. The form is the primary action, so it gets the strongest
+   surface on the page; the wall below it is deliberately quieter so a long
+   thread does not compete with the thing you came to write. */
+.chatform {
+  display: grid;
+  gap: var(--s-4);
+  max-width: 620px;
+  margin-inline: auto;
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  /* Opaque, not --card: the decorative background blooms bleed through a
+     translucent surface and wash out the small muted text (labels and the
+     character counter) that sits on top of it. */
+  background: var(--ink-900);
+  border: 1px solid var(--line-2);
+  box-shadow: var(--sh-3);
+}
+.chatform__row { display: grid; gap: var(--s-4); }
+@media (min-width: 620px) {
+  .chatform__row { grid-template-columns: 1fr 1fr; }
+}
+
+.field { display: grid; gap: 0.35rem; }
+.field__lab {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rose-200);
+}
+.field__opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text-mute); }
+.field__in {
+  width: 100%;
+  min-height: 46px;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--r-sm);
+  /* an opaque field, so placeholder text stays readable over the decorations */
+  background: var(--ink-900);
+  border: 1px solid var(--line-2);
+  color: var(--text);
+  font-size: var(--t-base);
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.field__in::placeholder { color: var(--text-mute); }
+.field__in:focus {
+  outline: 0;
+  border-color: var(--rose-400);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--rose-500) 28%, transparent);
+}
+.field__in--area { min-height: 132px; resize: vertical; line-height: 1.6; }
+.field__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+.field__count {
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+  font-variant-numeric: tabular-nums;
+}
+.field__count.is-near { color: var(--gold-300); }
+
+/* wall header */
+.chathead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  max-width: 620px;
+  margin: 0 auto var(--s-3);
+}
+.chathead__t { font-size: var(--t-md); font-family: var(--f-display); }
+.chathead__n { font-size: var(--t-xs); color: var(--text-mute); font-variant-numeric: tabular-nums; }
+
+.chatwall { display: grid; gap: 0.7rem; max-width: 620px; margin-inline: auto; list-style: none; padding: 0; }
+
+.chatmsg {
+  display: flex;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-radius: var(--r);
+  /* Slightly more solid than --card so the wall stays readable over the
+     decorative blooms, without going fully opaque like the form. */
+  background: color-mix(in srgb, var(--ink-900) 72%, transparent);
+  border: 1px solid var(--line);
+}
+.chatmsg.is-new { border-color: var(--rose-400); background: color-mix(in srgb, var(--rose-500) 14%, var(--ink-900)); }
+.chatmsg__av {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-full);
+  background: linear-gradient(140deg, var(--rose-400), var(--rose-600));
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--t-base);
+}
+.chatmsg__main { min-width: 0; }
+.chatmsg__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+.chatmsg__head b { font-size: var(--t-sm); font-weight: 600; }
+.chatmsg__rel {
+  font-size: var(--t-xs);
+  color: var(--rose-300);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--r-full);
+  background: color-mix(in srgb, var(--rose-500) 16%, transparent);
+}
+.chatmsg__when { font-size: var(--t-xs); color: var(--text-mute); margin-left: auto; }
+.chatmsg__text {
+  font-size: var(--t-base);
+  line-height: 1.62;
+  color: var(--text-soft);
+  /* long pasted URLs or unbroken words must not widen the page */
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* empty state sits between the form and the wall */
+.chatempty {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 620px;
+  margin-inline: auto;
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--r);
+  border: 1px dashed var(--line-2);
+  color: var(--text-dim);
+  font-size: var(--t-sm);
+  text-align: left;
+}
+.chatempty .ic { color: var(--rose-300); flex: none; }
+.chatempty.is-on { display: flex; }
+
+/* prompt cards: a button, so it needs the full reset the other buttons get */
+.chatseed { font: inherit; color: inherit; text-align: left; width: 100%; cursor: pointer; }
+.chatseed:hover { transform: translateY(-3px); }
