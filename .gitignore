@@ -5,6 +5,9 @@ dist/
 
 bt*.log
 bt*.err
+v*.log
+v*.err
+vercel*.log
 browse.txt
 all.txt
 .env*
