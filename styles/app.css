@@ -2435,15 +2435,41 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
   font-weight: 600;
 }
 
-.vmore__label {
+.vmore {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
   margin-top: var(--s-6);
-  text-align: center;
+}
+.vmore__label {
   font-size: var(--t-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--text-mute);
   font-weight: 600;
 }
+
+/* WCAG 2.2.2 Pause/Stop/Hide: the rail moves on its own, so it needs a real
+   control the visitor can operate, not just a hover pause. */
+.vmore__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  min-height: 2rem;
+  border-radius: var(--r-full);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--card);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.vmore__toggle:hover { color: #fff; border-color: var(--line-2); }
+.vmore__toggle[aria-pressed="true"] { color: var(--rose-300); border-color: var(--rose-600); }
 
 /* the rail clips the drift; the two identical tracks are what make the loop
    seamless, so the group is translated exactly one track-width */
@@ -2485,6 +2511,8 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
   }
   .vrail__track[aria-hidden="true"] { display: none; }
   .vcard { width: auto; }
+  /* nothing is moving, so there is nothing to pause */
+  .vmore__toggle { display: none; }
 }
 
 .vcard {
@@ -2522,5 +2550,6 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
 /* slow, calm: ease the start and stop so it never feels mechanical */
 .vrail:hover .vrail__track,
 .vrail:focus-within .vrail__track,
-.vrail.is-paused .vrail__track { animation-play-state: paused; }
+.vrail.is-paused .vrail__track,
+.vrail.is-held .vrail__track { animation-play-state: paused; }
 

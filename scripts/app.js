@@ -378,13 +378,27 @@
     }
   }
 
-  /* The home-page verse rail drifts continuously. It only animates while it is
-     actually on screen, so it costs nothing while the visitor is reading the
-     rest of the page. With reduced motion the CSS already lays the verses out
-     statically, so nothing is attached here at all. */
-  if (!reduceMotion) {
-    var vrail = document.querySelector("[data-vrail]");
-    if (vrail && "IntersectionObserver" in window) {
+  /* The home-page verse rail drifts continuously.
+     Two things pause it: an IntersectionObserver so it costs nothing while it is
+     off screen, and a real Pause button, because WCAG 2.2.2 requires a control
+     the visitor can operate for anything that moves on its own for more than
+     five seconds. Under reduced motion the CSS lays the verses out statically
+     and hides the button, so nothing is attached here at all. */
+  var vrail = document.querySelector("[data-vrail]");
+  var vtoggle = document.querySelector("[data-vtoggle]");
+  if (vrail) {
+    if (!reduceMotion && vtoggle) {
+      var label = vtoggle.querySelector("[data-vtoggle-label]");
+      var setHeld = function (held) {
+        vrail.classList.toggle("is-held", held);
+        vtoggle.setAttribute("aria-pressed", held ? "true" : "false");
+        if (label) label.textContent = held ? "Play" : "Pause";
+      };
+      vtoggle.addEventListener("click", function () {
+        setHeld(vtoggle.getAttribute("aria-pressed") !== "true");
+      });
+    }
+    if (!reduceMotion && "IntersectionObserver" in window) {
       var vio = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           en.target.classList.toggle("is-paused", !en.isIntersecting);

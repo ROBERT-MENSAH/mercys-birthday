@@ -133,7 +133,13 @@ function home() {
         <figcaption class="vmain__ref">${esc(bibleVerses.main.ref)}</figcaption>
       </figure>
 
-      <p class="vmore__label rv">${esc(bibleVerses.moreLabel)}</p>
+      <div class="vmore rv">
+        <p class="vmore__label" id="vmore-label">${esc(bibleVerses.moreLabel)}</p>
+        <button class="vmore__toggle" type="button" data-vtoggle aria-pressed="false"
+                aria-describedby="vmore-label">
+          ${icon("pause", { size: 14 })}<span data-vtoggle-label>Pause</span>
+        </button>
+      </div>
       <div class="vrail" data-vrail>
         <ul class="vrail__track">
           ${bibleVerses.more

@@ -974,6 +974,82 @@ async function main() {
   })()`);
   record(a11y.skip && a11y.imgsNoAlt === 0 && a11y.buttonsNoName === 0 && a11y.focusables > 10, "keyboard + naming basics", JSON.stringify(a11y));
 
+  /* ---- verse rail: WCAG 2.2.2 Pause/Stop/Hide ----
+     The rail drifts on its own for longer than five seconds, so it needs a
+     control the visitor can actually operate. Hover pause alone is not enough. */
+  await page.goto(`${BASE}/`, { settle: 700 });
+  await page.eval(`(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.querySelector('.vrail').scrollIntoView({ block: 'center', behavior: 'instant' });
+    return 1;
+  })()`);
+  await new Promise(r => setTimeout(r, 600));
+
+  const vbtn = await page.eval(`(() => {
+    const b = document.querySelector('[data-vtoggle]');
+    if (!b) return { missing: true };
+    const r = b.getBoundingClientRect();
+    return {
+      missing: false, tag: b.tagName, pressed: b.getAttribute('aria-pressed'),
+      text: b.textContent.trim(), w: Math.round(r.width), h: Math.round(r.height),
+      described: !!(b.getAttribute('aria-describedby') &&
+        document.getElementById(b.getAttribute('aria-describedby'))),
+    };
+  })()`);
+  record(!vbtn.missing && vbtn.tag === "BUTTON" && /pause/i.test(vbtn.text),
+    "verse rail has a real Pause button (WCAG 2.2.2)", JSON.stringify(vbtn));
+  record(vbtn.h >= 24 && vbtn.w >= 24 && vbtn.described,
+    "Pause button meets target size and is described", JSON.stringify(vbtn));
+
+  const vrun = await page.eval(`getComputedStyle(document.querySelector('.vrail__track')).animationPlayState`);
+  record(vrun === "running", `verse rail is moving by default (${vrun})`);
+
+  /* activate it as a keyboard user would, then confirm it really stops */
+  await page.eval(`(() => { const b = document.querySelector('[data-vtoggle]'); b.focus(); b.click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 400));
+  const vheld = await page.eval(`(() => {
+    const t = document.querySelector('.vrail__track');
+    const b = document.querySelector('[data-vtoggle]');
+    const first = getComputedStyle(t).transform;
+    return new Promise(res => setTimeout(() => res({
+      state: getComputedStyle(t).animationPlayState,
+      pressed: b.getAttribute('aria-pressed'),
+      text: b.textContent.trim(),
+      frozen: getComputedStyle(t).transform === first,
+    }), 900));
+  })()`);
+  record(vheld.state === "paused" && vheld.frozen, "Pause actually stops the movement", JSON.stringify(vheld));
+  record(vheld.pressed === "true" && vheld.text === "Play", "button reports its state and next action", JSON.stringify(vheld));
+
+  await page.eval(`(() => { document.querySelector('[data-vtoggle]').click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 400));
+  const vresume = await page.eval(`(() => {
+    const t = document.querySelector('.vrail__track');
+    const b = document.querySelector('[data-vtoggle]');
+    const first = getComputedStyle(t).transform;
+    return new Promise(res => setTimeout(() => res({
+      moving: getComputedStyle(t).transform !== first,
+      text: b.textContent.trim(),
+    }), 900));
+  })()`);
+  record(vresume.moving && vresume.text === "Pause", "Play resumes the movement", JSON.stringify(vresume));
+
+  /* reduced motion: nothing moves, and there is nothing to pause */
+  await page.cmd("Emulation.setEmulatedMedia", { features: [{ name: "prefers-reduced-motion", value: "reduce" }] });
+  await page.goto(`${BASE}/`, { settle: 700 });
+  const vrm = await page.eval(`(() => {
+    const b = document.querySelector('[data-vtoggle]');
+    return {
+      anim: getComputedStyle(document.querySelector('.vrail__track')).animationName,
+      btn: b ? getComputedStyle(b).display : 'absent',
+      verses: [...document.querySelectorAll('.vcard')].filter(c => c.getBoundingClientRect().width > 0).length,
+    };
+  })()`);
+  record(vrm.anim === "none", `reduced motion: verse rail does not animate (${vrm.anim})`);
+  record(vrm.btn === "none", `reduced motion: Pause button is hidden (${vrm.btn})`);
+  record(vrm.verses === 5, `reduced motion: all 5 extra verses readable (${vrm.verses})`);
+  await page.cmd("Emulation.setEmulatedMedia", { features: [] });
+
   /* ---- console must stay clean ---- */
   record(sessionErrors.length === 0, "no console errors across the run");
   for (const e of [...new Set(sessionErrors)].slice(0, 12)) console.log(`      ! ${e}`);
