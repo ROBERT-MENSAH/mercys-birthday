@@ -117,7 +117,7 @@ function home() {
 
     <section class="section section--tight">
       ${sectionHead("Now", "Mercy, right now")}
-      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, as she is today.", "One of Mercy's favourite pictures.", "Mercy in a white dress.", "Mercy some years back."] })}
+      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, as she is today.", "One of Mercy's favourite pictures.", "Mercy out in the sunshine.", "Mercy some years back."] })}
       <div class="btnrow" style="margin-top:var(--s-5)">
         <a class="btn btn--primary" href="birthday/">${icon("cake", { size: 18 })}<span>Go to the celebration</span></a>
       </div>
@@ -361,7 +361,7 @@ function birthday() {
 
     <section class="section section--tight">
       ${sectionHead("A few more", "Today, in pictures")}
-      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, as she is today.", "Mercy in a white dress.", "Mercy with some of her friends.", "Mercy and her sister Elizabeth."] })}
+      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, as she is today.", "Mercy out in the sunshine.", "Mercy with some of her friends.", "Mercy and her sister Elizabeth."] })}
     </section>
 
     <section class="section section--tight">

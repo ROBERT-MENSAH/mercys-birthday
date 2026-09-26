@@ -196,7 +196,7 @@ export const photos = [
   {
     id: "my-picture-1",
     group: "today",
-    caption: "Mercy in a white dress.",
+    caption: "Mercy out in the sunshine.",
     alt: "Mercy in a white lace dress with a black handbag and gold jewellery, standing in bright sunlight in front of green hedges",
   },
   {
