@@ -1,4 +1,4 @@
-﻿/**
+/**
  * One consistent icon family, authored on a 24x24 grid with a 1.75px stroke,
  * round caps and round joins. Used everywhere - nav, buttons, cards, labels.
  * No emoji, no mixed icon libraries, no icon font.

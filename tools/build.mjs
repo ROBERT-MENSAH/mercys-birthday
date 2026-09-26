@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Static site generator.
  *
  *   node tools/build.mjs        build into dist/
