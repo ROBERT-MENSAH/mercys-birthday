@@ -79,7 +79,7 @@ function home() {
         <div>
           <p class="hero__eyebrow">${icon("sparkles", { size: 15 })} A birthday for Mercy</p>
           <h1 class="hero__title">Happy Birthday,<em>Mercy.</em></h1>
-          <p class="hero__lead">${site.description} Every photograph and every video on these pages is real, and Robert has written them from what he knows.</p>
+          <p class="hero__lead">${site.description}</p>
           <div class="btnrow hero__cta">
             <a class="btn btn--primary" href="journey/">${icon("compass", { size: 18 })}<span>Start the journey</span></a>
             <a class="btn btn--ghost" href="memories/">${icon("images", { size: 18 })}<span>Memory room</span></a>
@@ -117,7 +117,7 @@ function home() {
 
     <section class="section section--tight">
       ${sectionHead("Now", "Mercy, right now")}
-      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, currently.", "One of her favourite pictures.", "In a white dress", "Years back"] })}
+      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, as she is today.", "One of Mercy's favourite pictures.", "Mercy in a white dress.", "Mercy some years back."] })}
       <div class="btnrow" style="margin-top:var(--s-5)">
         <a class="btn btn--primary" href="birthday/">${icon("cake", { size: 18 })}<span>Go to the celebration</span></a>
       </div>
@@ -182,7 +182,7 @@ function journey() {
     </section>
 
     <section class="section">
-      <div class="note rv">${icon("info", { size: 18 })}<p>Nothing on these pages is invented. Names come from the photographs, and anything Robert was not sure about, he left out.</p></div>
+      <div class="note rv">${icon("info", { size: 18 })}<p>Names here come from the photographs, and anything Robert was not sure about, he left out.</p></div>
     </section>`;
 
   return at(1, () => body, {
@@ -283,7 +283,7 @@ function memories() {
 
   const body = `    <section class="section section--tight">
       ${sectionHead("Memory room", "Every photograph")}
-      <p class="prose rv">All ${photos.length} photographs, grouped by the part of the story they belong to. Tap any one to see it full size.</p>
+      <p class="prose rv">All ${photos.length} photographs, grouped by the part of her life they belong to. Tap any one to see it full size.</p>
     </section>
 
     <div class="filters">
@@ -361,7 +361,7 @@ function birthday() {
 
     <section class="section section--tight">
       ${sectionHead("A few more", "Today, in pictures")}
-      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, currently.", "In a white dress", "Mercy and some of the people she loves most.", "Sister Elizabeth"] })}
+      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, as she is today.", "Mercy in a white dress.", "Mercy with some of her friends.", "Mercy and her sister Elizabeth."] })}
     </section>
 
     <section class="section section--tight">
@@ -476,7 +476,7 @@ function gifts() {
         </a>
       </div>
 
-      <div class="note" style="margin-top:var(--s-5);max-width:460px;margin-inline:auto">${icon("info", { size: 18 })}<p>If a payment or delivery detail is added later, it belongs in <code>tools/content.mjs</code> so it stays accurate and in one place.</p></div>
+      <div class="note" style="margin-top:var(--s-5);max-width:460px;margin-inline:auto">${icon("info", { size: 18 })}<p>There is no payment link on this page, so please do not send money to anyone for it. Talk to Mercy directly if you want to give her something.</p></div>
     </section>`;
 
   return at(1, () => body, {
@@ -500,17 +500,17 @@ function gifts() {
 function chat() {
   setDepth(1);
   const prompts = [
-    "She is the friend you call when everything is going wrong.",
-    "She makes a room lighter just by walking into it.",
-    "She is honest with you even when it is not what you want to hear.",
-    "Her laugh is contagious and you will be thinking about it tomorrow.",
-    "She shows up, every single time, and that is rarer than people think.",
-    "She has a good heart and she lives that, she does not just claim it.",
+    "Happy birthday, Mercy! I hope you have a really good day.",
+    "One thing I appreciate about Mercy is...",
+    "One memory I have with Mercy is...",
+    "I wish Mercy...",
+    "May God bless Mercy with...",
+    "Happy birthday, Mercy. Keep working towards your goals.",
   ];
 
   const body = `    <section class="section section--tight">
       ${sectionHead("Live chat", "Leave Mercy a message")}
-      <p class="prose rv">Tell her what she is honestly like, and what you like most about her. No filter needed &mdash; the honest version is the one she wants.</p>
+      <p class="prose rv">Tell her what she is honestly like, and what you like most about her. Write it in your own words.</p>
     </section>
 
     <section class="section--tight">
@@ -528,7 +528,7 @@ function chat() {
           </p>
         </div>
         <p class="field">
-          <label class="field__lab" for="chat-text">Your honest truth about Mercy</label>
+          <label class="field__lab" for="chat-text">Your message for Mercy</label>
           <textarea class="field__in field__in--area" id="chat-text" name="text" rows="5"
                     data-chat-text maxlength="600" required
                     placeholder="What she is really like, and what makes her the most likeable person you know."></textarea>
@@ -596,19 +596,19 @@ function creatorPage() {
   setDepth(1);
   const body = `    <section class="section section--tight">
       ${sectionHead(creator.kicker, creator.subtitle)}
-      <p class="prose rv">This site was built by hand for one person, using only her own photographs and videos.</p>
+      <p class="prose rv">This site was built by hand for one person, using her own photographs and videos.</p>
     </section>
 
     <section class="section--tight">
       <div class="card rv" style="max-width:460px;margin-inline:auto;text-align:center">
-        <img class="creator__photo" src="${asset(creator.photo)}" alt="Robert the Web Creator, who created this website for Mercy" width="176" height="176" loading="eager" decoding="async">
+        <img class="creator__photo" src="${asset(creator.photo)}" alt="Robert Mensah, who created this website for Mercy" width="176" height="176" loading="eager" decoding="async">
         <h2 style="font-size:var(--t-lg)">${esc(creator.name)}</h2>
         <p style="color:var(--rose-300);font-size:var(--t-sm);margin-top:.2rem">${esc(creator.role)}</p>
       </div>
     </section>
 
     <section class="section section--tight">
-      <p class="prose rv creator__invite">Need a website like this? Chat with Robert on WhatsApp or call to discuss your project.</p>
+      <p class="prose rv creator__invite">This birthday website was put together by Robert Mensah, a friend of Mercy's.</p>
       <div class="rows">
         <a class="row" href="https://wa.me/${creator.whatsappNumber}" target="_blank" rel="noopener">
           <span class="row__ico">${icon("whatsapp", { size: 19 })}</span>
