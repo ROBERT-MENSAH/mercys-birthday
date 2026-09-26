@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { site, contact, creator, photos, photoGroups, videos } from "./content.mjs";
-import { chapters, wishPrompts, celebration } from "./story.mjs";
+import { chapters, wishPrompts, celebration, personalMessage } from "./story.mjs";
 import { media, cover, problems } from "./media.mjs";
 import { icon } from "./iconsprite.mjs";
 import { page, esc, picture, figure, strip, videoCard, wishBox, installCard, aphorism, prose, sectionHead, base, rel, setDepth, asset, NAV } from "./templates.mjs";
@@ -64,9 +64,9 @@ function home() {
   setDepth(0);
   const hero = P("me-currently");
   const highlights = [
-    { p: P("my-childhood-picture"), to: "story/childhood/", cap: "My Childhood", num: "01" },
-    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "People in My Life", num: "03" },
-    { p: P("me-currently"), to: "story/today/", cap: "Who I Am Today", num: "06" },
+    { p: P("my-childhood-picture"), to: "story/childhood/", cap: "Where Her Story Began", num: "01" },
+    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "The People Who Shaped Her", num: "03" },
+    { p: P("me-currently"), to: "story/today/", cap: "Who She Is Today", num: "06" },
   ];
 
   const body = `    <section class="hero">
@@ -74,7 +74,7 @@ function home() {
         <div>
           <p class="hero__eyebrow">${icon("sparkles", { size: 15 })} A birthday for Mercy</p>
           <h1 class="hero__title">Happy Birthday,<em>Mercy.</em></h1>
-          <p class="hero__lead">${site.description} Every photograph and every video on these pages is real, and every word is written from the inside.</p>
+          <p class="hero__lead">${site.description} Every photograph and every video on these pages is real, and Robert has written them from what he knows.</p>
           <div class="btnrow hero__cta">
             <a class="btn btn--primary" href="journey/">${icon("compass", { size: 18 })}<span>Start the journey</span></a>
             <a class="btn btn--ghost" href="memories/">${icon("images", { size: 18 })}<span>Memory room</span></a>
@@ -88,8 +88,8 @@ function home() {
     </section>
 
     <section class="section">
-      ${sectionHead("The chapters", "A life in moments")}
-      <p class="prose rv">Seven chapters, told in order, from the very first photograph to the one I am still writing.</p>
+      ${sectionHead("The chapters", "Mercy's life, chapter by chapter")}
+      <p class="prose rv">Seven chapters, told in order, from the very first photograph to the future she is still working towards.</p>
       <div class="chgrid" style="margin-top:var(--s-5)">
         ${highlights
           .map(
@@ -112,7 +112,7 @@ function home() {
 
     <section class="section section--tight">
       ${sectionHead("Now", "Mercy, right now")}
-      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Me currently", "My favourite picture", "In a white dress", "Years back"] })}
+      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, currently.", "One of her favourite pictures.", "In a white dress", "Years back"] })}
       <div class="btnrow" style="margin-top:var(--s-5)">
         <a class="btn btn--primary" href="birthday/">${icon("cake", { size: 18 })}<span>Go to the celebration</span></a>
       </div>
@@ -166,7 +166,7 @@ function journey() {
     .join("\n        ");
 
   const body = `    <section class="section section--tight">
-      ${sectionHead("The journey", "My life, chapter by chapter")}
+      ${sectionHead("The journey", "Mercy's life, chapter by chapter")}
       <p class="prose rv">Read them in order, or dip into whichever one you want. Every chapter is built from real photographs and real videos.</p>
     </section>
 
@@ -177,7 +177,7 @@ function journey() {
     </section>
 
     <section class="section">
-      <div class="note rv">${icon("info", { size: 18 })}<p>Nothing on these pages is invented. Names come from the photographs, and every claim traces back to something in the album.</p></div>
+      <div class="note rv">${icon("info", { size: 18 })}<p>Nothing on these pages is invented. Names come from the photographs, and anything Robert was not sure about, he left out.</p></div>
     </section>`;
 
   return at(1, () => body, {
@@ -356,7 +356,15 @@ function birthday() {
 
     <section class="section section--tight">
       ${sectionHead("A few more", "Today, in pictures")}
-      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv" })}
+      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, currently.", "In a white dress", "Mercy and some of the people she loves most.", "Sister Elizabeth"] })}
+    </section>
+
+    <section class="section section--tight">
+      ${sectionHead(personalMessage.kicker, personalMessage.title)}
+      <div class="card rv" style="max-width:620px">
+        ${personalMessage.paragraphs.map((t) => `<p style="font-size:var(--t-base);line-height:1.65;margin-bottom:1rem">${esc(t)}</p>`).join("\n        ")}
+        <p style="font-size:var(--t-base);margin-top:1.2rem;color:var(--rose-300);font-weight:600">- ${esc(personalMessage.signoff)}</p>
+      </div>
     </section>
 
     <section class="section section--tight">
