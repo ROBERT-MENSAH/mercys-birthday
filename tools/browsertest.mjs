@@ -591,6 +591,66 @@ async function main() {
   record(!install.btn || (install.tapHeight ?? 46) >= 44, "install button meets 44px touch target",
     install.btn ? `h=${install.tapHeight}` : "button not shown in this browser (expected)");
 
+  const part = await page.eval(`(() => {
+    const bar = document.querySelector('[data-install-bar]');
+    if (!bar) return { error: 'no install bar' };
+    const btn = bar.querySelector('[data-install-btn]');
+    const steps = bar.querySelector('[data-install-steps]');
+    const note = bar.querySelector('[data-install-note]');
+    const x = bar.querySelector('[data-install-dismiss]');
+    const vis = (el) => !!el && !el.hidden && getComputedStyle(el).display !== 'none';
+    const box = bar.getBoundingClientRect();
+    const xb = x ? x.getBoundingClientRect() : null;
+    return {
+      shown: vis(bar),
+      btn: vis(btn), steps: vis(steps), note: vis(note),
+      honest: vis(btn) || vis(steps) || vis(note),
+      aboveFold: box.top < window.innerHeight && box.height > 0,
+      top: Math.round(box.top),
+      hasDismiss: !!x,
+      dismissSize: xb ? [Math.round(xb.width), Math.round(xb.height)] : null,
+      // the bar must not overlap the sticky header
+      clearsHeader: box.top >= 0,
+    };
+  })()`);
+  record(!part.error, "install bar exists on the home page", JSON.stringify(part));
+  record(part.honest === true, "install bar resolves to a real action, never a dead button",
+    JSON.stringify({ btn: part.btn, steps: part.steps, note: part.note }));
+  record(part.aboveFold === true, "install bar is above the fold", `top=${part.top}`);
+  record(!!part.hasDismiss && (part.dismissSize || []).every((n) => n >= 28),
+    "install bar can be dismissed by a tappable control", JSON.stringify(part.dismissSize));
+
+  /* Dismissing must actually stick. A prompt that comes back on the next
+     reload is nagging, not a convenience. Cleared first so a previous run in
+     this same profile cannot make the check pass for the wrong reason. */
+  await page.eval(`(() => { try { localStorage.removeItem('mb-install-dismissed'); } catch (e) {} })()`);
+  await page.goto(`${BASE}/`, { settle: 1400 });
+  const afterDismiss = await page.eval(`(async () => {
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const bar = () => document.querySelector('[data-install-bar]');
+    const vis = (el) => !!el && !el.hidden && getComputedStyle(el).display !== 'none';
+    const before = vis(bar());
+    const x = bar() && bar().querySelector('[data-install-dismiss]');
+    if (x) x.click();
+    await sleep(150);
+    const afterClick = vis(bar());
+    let stored = null;
+    try { stored = localStorage.getItem('mb-install-dismissed'); } catch (e) {}
+    return { before, afterClick, stored };
+  })()`);
+  record(afterDismiss && afterDismiss.before === true && afterDismiss.afterClick === false &&
+         afterDismiss.stored === "1",
+    "dismissing the install bar hides it and remembers", JSON.stringify(afterDismiss));
+  await page.goto(`${BASE}/`, { settle: 1200 });
+  const afterReload = await page.eval(`(() => {
+    const bar = document.querySelector('[data-install-bar]');
+    const vis = (el) => !!el && !el.hidden && getComputedStyle(el).display !== 'none';
+    return { shown: vis(bar) };
+  })()`);
+  record(afterReload.shown === false, "dismissed bar stays gone after a reload", JSON.stringify(afterReload));
+  /* Put the profile back the way it was, so later checks see a first visit. */
+  await page.eval(`(() => { try { localStorage.removeItem('mb-install-dismissed'); } catch (e) {} })()`);
+
   /* Opening hook: must show once, then leave the DOM and unlock scrolling.
      sessionStorage is cleared and the page reloaded first, so a previous run
      in the same profile cannot make the hook (correctly) stay hidden. */

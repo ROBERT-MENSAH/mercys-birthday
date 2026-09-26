@@ -209,6 +209,43 @@ export function installCard({ cls = "" } = {}) {
       </section>`;
 }
 
+/**
+ * A compact install prompt for the top of the home page.
+ *
+ * The full install card lives at the very bottom of the home page, which is
+ * exactly where nobody looks. This is the same state machine in a smaller
+ * package, placed where it is actually seen, so a visitor never has to scroll
+ * to the end of the page to find the one button that makes the whole thing
+ * live on their home screen.
+ *
+ * It reuses the data-install hooks so it can never disagree with the card
+ * below it or the button in the menu - scripts/app.js drives all of them from
+ * one piece of state.
+ *
+ * Starts hidden. It is revealed by app.js only once a real state is known, so
+ * it never flashes an empty prompt while the browser decides.
+ */
+export function installBar({ cls = "" } = {}) {
+  return `<aside class="installbar ${cls}" data-install-bar data-install hidden aria-label="Add this to your home screen">
+        <span class="installbar__icon" aria-hidden="true">${icon("download", { size: 18 })}</span>
+        <div class="installbar__text">
+          <p class="installbar__title">Keep this on your home screen</p>
+          <p class="installbar__body" data-install-body>Install it and it opens full screen, like an app.</p>
+        </div>
+        <div class="installbar__act">
+          <button class="btn btn--primary btn--sm installbar__btn" type="button" data-install-btn hidden>
+            ${icon("download", { size: 15 })}<span data-install-label>Add to home screen</span>
+          </button>
+          <ol class="installbar__steps" data-install-steps hidden>
+            <li>${icon("share", { size: 14 })}<b>Share</b></li>
+            <li>${icon("plus", { size: 14 })}<b>Add to Home Screen</b></li>
+            <li>${icon("check", { size: 14 })}<b>Add</b></li>
+          </ol>
+          <p class="installbar__note" data-install-note hidden>${icon("info", { size: 13 })}<span data-install-note-text></span></p>
+        </div>
+        <button class="installbar__x" type="button" data-install-dismiss aria-label="Dismiss the install prompt">${icon("close", { size: 15 })}</button>
+      </aside>`;
+}
 /** WhatsApp wish launcher. */
 export function wishBox(prompt, { text, label = "Send a wish", cls = "" } = {}) {
   return `<div class="wishbox ${cls}">

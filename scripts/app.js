@@ -467,14 +467,18 @@
   })();
 
   /* ----------------------------------------------------------- PWA install
-     One card, four honest states, decided from what the browser really
-     supports. There is never a button that quietly does nothing:
+     One state machine, several surfaces. There is never a button that quietly
+     does nothing:
        - native prompt available -> button triggers the real install flow
        - iOS/iPadOS Safari        -> short "Share -> Add to Home Screen" steps
        - already installed        -> swapped for a confirmation state
-       - nothing supported        -> a plain note explaining why, no button   */
+       - nothing supported        -> a plain note explaining why, no button
+
+     The surfaces are the bar near the top of the home page, the full card at
+     the foot of it, and a compact button in the menu. They share this state,
+     so they can never tell a visitor two different things. */
   (function install() {
-    /* Two surfaces: the home card and a compact button in the menu. Both are
+    /* Three surfaces: the top bar, the home card, and the menu button. All are
        driven by the same state, so they can never disagree. */
     var cards = $$("[data-install], [data-install-drawer]");
     if (!cards.length) return;
@@ -502,7 +506,28 @@
     var deferred = null;      /* the BeforeInstallPromptEvent, held until tapped */
     var installed = false;    /* became true once the app is on the home screen  */
 
+    /* A visitor who dismisses the bar has answered the question. Remembering
+       that is the difference between a helpful prompt and nagging, so the
+       choice survives a reload. localStorage throws in some private modes, so
+       every access is guarded. */
+    var DISMISS_KEY = "mb-install-dismissed";
+    var dismissed = false;
+    try { dismissed = window.localStorage.getItem(DISMISS_KEY) === "1"; } catch (e) { dismissed = false; }
+
     function each(fn) { cards.forEach(fn); }
+
+    /* The bar ships hidden so it can never flash an empty prompt before the
+       browser has told us what it supports. Reveal it only now that a real
+       state exists. */
+    var bar = $("[data-install-bar]");
+    function revealBar(show) {
+      if (bar) bar.hidden = !show;
+    }
+    /* Installed is the one state where the bar should simply go away: the card
+       below already confirms it, and a "keep this on your home screen" prompt
+       is nonsense once it is there. */
+    function settleBar() { revealBar(!installed && !isStandalone() && !dismissed); }
+
 
     function parts(card) {
       return {
@@ -529,6 +554,7 @@
           if (p.noteText) p.noteText.textContent = "You can launch it like any other app.";
         }
       });
+      settleBar();
     }
 
     function showIOSSteps() {
@@ -540,6 +566,7 @@
         if (p.steps) p.steps.hidden = false;
         if (p.note) p.note.hidden = true;
       });
+      settleBar();
     }
 
     function showButton() {
@@ -551,6 +578,7 @@
         if (p.steps) p.steps.hidden = true;
         if (p.note) p.note.hidden = true;
       });
+      settleBar();
     }
 
     function showUnsupported() {
@@ -567,6 +595,8 @@
         if (p.note) {
           p.note.hidden = false;
           if (p.noteText) {
+            /* The menu button cannot afford an explanation, so it gets a short
+               pointer; the home surfaces can say the whole thing. */
             p.noteText.textContent = isInApp()
               ? "Open in your normal browser to install."
               : (compact
@@ -575,6 +605,7 @@
           }
         }
       });
+      settleBar();
     }
 
     function render() {
@@ -583,9 +614,12 @@
       if (isIOS()) return showIOSSteps();
       if (isInApp()) return showUnsupported();
       /* Optimistic: the page is fully loaded, so the prompt is either already
-         here or will never come. Show nothing rather than a dead button. */
+         here or will never come. Show nothing rather than a dead button - and
+         keep the bar hidden until one of the honest states below replaces
+         this, so it never sits there empty waiting to find out. */
       showButton();
       each(function (card) { var b = $("[data-install-btn]", card); if (b) b.hidden = true; });
+      revealBar(false);
     }
 
     window.addEventListener("beforeinstallprompt", function (e) {
@@ -598,6 +632,17 @@
       deferred = null;
       showInstalled();
       toast("Mercy's Birthday is installed.");
+    });
+
+    /* Dismissing the bar is a decision, not a scroll. Remember it, and hide it
+       for good, so the prompt never becomes something to tap past on every
+       visit. The card at the foot of the page and the menu button stay. */
+    $$("[data-install-dismiss]").forEach(function (x) {
+      x.addEventListener("click", function () {
+        dismissed = true;
+        try { window.localStorage.setItem(DISMISS_KEY, "1"); } catch (e) { /* private mode */ }
+        settleBar();
+      });
     });
 
     $$("[data-install-btn]").forEach(function (btn) {

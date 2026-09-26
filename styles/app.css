@@ -1269,6 +1269,108 @@ html.is-gated, html.is-gated body { overflow: hidden; }
 .installcard.is-installed .installcard__eyebrow { color: var(--gold-300); }
 .installcard__btn[hidden] { display: none; }
 
+/* ---------- install bar (top of the home page) ----------
+   The install card at the foot of the page is the explanation; this is the
+   invitation. Same state machine, so the two never contradict each other. */
+.installbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--rose-500) 32%, transparent);
+  border-radius: var(--r-lg);
+  background: linear-gradient(140deg, color-mix(in srgb, var(--rose-600) 20%, transparent), var(--card));
+  box-shadow: 0 12px 30px -22px rgba(0, 0, 0, 0.9);
+}
+.installbar[hidden] { display: none; }
+.installbar__icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-full);
+  color: #fff;
+  background: linear-gradient(150deg, var(--rose-500), var(--rose-600));
+  box-shadow: 0 6px 16px -8px color-mix(in srgb, var(--rose-500) 90%, transparent);
+}
+.installbar__text { min-width: 0; flex: 1 1 auto; }
+.installbar__title {
+  margin: 0;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.installbar__body {
+  margin: 0.15rem 0 0;
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+.installbar__act { flex: none; display: flex; align-items: center; }
+/* .btn--sm sets min-height:40px, and it is declared later in this file than
+   this block, so it would win on source order and leave a 40px tap target -
+   under the 44px minimum. Bump the specificity so the bar's button is always
+   thumb-sized, wherever the two rules end up. */
+.installbar .installbar__btn { min-height: 44px; white-space: nowrap; }
+.installbar__btn[hidden] { display: none; }
+/* iOS: the three steps inline, where the card would number them */
+.installbar__steps {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-xs);
+  color: var(--text-dim);
+}
+.installbar__steps[hidden] { display: none; }
+.installbar__steps li { display: inline-flex; align-items: center; gap: 0.28rem; }
+.installbar__steps b { color: var(--text); font-weight: 600; white-space: nowrap; }
+.installbar__steps .ic { color: var(--rose-400); flex: none; }
+.installbar__note {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  max-width: 24ch;
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  color: var(--text-mute);
+}
+.installbar__note[hidden] { display: none; }
+.installbar__note .ic { flex: none; }
+/* The dismiss control has to stay reachable by thumb and by keyboard. */
+.installbar__x {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  margin: -0.25rem -0.3rem -0.25rem 0;
+  border: 0;
+  border-radius: var(--r-full);
+  color: var(--text-mute);
+  background: transparent;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+.installbar__x:hover { color: var(--text); background: rgba(255, 255, 255, 0.07); }
+.installbar__x:focus-visible { outline: 2px solid var(--rose-400); outline-offset: 2px; }
+.installbar.is-installed { display: none !important; }
+/* On a narrow phone the bar has to stack, or the button crowds the words out
+   of the row. */
+@media (max-width: 560px) {
+  .installbar { flex-wrap: wrap; gap: 0.7rem; }
+  .installbar__text { flex: 1 1 60%; }
+  .installbar__act { flex: 1 1 100%; }
+  .installbar__btn { width: 100%; justify-content: center; }
+  .installbar__steps { flex-wrap: wrap; }
+  .installbar__note { max-width: none; }
+  .installbar__x { position: absolute; top: 0.5rem; right: 0.5rem; }
+}
 /* ---------- birthday page ---------- */
 .bday { text-align: center; }
 .cake {
