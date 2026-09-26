@@ -26,6 +26,7 @@ const TYPES = {
   ".jpeg": "image/jpeg",
   ".png": "image/png",
   ".mp4": "video/mp4",
+  ".wav": "audio/wav",
   ".svg": "image/svg+xml",
   ".txt": "text/plain; charset=utf-8",
 };
@@ -63,14 +64,18 @@ createServer(async (req, res) => {
       return;
     }
 
-    /* range requests so <video> can seek */
+    /* Range requests, so <video> and <audio> can seek and report a real
+       duration. Without them Chrome treats a media file as an unbounded
+       stream: duration comes back as Infinity and seeking silently fails.
+       This mirrors what Vercel does for static files. */
     const range = req.headers.range;
-    if (range && TYPES[path.extname(file).toLowerCase()] === "video/mp4") {
+    const type = TYPES[path.extname(file).toLowerCase()];
+    if (range && (type === "video/mp4" || type === "audio/wav")) {
       const m = /bytes=(\d*)-(\d*)/.exec(range);
       const start = m[1] ? Number(m[1]) : 0;
       const end = m[2] ? Number(m[2]) : info.size - 1;
       res.writeHead(206, {
-        "content-type": "video/mp4",
+        "content-type": type,
         "content-range": `bytes ${start}-${end}/${info.size}`,
         "accept-ranges": "bytes",
         "content-length": end - start + 1,

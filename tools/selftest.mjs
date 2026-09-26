@@ -65,6 +65,7 @@ const ASSETS = [
   ["/icons/app-icon-maskable-512.png", 200, "image/png"],
   ["/img/me-currently-320.webp", 200, "image/webp"],
   ["/videos/MY%20STUDIO%20SONG.mp4", 200, "video/mp4"],
+  ["/audio/happy-birthday.wav", 200, "audio/wav"],
 ];
 
 const fail = [];

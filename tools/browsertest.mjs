@@ -743,39 +743,60 @@ async function main() {
   const song = await page.eval(`(async () => {
     const errs = [];
     window.addEventListener('error', (e) => errs.push(String((e.error && e.error.stack) || e.message || e)));
-    const Orig = window.AudioContext;
-    if (!Orig) return { error: 'no AudioContext constructor' };
-    let created = 0;
-    function Wrapped() {
-      const c = new (Function.prototype.bind.apply(Orig, [null].concat([...arguments])))();
-      window.__ctx = c;
-      const co = c.createOscillator.bind(c);
-      c.createOscillator = function () { created++; return co(); };
-      return c;
+
+    /* Capture the <audio> the page builds. It is created with new Audio() and
+       never attached to the DOM, so querySelectorAll cannot see it. */
+    const OrigAudio = window.Audio;
+    function AudioWrap() {
+      const el = new (Function.prototype.bind.apply(OrigAudio, [null].concat([...arguments])))();
+      window.__audio = el;
+      return el;
     }
-    Wrapped.prototype = Orig.prototype;
-    window.AudioContext = Wrapped;
-    window.webkitAudioContext = Wrapped;
+    AudioWrap.prototype = OrigAudio.prototype;
+    window.Audio = AudioWrap;
+
+    /* Keep counting oscillators too: if the file ever fails we silently fall
+       back to the Web Audio synth, and we want to be able to prove which ran. */
+    const Orig = window.AudioContext;
+    let created = 0;
+    if (Orig) {
+      function Wrapped() {
+        const c = new (Function.prototype.bind.apply(Orig, [null].concat([...arguments])))();
+        window.__ctx = c;
+        const co = c.createOscillator.bind(c);
+        c.createOscillator = function () { created++; return co(); };
+        return c;
+      }
+      Wrapped.prototype = Orig.prototype;
+      window.AudioContext = Wrapped;
+      window.webkitAudioContext = Wrapped;
+    }
 
     const btn = document.querySelector('[data-song]');
     if (!btn) return { error: 'no [data-song]' };
     const label = btn.querySelector('[data-song-label]');
     const before = { pressed: btn.getAttribute('aria-pressed'), text: label ? label.textContent : '' };
     btn.click();
-    await new Promise(r => setTimeout(r, 700));
-    const c = window.__ctx;
-    const t0 = c ? c.currentTime : 0;
-    /* Wait 5s. A real "Happy Birthday" runs ~10s; the old broken tune finished
-       in ~3.5s, so a short wait is the cheapest way to catch it collapsing
-       back into a blip. */
-    await new Promise(r => setTimeout(r, 4600));
+    /* Wait 5s. The rendered song runs ~11.8s; the old broken tune finished in
+       ~3.5s, so a short wait is the cheapest way to catch it collapsing into
+       a blip. */
+    await new Promise(r => setTimeout(r, 5200));
+
+    const a = window.__audio;
     const during = {
       pressed: btn.getAttribute('aria-pressed'),
       text: label ? label.textContent : '',
-      ctxState: c ? c.state : null,
-      oscillators: created,
-      timeAdvanced: c ? (c.currentTime - t0) > 0.1 : false,
       stillPlayingAfter5s: btn.getAttribute('aria-pressed') === 'true',
+      audio: a ? {
+        src: a.currentSrc || a.src,
+        duration: a.duration,
+        currentTime: a.currentTime,
+        paused: a.paused,
+        readyState: a.readyState,
+        error: a.error ? a.error.code : null,
+      } : null,
+      synthOscillators: created,
+      usingRealFile: !!(a && !a.error && /happy-birthday\\.wav$/.test(a.currentSrc || a.src)),
     };
     btn.click();
     await new Promise(r => setTimeout(r, 400));
@@ -788,10 +809,12 @@ async function main() {
     JSON.stringify(song),
   );
   /* A flipped aria-pressed only proves the handler ran - it says nothing about
-     sound. Assert the audio graph is really built and the context is running. */
+     sound. Assert the rendered file really loaded, decoded, and is advancing. */
+  const songAudio = song && song.during && song.during.audio;
   record(
-    !song.error && song.during.oscillators > 0 && song.during.ctxState === "running" && song.during.timeAdvanced,
-    "birthday song actually produces audio",
+    !song.error && song.during.usingRealFile && songAudio && !songAudio.error &&
+    songAudio.duration > 10 && songAudio.currentTime > 1 && songAudio.paused === false,
+    "birthday song plays the real rendered audio file",
     JSON.stringify(song && song.during) + (song && song.errs ? " errors=" + JSON.stringify(song.errs) : ""),
   );
   /* The tune must still be going after 5s - i.e. it is a real song, not a

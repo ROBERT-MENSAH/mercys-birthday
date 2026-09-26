@@ -634,11 +634,16 @@
   })();
 
   /* -------------------------------------------------- "Happy Birthday" tune
-     Rendered live with the Web Audio API, so the site ships no audio file
-     and playback still begins only from a genuine user gesture. */
+     Plays audio/happy-birthday.wav, a real rendered piano take that
+     tools/build.mjs generates on every build. The Web Audio synth below is
+     kept only as a fallback for the rare case where that file cannot be
+     fetched. Either way playback still begins from a genuine user gesture. */
   (function birthdaySong() {
     var btn = $("[data-song]");
     if (!btn) return;
+
+    var LABEL_PLAY = "Play the birthday song";
+    var LABEL_STOP = "Stop the birthday song";
 
     var ctx = null;
     var playing = false;
@@ -646,6 +651,38 @@
     var master = null;
     var nodes = [];
     var timers = [];
+
+    /* Resolved against this script's own URL, exactly like the service worker
+       registration below, so it works from /birthday/ and from / alike. */
+    var SONG_URL = APP_SRC
+      ? new URL("audio/happy-birthday.wav", new URL("../", APP_SRC)).href
+      : "audio/happy-birthday.wav";
+
+    var el = null;        /* the <audio>, built on first play */
+    var fileFailed = false;
+
+    function setLabel(text) {
+      var lbl = btn.querySelector("[data-song-label]");
+      if (lbl) lbl.textContent = text;
+    }
+
+    function showPlaying(on) {
+      playing = on;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      setLabel(on ? LABEL_STOP : LABEL_PLAY);
+    }
+
+    /* The file is fetched on demand - nothing is downloaded until Mercy
+       actually presses play, which matters on a phone. */
+    function ensureEl() {
+      if (el) return el;
+      el = new Audio();
+      el.preload = "auto";
+      el.addEventListener("ended", function () { showPlaying(false); });
+      el.addEventListener("error", function () { fileFailed = true; });
+      el.src = SONG_URL;
+      return el;
+    }
 
     var N = {
       C4: 261.63, D4: 293.66, E4: 329.63, Fs4: 369.99, G4: 392.0,
@@ -706,24 +743,20 @@
       nodes = [];
       timers.forEach(clearTimeout);
       timers = [];
-      playing = false;
+      if (el) { try { el.pause(); } catch (e) {} }
+      showPlaying(false);
       starting = false;
-      btn.setAttribute("aria-pressed", "false");
-      var lbl = btn.querySelector("[data-song-label]");
-      if (lbl) lbl.textContent = "Play the birthday song";
     }
 
-    function play() {
+    /* ---- fallback: the live Web Audio synth, used only if the file fails ---- */
+    function playSynth() {
       var AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) { toast("Audio is not supported on this device."); return; }
       if (!ctx) ctx = new AC();
 
       /* resume() is ASYNCHRONOUS, and it is REJECTED outright when the tap did
-         not count as a user gesture. The old code fired it and moved straight
-         on to scheduling notes: if the promise rejected, the context stayed
-         suspended, nothing was ever audible, yet the button still read
-         "Stop the birthday song". So await it, check the state, and only then
-         claim that the song is playing. */
+         not count as a user gesture. Fire it without awaiting and the context
+         can stay suspended while the button still claims to be playing. */
       var ready = ctx.state === "running"
         ? Promise.resolve()
         : Promise.resolve().then(function () { return ctx.resume(); }).catch(function () {});
@@ -732,20 +765,14 @@
       return ready.then(function () {
         starting = false;
         if (ctx.state !== "running") {
-          /* Honest failure: say so instead of pretending to play. */
           toast("Tap once more and the song will play.");
           return;
         }
 
-        playing = true;
-        btn.setAttribute("aria-pressed", "true");
-        var lbl = btn.querySelector("[data-song-label]");
-        if (lbl) lbl.textContent = "Stop the birthday song";
+        showPlaying(true);
         ensureMaster();
 
-        /* A real beat length. The old 0.28s-per-beat crammed the whole tune
-           into ~3.5s, which is why it sounded like a click rather than a song. */
-        var beat = 0.42;
+        var beat = 0.5;
         var t = ctx.currentTime + 0.12;
         for (var i = 0; i < SONG.length; i++) {
           note(SONG[i][0], t, SONG[i][1] * beat, 0.22, "triangle");
@@ -753,15 +780,12 @@
         }
         var total = t - ctx.currentTime;
 
-        /* Gentle accompaniment, derived from the tune's real length instead of
-           a hardcoded count: root/fifth walking bass under the whole thing... */
         var bassRoots = [N.G2, N.D3, N.G2, N.C3];
         var steps = Math.ceil(total / (beat * 2));
         for (var b = 0; b < steps; b++) {
           var bt = ctx.currentTime + 0.12 + b * beat * 2;
           note(bassRoots[(b >> 1) % bassRoots.length], bt, beat * 1.8, 0.09, "sine");
         }
-        /* ...plus a quiet sparkle an octave up so it feels like a gift. */
         for (var k = 0; k * beat * 2 < total; k++) {
           note([N.D5, N.G4, N.B4, N.G4][k % 4],
                ctx.currentTime + 0.12 + k * beat * 2, beat * 1.5, 0.03, "sine");
@@ -771,10 +795,33 @@
       });
     }
 
+    /* ---- primary: the rendered WAV ---- */
+    function playFile() {
+      var a = ensureEl();
+      try { a.currentTime = 0; } catch (e) {}
+      var p = a.play();
+      showPlaying(true);
+      if (p && p.catch) {
+        p.catch(function () {
+          showPlaying(false);
+          /* A hard load error means the file is not there; anything else is
+             almost always "this tap did not count as a gesture". Fall back to
+             the synth for the former, ask for another tap for the latter. */
+          if (a.error) { fileFailed = true; playSynth(); }
+          else { toast("Tap once more and the song will play."); }
+        });
+      }
+    }
+
+    function play() {
+      if (fileFailed) { playSynth(); return; }
+      playFile();
+    }
+
     btn.addEventListener("click", function () {
       if (playing) { stopAll(); return; }
-      /* Ignore repeat taps while a resume is still in flight, otherwise the
-         tune gets scheduled twice on top of itself. */
+      /* Ignore repeat taps while something is still starting up, otherwise the
+         song gets scheduled twice on top of itself. */
       if (starting) return;
       play();
     });
