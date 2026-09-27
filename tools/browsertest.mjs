@@ -730,6 +730,37 @@ async function main() {
   record(vfit.pad === "0px" && (vfit.border === "0px" || vfit.border === ""),
     "video card carries no stray card padding or border", JSON.stringify(vfit));
 
+  /* the title sits on the poster, and gets out of the way once playing */
+  const vover = await page.eval(`(() => {
+    const c = document.querySelector('[data-video]');
+    const t = c.querySelector('.vcard__title');
+    const f = c.querySelector('.vcard__frame');
+    const tr = t.getBoundingClientRect();
+    const fr = f.getBoundingClientRect();
+    const cs = getComputedStyle(t);
+    const st = c.querySelector('.vcard__state');
+    return {
+      insideFrame: t.parentElement === f,
+      positioned: cs.position,
+      w: Math.round(tr.width), fw: Math.round(fr.width),
+      bottomGap: Math.round(fr.bottom - tr.bottom),
+      color: cs.color, shadow: cs.textShadow,
+      overlapsPlay: !!(document.elementFromPoint(
+        tr.left + tr.width / 2, tr.top + tr.height / 2) || {}).classList
+        && document.elementFromPoint(tr.left + tr.width / 2, tr.top + tr.height / 2).closest('[data-play]'),
+      stateTop: Math.round(st.getBoundingClientRect().top - fr.top),
+      titleTop: Math.round(tr.top - fr.top),
+      inCaption: !!c.querySelector('.vcard__cap .vcard__title'),
+    };
+  })()`);
+  record(vover.insideFrame && vover.positioned === "absolute",
+    "video title is overlaid on the picture", JSON.stringify(vover));
+  record(vover.w <= vover.fw, `video title stays inside the frame (${vover.w}/${vover.fw}px)`, JSON.stringify(vover));
+  record(!vover.inCaption, "title is not duplicated in the caption below", JSON.stringify(vover));
+  record(!vover.overlapsPlay, "overlaid title does not cover the play button", JSON.stringify(vover));
+  record(vover.stateTop < vover.titleTop,
+    "loading pill and title do not overlap", JSON.stringify(vover));
+
   /* ---- interactions, at phone width ---- */
   console.log("\nInteractions (390x844)");
 

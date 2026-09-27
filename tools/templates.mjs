@@ -129,10 +129,10 @@ export function videoCard(id, { ratio = "16/10", cls = "", inline = false } = {}
             <span class="vcard__ring">${icon("play", { size: inline ? 26 : 22 })}</span>
             <span class="vcard__playlabel">Play</span>
           </button>
+          <span class="vcard__title">${esc(v.title)}</span>
           <span class="vcard__state" data-vstate aria-live="polite"></span>
         </div>
         <figcaption class="vcard__cap">
-          <span class="vcard__title">${esc(v.title)}</span>
           <span class="vcard__sub">${esc(v.caption)}</span>
           ${v.why ? `<span class="vcard__why"><b>Why I included this</b><span>${esc(v.why)}</span></span>` : ""}
         </figcaption>
