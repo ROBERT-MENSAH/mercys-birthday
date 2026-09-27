@@ -147,6 +147,14 @@
     var idx = 0;
     var lastFocus = null;
 
+    /* The lightbox image is skipped by the global image check because it has
+       no src until a photo is opened, so watch it here instead and fall back to
+       the same labelled placeholder rather than a broken-image icon. */
+    lbImg.addEventListener("error", function () {
+      var fig = lbImg.closest("figure") || lbImg.parentNode;
+      if (fig) fig.classList.add("is-broken");
+    });
+
     /* collect the visible grid so prev/next follows what the visitor sees */
     function collect() {
       set = $$("[data-zoom]").filter(function (b) {
@@ -300,6 +308,11 @@
      broken-image icon or an empty grey box. */
   (function mediaStates() {
     $$("img").forEach(function (img) {
+      /* The lightbox image ships with no src and is filled in when a visitor
+         opens a photo. An <img> with no src counts as "complete" with a
+         naturalWidth of 0, so without this guard the placeholder was marked
+         broken and the lightbox showed "Photo unavailable". */
+      if (!img.getAttribute("src")) return;
       var mark = function () {
         var host = img.closest(".ph, .vcard__frame, figure") || img.parentNode;
         if (host) host.classList.add("is-broken");

@@ -1027,6 +1027,34 @@ async function main() {
   })()`);
   record(a11y.skip && a11y.imgsNoAlt === 0 && a11y.buttonsNoName === 0 && a11y.focusables > 10, "keyboard + naming basics", JSON.stringify(a11y));
 
+  /* the lightbox image has no src until a photo is opened, and must not be
+     mistaken for a broken one */
+  const lbst = await page.eval(`(() => {
+    const fig = document.querySelector('.lb__fig');
+    const img = document.querySelector('.lb__img');
+    if (!fig || !img) return { error: 'no lightbox' };
+    return { hasSrc: !!img.getAttribute('src'), broken: fig.classList.contains('is-broken'),
+             failed: img.getAttribute('data-failed') };
+  })()`);
+  record(!lbst.error && !lbst.broken && !lbst.hasSrc && !lbst.failed,
+    "closed lightbox is not marked broken", JSON.stringify(lbst));
+
+  /* opening a real photo must show that photo, not the placeholder */
+  await page.eval(`(() => { const b = document.querySelector('[data-zoom]'); if (b) b.click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 600));
+  const lbopen = await page.eval(`(() => {
+    const fig = document.querySelector('.lb__fig');
+    const img = document.querySelector('.lb__img');
+    const lb = document.querySelector('[data-lightbox]');
+    return { open: !!(lb && (lb.classList.contains('is-on') || lb.getAttribute('aria-hidden') === 'false' || !lb.hidden)),
+             src: (img.getAttribute('src') || '').split('/').pop(),
+             natural: img.naturalWidth, broken: fig.classList.contains('is-broken') };
+  })()`);
+  record(lbopen.src && lbopen.natural > 0, `lightbox loads the photo (${lbopen.src})`, JSON.stringify(lbopen));
+  record(!lbopen.broken, "opened lightbox is not marked broken", JSON.stringify(lbopen));
+  await page.eval(`(() => { const x = document.querySelector('[data-lb-close]'); if (x) x.click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 400));
+
   /* ---- gifts: the mobile money number is visible and copyable ---- */
   await page.goto(`${BASE}/gifts/`, { settle: 600 });
   const g = await page.eval(`(() => {
