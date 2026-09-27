@@ -291,16 +291,16 @@ export const photos = [
    -------------------------------------------------------------------------- */
 export const videos = [
   /* Mercy picked this worship clip herself and asked for it to be seen, so it
-     leads the list. `poster` reuses her existing church photograph until a
-     real frame is captured from the file. */
+     leads the list. The poster is a real frame captured from this file, not
+     reused from the older worship video. */
   {
     id: "mercy-deep-worship",
     file: "MERCY'S DEEP WORSHIP.mp4",
     title: "Mercy worshipping",
     caption: "This is the video she asked to be shown.",
     group: "faith",
-    poster: "me-worshiping-at-church-poster.webp",
-    alt: "Video still of Mercy worshipping at church",
+    poster: "mercy-s-deep-worship-poster.webp",
+    alt: "Video still of Mercy singing into a microphone while worshipping at church",
   },
   {
     id: "my-video-3",
@@ -308,7 +308,8 @@ export const videos = [
     title: "Mercy at home",
     caption: "Mercy on camera at home.",
     group: "today",
-    alt: "Video still of Mercy at home",
+    poster: "my-video-3-poster.webp",
+    alt: "Video still of Mercy on camera at home",
   },
   {
     id: "my-lovely-mom-video",
