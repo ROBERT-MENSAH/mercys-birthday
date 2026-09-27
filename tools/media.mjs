@@ -67,11 +67,18 @@ for (const v of videos) {
   const slug = slugify(v.file);
   const posterFile = `img/${slug}-poster.webp`;
   const hasPoster = existsSync(path.join(root, posterFile));
+  /* poster: optional override used only when there is no <slug>-poster.webp.
+     Accepts either a photo id or a ready-made image path in img/. */
+  let poster = hasPoster ? posterFile : null;
+  if (!poster && v.poster) {
+    if (media.photos[v.poster]) poster = media.photos[v.poster].src;
+    else if (existsSync(path.join(root, "img", v.poster))) poster = `img/${v.poster}`;
+  }
   media.videos[v.id] = {
     ...v,
     slug,
     src: `videos/${v.file}`,
-    poster: hasPoster ? posterFile : v.poster && media.photos[v.poster] ? media.photos[v.poster].src : null,
+    poster,
     posterAsset: hasPoster ? posterFile : v.poster || null,
   };
 }

@@ -161,11 +161,12 @@ export const chapters = [
         type: "prose",
         text: "When Mercy talks about her priorities, she is straightforward about them. She also wants to live a whole and balanced life, to minister unto the Lord, and to be a gospel singer. She grew up in a Christian home.",
       },
-      { type: "video", video: "me-worshiping-at-church" },
+      { type: "video", video: "mercy-deep-worship", ratio: "16/9" },
       {
         type: "prose",
-        text: "This is Mercy at church. Church has always been part of her life, and worship is something she takes part in.",
+        text: "Church has always been part of her life, and worship is something she takes part in. This clip is the one she picked out herself.",
       },
+      { type: "video", video: "me-worshiping-at-church" },
       {
         type: "prose",
         text: "Mercy describes Pastor Paul Oteng Asamoah as someone who never gave up on her, who fought for her dreams, and who wanted her to be happy. She also describes him as a father figure, and as a blessing in her life.",

@@ -121,8 +121,9 @@ export function strip(ids, { ratio, captions, cls = "", eagerFirst = false } = {
 export function videoCard(id, { ratio = "16/10", cls = "", inline = false } = {}) {
   const v = media.videos[id];
   if (!v) return "";
+  const ar = ratio || "16/10";
   return `<figure class="vcard ${cls}" data-video="${v.id}" data-src="${asset(v.src)}" data-title="${esc(v.title)}"${v.poster ? ` data-poster="${asset(v.poster)}"` : ""}>
-        <div class="vcard__frame" style="--ar:${ratio}">
+        <div class="vcard__frame" style="--ar:${ar}">
           ${v.poster ? `<img class="vcard__poster" src="${asset(v.poster)}" alt="${esc(v.alt)}" width="960" height="600" loading="lazy" decoding="async">` : `<span class="vcard__poster vcard__poster--none"></span>`}
           <button class="vcard__play" type="button" data-play aria-label="Play video: ${esc(v.title)}">
             <span class="vcard__ring">${icon("play", { size: inline ? 26 : 22 })}</span>

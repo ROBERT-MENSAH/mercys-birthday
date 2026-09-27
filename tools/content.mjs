@@ -290,6 +290,26 @@ export const photos = [
    poster: optional override when the automatic <slug>-poster.webp is absent.
    -------------------------------------------------------------------------- */
 export const videos = [
+  /* Mercy picked this worship clip herself and asked for it to be seen, so it
+     leads the list. `poster` reuses her existing church photograph until a
+     real frame is captured from the file. */
+  {
+    id: "mercy-deep-worship",
+    file: "MERCY'S DEEP WORSHIP.mp4",
+    title: "Mercy worshipping",
+    caption: "This is the video she asked to be shown.",
+    group: "faith",
+    poster: "me-worshiping-at-church-poster.webp",
+    alt: "Video still of Mercy worshipping at church",
+  },
+  {
+    id: "my-video-3",
+    file: "MY VIDEO 3.mp4",
+    title: "Mercy at home",
+    caption: "Mercy on camera at home.",
+    group: "today",
+    alt: "Video still of Mercy at home",
+  },
   {
     id: "my-lovely-mom-video",
     file: "MY LOVELY MOM VIDEO.mp4",

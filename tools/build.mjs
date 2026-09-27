@@ -268,7 +268,7 @@ function chapter(ch) {
         case "trio":
           return `<div class="rv">${strip(b.photos, { captions: b.captions })}</div>`;
         case "video":
-          return `<div class="rv">${videoCard(b.video, { inline: true })}</div>`;
+          return `<div class="rv">${videoCard(b.video, { inline: true, ratio: b.ratio })}</div>`;
         case "wishBox":
           return `<div class="rv">${wishBox(b.prompt, { text: wishPrompts[5] })}</div>`;
         default:
