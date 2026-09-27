@@ -154,6 +154,40 @@ for (const page of pages) {
   }
 }
 
+/* Bottom tab bar integrity. The bar is the only navigation a phone visitor
+   gets (the top bar is hidden on small screens), so a column count that does
+   not match NAV does not degrade gracefully - it silently pushes the extra
+   tab onto a second row that the fixed 58px bar clips away, making that page
+   unreachable. The browser suite only counts DOM nodes, so it cannot see
+   this. Assert the authored grid against the real NAV length instead. */
+{
+  const navSrc = readFileSync(path.join(ROOT, "tools/templates.mjs"), "utf8");
+  const navBlock = navSrc.match(/export const NAV = \[([\s\S]*?)\n\];/);
+  const css = readFileSync(path.join(ROOT, "styles/app.css"), "utf8");
+  const gridRule = css.match(/\.tabs__list\s*\{[^}]*grid-template-columns:\s*repeat\((\d+)/);
+
+  if (!navBlock) {
+    issues.push("global: could not parse NAV from tools/templates.mjs");
+  } else if (!gridRule) {
+    issues.push("global: could not find .tabs__list grid-template-columns in styles/app.css");
+  } else {
+    const navCount = (navBlock[1].match(/\{ href:/g) || []).length;
+    const cols = Number(gridRule[1]);
+    if (cols !== navCount) {
+      issues.push(
+        `global: .tabs__list has ${cols} columns but NAV has ${navCount} entries - ` +
+          `the extra tab(s) wrap onto a row the 58px bar clips, so they cannot be tapped`
+      );
+    }
+    const idx = readFileSync(path.join(DIST, "index.html"), "utf8")
+      .match(/<ul class="tabs__list">([\s\S]*?)<\/ul>/);
+    const rendered = idx ? (idx[1].match(/data-tab/g) || []).length : 0;
+    if (rendered !== navCount) {
+      issues.push(`global: home page rendered ${rendered} tabs but NAV has ${navCount}`);
+    }
+  }
+}
+
 /* ---- report ---- */
 if (issues.length) {
   console.error(`\nFAILED - ${issues.length} issue(s):\n`);

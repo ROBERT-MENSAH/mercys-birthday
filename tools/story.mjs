@@ -25,14 +25,14 @@ export const chapters = [
   {
     slug: "childhood",
     number: "01",
-    title: "Where Her Story Began",
+    title: "Childhood and school",
     nav: "Childhood",
     intro: "Her childhood and her school years.",
     cover: "my-childhood-picture",
     blurb: "Childhood and school",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "This is where Mercy's story begins." },
+      { type: "aphorism", text: "She grew up with her parents and her siblings, and the house was full of faith." },
       {
         type: "prose",
         text: "Mercy grew up in a Christian home with her parents and her siblings. This is one of the earliest pictures of her, taken when she was a young girl.",
@@ -61,7 +61,7 @@ export const chapters = [
   {
     slug: "family",
     number: "02",
-    title: "The Family Behind Her",
+    title: "Her family",
     nav: "Family",
     intro: "Her parents, her siblings, and the home she grew up in.",
     cover: "picture-with-my-younger-siblings",
@@ -71,7 +71,7 @@ export const chapters = [
       { type: "aphorism", text: "Her parents have cared for her since birth." },
       {
         type: "prose",
-        text: "Mercy grew up in a Christian home. Her parents cared for her from birth and guided her as she grew up. They were strict about doing the right thing, and they are among the most important people in her life.",
+        text: "Her parents cared for her from birth and guided her as she grew up. They were strict about doing the right thing, and they are among the most important people in her life. Mercy grew up in a Christian home.",
       },
       {
         type: "pair",
@@ -104,17 +104,17 @@ export const chapters = [
   {
     slug: "people",
     number: "03",
-    title: "The People Who Shaped Her",
+    title: "Her friends",
     nav: "People",
     intro: "The friends Mercy talks about.",
     cover: "i-and-my-lovely-friends",
     blurb: "The people in her life",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "Elijah Owusu Asante is Mercy's best friend." },
+      { type: "aphorism", text: "Elijah Owusu Asante is her best friend." },
       {
         type: "prose",
-        text: "Elijah Owusu Asante has been with her through thick and thin. Mercy values his advice, his love and the way he cares for her.",
+        text: "He has been with her through thick and thin, and she values his advice, his love and the way he cares for her.",
       },
       {
         type: "figure",
@@ -124,7 +124,7 @@ export const chapters = [
       },
       {
         type: "prose",
-        text: "They have had their disagreements too. Mercy says she can be stubborn sometimes, and she appreciates that Elijah does not get tired of her. Their friendship has grown stronger because of it.",
+        text: "They have had their disagreements too. Mercy admits she can be stubborn, and she values that Elijah does not get tired of her. Their friendship has grown stronger because of it.",
       },
       {
         type: "pair",
@@ -133,7 +133,7 @@ export const chapters = [
       },
       {
         type: "prose",
-        text: "Mercy has other friends as well. Sandra and Rachael are some of the people she spends time with.",
+        text: "Sandra and Rachael are two of the others Mercy spends her time with.",
       },
       {
         type: "figure",
@@ -149,17 +149,17 @@ export const chapters = [
   {
     slug: "faith",
     number: "04",
-    title: "The Part That Holds It Together",
+    title: "Her faith",
     nav: "Faith",
     intro: "Being a Christian comes first for Mercy.",
     cover: "me-worshiping-at-church",
     blurb: "Her faith",
     theme: "blue",
     blocks: [
-      { type: "aphorism", text: "Her Christian faith is an important part of her life." },
+      { type: "aphorism", text: "She does not build her life around what other people expected of her." },
       {
         type: "prose",
-        text: "When Mercy talks about her priorities, she is straightforward about them. She also wants to live a whole and balanced life, to minister unto the Lord, and to be a gospel singer. She grew up in a Christian home.",
+        text: "Mercy is straightforward about her priorities. She wants to live a whole and balanced life, to minister unto the Lord, and to be a gospel singer.",
       },
       { type: "video", video: "mercy-deep-worship", ratio: "16/9" },
       {
@@ -184,14 +184,14 @@ export const chapters = [
       { type: "aphorism", text: "Be anxious for nothing, but in everything, by prayer and petition with thanksgiving." },
       {
         type: "prose",
-        text: "Mercy has said her memories taught her how to live without depending on anyone else but God. She has also talked about not building her life around what other people expected of her, and choosing her own way instead.",
+        text: "She has said her memories taught her how to live without depending on anyone else but God, and that she does not build her life around what other people expected of her. She chooses her own way instead.",
       },
     ],
   },
   {
     slug: "music",
     number: "05",
-    title: "The Voice She Keeps Working On",
+    title: "Her music",
     nav: "Music",
     intro: "Singing is something Mercy works at seriously.",
     cover: "my-studio-song",
@@ -201,7 +201,7 @@ export const chapters = [
       { type: "aphorism", text: "Mercy wants to become a good gospel musician." },
       {
         type: "prose",
-        text: "Mercy likes singing and she likes listening to music, so she works at it. For her, singing and faith are connected.",
+        text: "Mercy likes singing, she likes listening to music, and she works at it. For her, the singing and the faith are connected.",
       },
       {
         type: "figure",
@@ -215,7 +215,7 @@ export const chapters = [
       },
       {
         type: "prose",
-        text: "Melody Singers has been part of her Christian and music journey. She has mentioned Mama Esther as an artist she has listened to. Two lines she has mentioned are my soul says yes to your ways, and may the meditation of my heart be accepted to you.",
+        text: "Melody Singers has been part of her Christian and music journey. One of the artists she listens to is Mama Esther. Two lines she has mentioned are my soul says yes to your ways, and may the meditation of my heart be accepted to you.",
       },
       { type: "video", video: "my-studio-song" },
       {
@@ -228,14 +228,14 @@ export const chapters = [
   {
     slug: "today",
     number: "06",
-    title: "Who She Is Today",
+    title: "Mercy today",
     nav: "Today",
     intro: "Mercy today.",
     cover: "me-currently",
     blurb: "Where she is now",
     theme: "blue",
     blocks: [
-      { type: "aphorism", text: "This is Mercy as she is today." },
+      { type: "aphorism", text: "Away from work and school: good food, films, pink and blue." },
       {
         type: "prose",
         text: "Mercy is currently a teacher, and she is working towards further education at university.",
@@ -255,17 +255,17 @@ export const chapters = [
   {
     slug: "dreams",
     number: "07",
-    title: "Where She Wants To Go",
+    title: "What she is working towards",
     nav: "Dreams",
     intro: "What she is aiming for.",
     cover: "my-picture-2",
     blurb: "Her goals",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "Mercy has goals she is still working towards." },
+      { type: "aphorism", text: "She wants to make heaven proud." },
       {
         type: "prose",
-        text: "She wants to become an Agric Officer, and she wants to become a good gospel musician. She wants to make her parents proud, and she has said she wants to make heaven proud.",
+        text: "She wants to become an Agric Officer. She wants to become a good gospel musician. She wants to make her parents proud.",
       },
       {
         type: "prose",
@@ -287,9 +287,9 @@ export const personalMessage = {
   paragraphs: [
     "You are a very good friend, and honestly, knowing you has been something I really appreciate. Knowing you and sharing different moments with you over the years has been amazing.",
     "Today, I just want to celebrate you and wish you a very happy birthday.",
-    "I pray that God continues to bless you, protect you and guide you in everything you do. May He bless your education, your music, your faith and all the things you are working towards.",
-    "Keep growing, keep smiling and keep being yourself.",
-    "I hope you enjoy your day and make beautiful memories.",
+    "I pray that God blesses you, keeps you and guides you in whatever you are doing. I pray He blesses the work of your hands this year.",
+    "Keep going. You are closer than you think.",
+    "I hope you eat well, enjoy your day, and make beautiful memories.",
     "Happy birthday once again, Mercy. ❤️",
   ],
   signoff: "Robert",
@@ -299,7 +299,7 @@ export const personalMessage = {
 export const wishPrompts = [
   "Happy birthday Mercy! I pray God blesses you and gives you a peaceful year ahead.",
   "Happy birthday Mercy! Enjoy your day, and may God guide you in everything you are working towards.",
-  "Happy birthday Mercy! Wishing you good health, happiness and a successful year ahead.",
+  "Happy birthday Mercy! Wishing you good health, and a year full of small good things.",
   "Happy birthday Mercy! May the Lord bless the work of your hands this year.",
   "Happy birthday Mercy! Thank you for the good times. Have a lovely day.",
   "Happy birthday Mercy! May God continue to guide you and keep you safe. Have fun today!",
@@ -309,7 +309,7 @@ export const wishPrompts = [
 export const celebration = {
   kicker: "Today is all about her",
   heading: "Happy Birthday,\nMercy",
-  lead: "This page is for you, Mercy. Take your time with it - press the cake, play the song, and read the wishes people have left for you.",
+  lead: "This page is for you, Mercy. Press the cake, play the song, and read the wishes people have left for you.",
   songTitle: "Happy Birthday to You",
   songNote: "A little tune, made for you. Press play.",
   candleLabel: "Blow out the candles",

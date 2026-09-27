@@ -15,7 +15,7 @@ export const site = {
   subject: "Mercy",
   tagline: "This is Mercy",
   description:
-    "A birthday story about Mercy, told through her photographs, videos, family, friends, faith, music and the goals she is working towards.",
+    "Her photographs, her videos, and a few things she has said about herself. Made by hand for her birthday.",
   themeColor: "#101A3A",
   backgroundColor: "#101A3A",
   accentColor: "#E83E8C",
@@ -36,7 +36,7 @@ export const creator = {
   role: "Friend • Web Creator",
   photo: "img/robert-the-web-creator.png",
   kicker: "Created for Mercy",
-  subtitle: "A Birthday Digital Experience",
+  subtitle: "Made by one friend",
   whatsappNumber: "233533874270",
   whatsappDisplay: "053 387 4270",
 };
@@ -58,7 +58,7 @@ export const bibleVerses = {
   translation: "New International Version (NIV)",
   kicker: "Words she holds close",
   title: "A verse close to her heart",
-  lead: "Faith is an important part of Mercy's life. Philippians 4:6 is the Bible verse she chose, and the other verses here are a small birthday blessing for her.",
+  lead: "Philippians 4:6 is the verse Mercy chose herself. The others are here as a birthday blessing for her.",
   main: {
     label: "Mercy's favourite Bible verse",
     ref: "Philippians 4:6",
@@ -387,7 +387,7 @@ export const videos = [
     id: "my-video-2",
     file: "MY VIDEO  2.mp4",
     title: "A selfie moment",
-    caption: "A selfie Mercy took of herself.",
+    caption: "A selfie Mercy took.",
     group: "today",
     alt: "Video still of Mercy smiling in a patterned top",
   },

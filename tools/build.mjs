@@ -64,10 +64,12 @@ const at = (depth, fn, opts) => {
 function home() {
   setDepth(0);
   const hero = P("me-currently");
+  /* Shown as a preview, so the numbers must read as a real, unbroken run.
+     Picking 01/03/06 implied four chapters were missing. */
   const highlights = [
-    { p: P("my-childhood-picture"), to: "story/childhood/", cap: "Where Her Story Began", num: "01" },
-    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "The People Who Shaped Her", num: "03" },
-    { p: P("me-currently"), to: "story/today/", cap: "Who She Is Today", num: "06" },
+    { p: P("my-childhood-picture"), to: "story/childhood/", cap: "Childhood and school", num: "01" },
+    { p: P("picture-with-my-younger-siblings"), to: "story/family/", cap: "Her family", num: "02" },
+    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "Her friends", num: "03" },
   ];
 
   const body = `    <section class="section section--tight">
@@ -92,9 +94,35 @@ function home() {
       </div>
     </section>
 
+    <section class="section section--tight">
+      <header class="shead ">
+        <p class="shead__kick">If you want to do something</p>
+        <h2 class="shead__t">Say something to Mercy</h2>
+      </header>
+      <p class="prose rv">Two ways to reach her directly. Everything else on this page is the story behind them.</p>
+      <div class="actgrid" style="margin-top:var(--s-5)">
+        <a class="actcard rv" href="gifts/">
+          <span class="actcard__ico" aria-hidden="true">${icon("gift", { size: 22 })}</span>
+          <span class="actcard__body">
+            <span class="actcard__t">Send a gift</span>
+            <span class="actcard__d">Mobile money, one tap to copy</span>
+          </span>
+          <span class="actcard__go" aria-hidden="true">${icon("arrow-right", { size: 16 })}</span>
+        </a>
+        <a class="actcard rv" href="${waLink(wishPrompts[0])}" target="_blank" rel="noopener">
+          <span class="actcard__ico actcard__ico--wa" aria-hidden="true">${icon("whatsapp", { size: 22 })}</span>
+          <span class="actcard__body">
+            <span class="actcard__t">Write a wish</span>
+            <span class="actcard__d">Opens in WhatsApp, ready to send</span>
+          </span>
+          <span class="actcard__go" aria-hidden="true">${icon("arrow-right", { size: 16 })}</span>
+        </a>
+      </div>
+    </section>
+
     <section class="section">
-      ${sectionHead("The chapters", "Mercy's life, chapter by chapter")}
-      <p class="prose rv">Seven chapters, told in order, from the very first photograph to the future she is still working towards.</p>
+      ${sectionHead("The chapters", "Her life, in order")}
+      <p class="prose rv">Seven chapters, from the earliest photograph of her to what she is still working towards.</p>
       <div class="chgrid" style="margin-top:var(--s-5)">
         ${highlights
           .map(
@@ -182,7 +210,7 @@ function home() {
     <section class="section section--tight">
       <div class="wishbox rv">
         <div class="wishbox__head">${icon("whatsapp", { size: 20 })}<h3>Send a wish</h3></div>
-        <p class="wishbox__note">Wishes open in WhatsApp so they land straight on Mercy's phone.</p>
+        <p class="wishbox__note">Wishes open in WhatsApp, so it goes straight to her phone.</p>
         <a class="btn btn--wa" href="${waLink(wishPrompts[0])}" target="_blank" rel="noopener">${icon("whatsapp", { size: 18 })}<span>Write a wish</span></a>
       </div>
     </section>
@@ -227,8 +255,8 @@ function journey() {
     .join("\n        ");
 
   const body = `    <section class="section section--tight">
-      ${sectionHead("The journey", "Mercy's life, chapter by chapter")}
-      <p class="prose rv">Read them in order, or dip into whichever one you want. Every chapter is built from real photographs and real videos.</p>
+      ${sectionHead("The journey", "Her life, in order")}
+      <p class="prose rv">Read them in order, or start with whichever one you want. Every chapter is built from real photographs and real videos.</p>
     </section>
 
     <section class="section--tight">
@@ -627,7 +655,7 @@ function chat() {
     </section>
 
     <section class="section--tight">
-      ${sectionHead("Need a bigger reach", "Send it straight to her")}
+      ${sectionHead("Send it straight to her", "The wall does not send for you")}
       <p class="prose rv">These messages stay in your browser, so if you want Mercy to actually read yours, send it to her directly.</p>
       <div class="rows">
         <a class="row" href="${waLink("Happy birthday Mercy! ")}" target="_blank" rel="noopener">
@@ -645,7 +673,7 @@ function chat() {
     </section>
 
     <section class="section">
-      ${sectionHead("Stuck?", "Something honest to say")}
+      ${sectionHead("Stuck?", "Something to start from")}
       <div class="lgrid">
         ${prompts
           .map(
@@ -673,7 +701,7 @@ function creatorPage() {
   setDepth(1);
   const body = `    <section class="section section--tight">
       ${sectionHead(creator.kicker, creator.subtitle)}
-      <p class="prose rv">This site was built by hand for one person, using her own photographs and videos.</p>
+      <p class="prose rv">Robert Mensah, a friend of Mercy's, made this site by hand from her own photographs and videos.</p>
     </section>
 
     <section class="section--tight">
@@ -685,7 +713,7 @@ function creatorPage() {
     </section>
 
     <section class="section section--tight">
-      <p class="prose rv creator__invite">This birthday website was put together by Robert Mensah, a friend of Mercy's.</p>
+      <p class="prose rv creator__invite">If you want to thank whoever made this, Robert is the one to message.</p>
       <div class="rows">
         <a class="row" href="https://wa.me/${creator.whatsappNumber}" target="_blank" rel="noopener">
           <span class="row__ico">${icon("whatsapp", { size: 19 })}</span>

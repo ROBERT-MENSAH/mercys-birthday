@@ -631,6 +631,63 @@ img[data-failed] { opacity: 0; }
 /* the bar shows at every width. The desktop rail still exists above it, so on a
    wide screen the two are redundant - but the bottom bar is the one place a
    thumb can always reach, and it is the same five destinations everywhere. */
+/* Two things a visitor can actually do, so they sit above the story.
+   The arrow nudges right on hover, matching .chcard's behaviour. */
+.actgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+@media (min-width: 700px) {
+  .actgrid { grid-template-columns: 1fr 1fr; }
+}
+.actcard {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 64px;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--sh-1);
+  transition:
+    transform var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.actcard:hover,
+.actcard:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--rose-300) 45%, var(--line-2));
+  box-shadow: var(--sh-2);
+}
+.actcard__ico {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  color: var(--rose-200);
+  background: color-mix(in srgb, var(--rose-500) 18%, transparent);
+}
+.actcard__ico--wa {
+  color: #7ee6a4;
+  background: color-mix(in srgb, #25d366 18%, transparent);
+}
+.actcard__body { display: grid; gap: 0.15rem; min-width: 0; }
+.actcard__t { font-weight: 700; font-size: var(--t-md); }
+.actcard__d { color: var(--text-soft); font-size: var(--t-sm); }
+.actcard__go {
+  margin-left: auto;
+  flex: none;
+  color: var(--text-mute);
+  transition: transform var(--dur) var(--ease);
+}
+.actcard:hover .actcard__go { transform: translateX(3px); }
+
 .tabs {
   display: block;
   position: fixed;
@@ -660,7 +717,10 @@ img[data-failed] { opacity: 0; }
 }
 .tabs__list {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  /* One column per NAV entry. This must stay in step with NAV.length -
+     a 5-column grid silently wrapped the 6th tab (Gifts) onto a clipped
+     second row, making it unreachable on a phone. */
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   align-items: stretch;
   height: 58px;
   max-width: var(--maxw);

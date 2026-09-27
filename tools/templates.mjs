@@ -174,7 +174,7 @@ export const tabBar = (b, current = "") =>
 export function openingGate() {
   return `<div class="gate" data-gate hidden>
       <div class="gate__in">
-        <p class="gate__line" data-gate-line>For a moment...</p>
+        <p class="gate__line" data-gate-line>One moment.</p>
         <p class="gate__line gate__line--big" data-gate-line>Pause.</p>
         <p class="gate__line gate__line--big" data-gate-line>This one is for <em>Mercy</em>.</p>
       </div>
