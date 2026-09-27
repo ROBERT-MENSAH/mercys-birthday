@@ -100,7 +100,7 @@ export const momo = {
   /* Ghanaian mobile money wallets are dialled locally, no country code */
   telHref: "tel:0596269758",
   steps: [
-    "Open your MTN Mobile Money app or dial *165#.",
+    "Open your MTN Mobile Money app or dial *170# on your phone.",
     "Choose Mobile Money Transfer and select MTN Mobile Money.",
     "Enter the number above as the recipient.",
     "Enter the amount, confirm, and enter your PIN.",
