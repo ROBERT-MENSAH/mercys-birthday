@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Mercy's Birthday - content source of truth.
  *
  * Every word of copy, caption, alt-text and contact detail lives here.
@@ -33,7 +33,7 @@ export const contact = {
 
 export const creator = {
   name: "Robert Mensah",
-  role: "Friend • Web Creator",
+  role: "Friend â€¢ Web Creator",
   photo: "img/robert-the-web-creator.png",
   kicker: "Created for Mercy",
   subtitle: "A Birthday Digital Experience",
@@ -305,8 +305,8 @@ export const videos = [
   {
     id: "my-video-3",
     file: "MY VIDEO 3.mp4",
-    title: "Mercy at home",
-    caption: "Mercy on camera at home.",
+    title: "Mercy close up",
+    caption: "Mercy close up on camera.",
     group: "today",
     poster: "my-video-3-poster.webp",
     alt: "Video still of Mercy on camera at home",
@@ -370,40 +370,24 @@ export const videos = [
   {
     id: "me-currently-flexing",
     file: "ME CURRENTLY FLEXING.mp4",
-    title: "Me currently flexing",
-    caption: "Mercy flexing for the camera.",
-    group: "today",
-    alt: "Video still of Mercy flexing in a patterned headwrap",
-  },
-  {
-    id: "me-flexing-small",
-    file: "ME FLEXING SMALL.mp4",
-    title: "Me flexing small",
-    caption: "Mercy flexing for the camera.",
+    title: "Mercy on camera",
+    caption: "Mercy filming herself.",
     group: "today",
     alt: "Video still of Mercy flexing in a patterned headwrap",
   },
   {
     id: "my-video-1",
     file: "MY VIDEO 1.mp4",
-    title: "Mercy at home",
-    caption: "Mercy at home.",
+    title: "Mercy indoors",
+    caption: "Mercy on camera at home.",
     group: "today",
     alt: "Video still of Mercy in a green patterned top indoors",
   },
   {
-    id: "my-selfie-video-1",
-    file: "MY SELFIE VIDEO 1.mp4",
-    title: "A selfie moment",
-    caption: "A selfie Mercy took of herself.",
-    group: "today",
-    alt: "Video still of Mercy smiling in a patterned top",
-  },
-  {
     id: "my-video-2",
     file: "MY VIDEO  2.mp4",
-    title: "Mercy at home",
-    caption: "Mercy smiling at the camera.",
+    title: "A selfie moment",
+    caption: "A selfie Mercy took of herself.",
     group: "today",
     alt: "Video still of Mercy smiling in a patterned top",
   },
