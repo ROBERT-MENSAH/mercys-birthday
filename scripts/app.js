@@ -409,6 +409,27 @@
   }
 
 
+  /* --------------------------------------------- gifts: copy the MoMo number */
+  var copyBtns = document.querySelectorAll("[data-copy]");
+  Array.prototype.forEach.call(copyBtns, function (btn) {
+    btn.addEventListener("click", function () {
+      var num = btn.getAttribute("data-copy") || "";
+      var label = btn.querySelector("[data-copy-label]");
+      var say = function (msg) { if (label) label.textContent = msg; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(num).then(
+          function () {
+            say("Copied");
+            toast("Number copied. Send it to " + num);
+          },
+          function () { toast("Copy this number: " + num); }
+        );
+      } else {
+        toast("Copy this number: " + num);
+      }
+    });
+  });
+
   /* ------------------------------------------------------------- sharing */
   function shareText() {
     var m = document.querySelector('meta[name="description"]');

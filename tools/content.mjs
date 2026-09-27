@@ -89,6 +89,24 @@ export const bibleVerses = {
   ],
 };
 
+/* Mobile Money details. The number Mercy wants gifts sent to. Kept here so it
+   is changed in one place only. `network` is shown to visitors so they send to
+   the right wallet. */
+export const momo = {
+  network: "MTN Mobile Money",
+  /* shown on the gifts page, and copied straight to the clipboard */
+  numberDisplay: "059 626 9758",
+  numberDial: "059 626 9758",
+  /* Ghanaian mobile money wallets are dialled locally, no country code */
+  telHref: "tel:0596269758",
+  steps: [
+    "Open your MTN Mobile Money app or dial *165#.",
+    "Choose Mobile Money Transfer and select MTN Mobile Money.",
+    "Enter the number above as the recipient.",
+    "Enter the amount, confirm, and enter your PIN.",
+  ],
+};
+
 /* -------------------------------------------------------------------------- 
    Photographs
    group   -> chapter / memory-room filter

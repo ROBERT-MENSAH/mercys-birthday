@@ -15,14 +15,14 @@ export const NAV = [
   { href: "/memories/", label: "Memories", icon: "images", short: "Memories" },
   { href: "/birthday/", label: "Birthday", icon: "cake", hero: true, short: "Party" },
   { href: "/wishes/", label: "Wishes", icon: "heart", short: "Wishes" },
+  /* Gifts is here so it is one tap away on a phone. The top bar is hidden on
+     small screens, so anything not in this list is hard to reach on mobile. */
+  { href: "/gifts/", label: "Gifts", icon: "gift", short: "Gifts" },
 ];
 
 export const DESK = [
-  ...NAV.slice(0, 3),
-  NAV[3],
-  NAV[4],
+  ...NAV,
   { href: "/chat/", label: "Chat", icon: "quote", short: "Chat" },
-  { href: "/gifts/", label: "Gifts", icon: "gift", short: "Gifts" },
   { href: "/creator/", label: "Creator", icon: "user", short: "Creator" },
 ];
 

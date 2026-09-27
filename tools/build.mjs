@@ -9,7 +9,7 @@ import { mkdirSync, writeFileSync, cpSync, rmSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { site, contact, creator, photos, photoGroups, videos, bibleVerses } from "./content.mjs";
+import { site, contact, creator, photos, photoGroups, videos, bibleVerses, momo } from "./content.mjs";
 import { chapters, wishPrompts, celebration, personalMessage } from "./story.mjs";
 import { media, cover, problems } from "./media.mjs";
 import { icon } from "./iconsprite.mjs";
@@ -163,6 +163,20 @@ function home() {
         </ul>
       </div>
       <p class="vnote rv">Bible text: ${esc(bibleVerses.translation)}.</p>
+    </section>
+
+    <section class="section section--tight">
+      <div class="giftbox rv">
+        <div class="giftbox__head">${icon("gift", { size: 20 })}<h3>Send a gift</h3></div>
+        <p class="giftbox__note">The easiest way to send Mercy something is ${esc(momo.network)}.</p>
+        <p class="giftbox__num">${esc(momo.numberDisplay)}</p>
+        <div class="btnrow" style="margin-top:var(--s-4)">
+          <a class="btn btn--primary" href="gifts/">${icon("gift", { size: 18 })}<span>See how to send it</span></a>
+          <button class="btn" type="button" data-copy="${esc(momo.numberDial)}">
+            ${icon("copy", { size: 18 })}<span data-copy-label>Copy number</span>
+          </button>
+        </div>
+      </div>
     </section>
 
     <section class="section section--tight">
@@ -485,25 +499,48 @@ function wishes() {
 }
 
 /* --- Gifts ------------------------------------------------------------
-   No payment or delivery details exist for this project, so none are
-   invented here. The page offers only real, actionable options. */
+   Mobile money is the main, most practical way to send something, so it leads
+   the page and is shown plainly: the network, the number in large type, and
+   the short dial sequence. The number lives in content.mjs so it is changed in
+   one place. No payment link is invented, and nothing here pretends to process
+   a transaction - the money is sent by the visitor, from their own phone. */
 function gifts() {
   setDepth(1);
   const body = `    <section class="section section--tight">
-      ${sectionHead("Gifts", "Ways to celebrate")}
-      <p class="prose rv">There is no payment link or delivery address for this gift, so this page does not pretend there is one. Here is what genuinely helps.</p>
+      ${sectionHead("Gifts", "Send something to Mercy")}
+      <p class="prose rv">The easiest way to send Mercy a gift is Mobile Money. Copy the number below, or tap to call her if you would rather ask her first.</p>
     </section>
 
     <section class="section--tight">
+      <div class="momo rv">
+        <p class="momo__net"><span class="momo__badge">MTN MoMo</span></p>
+        <p class="momo__label">Send to this number</p>
+        <p class="momo__num">${esc(momo.numberDisplay)}</p>
+        <div class="momo__acts">
+          <button class="btn btn--primary" type="button" data-copy="${esc(momo.numberDial)}">
+            ${icon("copy", { size: 18 })}<span data-copy-label>Copy number</span>
+          </button>
+          <a class="btn" href="${esc(momo.telHref)}">${icon("phone", { size: 18 })}<span>Call ${esc(momo.numberDisplay)}</span></a>
+        </div>
+        <p class="momo__net-note">Only send to ${esc(momo.network)}. Nothing on this page can take your money, so check the number before you confirm.</p>
+      </div>
+    </section>
+
+    <section class="section--tight">
+      <div class="momo__steps rv">
+        <h2 class="momo__steps-h">How to send it</h2>
+        <ol class="momo__list">
+          ${momo.steps.map((s) => `<li class="momo__step">${esc(s)}</li>`).join("\n          ")}
+        </ol>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      ${sectionHead("Other ways", "If mobile money is not for you")}
       <div class="rows">
         <a class="row" href="${waLink("Happy birthday Mercy! I have a gift idea for you: ")}" target="_blank" rel="noopener">
           <span class="row__ico">${icon("whatsapp", { size: 19 })}</span>
           <span class="row__t"><b>Send a gift directly on WhatsApp</b><span>Talk to Mercy about what she would love</span></span>
-          <span class="row__go">${icon("arrow-up-right", { size: 18 })}</span>
-        </a>
-        <a class="row" href="${waLink("Happy birthday Mercy! Here is a little something for you: ")}" target="_blank" rel="noopener">
-          <span class="row__ico">${icon("gift", { size: 19 })}</span>
-          <span class="row__t"><b>Send a mobile top-up</b><span>A simple, instant gift via Mobile Money</span></span>
           <span class="row__go">${icon("arrow-up-right", { size: 18 })}</span>
         </a>
         <a class="row" href="tel:${contact.phoneHref}">
@@ -513,17 +550,15 @@ function gifts() {
         </a>
         <a class="row" href="../wishes/">
           <span class="row__ico">${icon("heart", { size: 19 })}</span>
-          <span class="row__t"><b>A wish costs nothing</b><span>And sometimes means the most</span></span>
+          <span class="row__t"><b>Send a wish instead</b><span>It costs nothing and she will read it</span></span>
           <span class="row__go">${icon("arrow-right", { size: 18 })}</span>
         </a>
       </div>
-
-      <div class="note" style="margin-top:var(--s-5);max-width:460px;margin-inline:auto">${icon("info", { size: 18 })}<p>There is no payment link on this page, so please do not send money to anyone for it. Talk to Mercy directly if you want to give her something.</p></div>
     </section>`;
 
   return at(1, () => body, {
     title: "Gift Ideas",
-    description: "Ways to celebrate Mercy's birthday.",
+    description: "Send Mercy a gift by MTN Mobile Money.",
     current: "/gifts/",
   });
 }

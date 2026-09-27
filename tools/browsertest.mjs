@@ -15,6 +15,11 @@ import { spawn } from "node:child_process";
 import { existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { NAV } from "./templates.mjs";
+
+/* The tab bar mirrors NAV. Assert against the real list so adding or removing a
+   tab does not silently break this check. */
+const NAV_COUNT = NAV.length;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = path.join(ROOT, ".browse");
@@ -481,7 +486,7 @@ async function main() {
     if (!r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar not shown on phone`);
     if (r.position !== "fixed") tabIssues.push(`${r.v} ${r.name}: position=${r.position} (want fixed)`);
     if (!r.onScreen) tabIssues.push(`${r.v} ${r.name}: bar off-screen h=${r.height}`);
-    if (r.count !== 5) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want 5)`);
+    if (r.count !== NAV_COUNT) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want ${NAV_COUNT})`);
     if (r.minTap < 44) tabIssues.push(`${r.v} ${r.name}: tap target ${r.minTap}px < 44px`);
     if (r.overflowX > 1) tabIssues.push(`${r.v} ${r.name}: overflows by ${r.overflowX}px`);
     if (r.activeCount > 1) tabIssues.push(`${r.v} ${r.name}: ${r.activeCount} active tabs`);
@@ -494,7 +499,7 @@ async function main() {
     if (!r.shown) tabIssues.push(`${r.v} ${r.name}: tab bar not shown on desktop`);
     if (r.position !== "fixed") tabIssues.push(`${r.v} ${r.name}: position=${r.position} (want fixed)`);
     if (!r.onScreen) tabIssues.push(`${r.v} ${r.name}: bar off-screen h=${r.height}`);
-    if (r.count !== 5) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want 5)`);
+    if (r.count !== NAV_COUNT) tabIssues.push(`${r.v} ${r.name}: ${r.count} tabs (want ${NAV_COUNT})`);
     if (r.overflowX > 1) tabIssues.push(`${r.v} ${r.name}: overflows by ${r.overflowX}px`);
     if (r.activeCount > 1) tabIssues.push(`${r.v} ${r.name}: ${r.activeCount} active tabs`);
     if (r.bodyPad < 58) tabIssues.push(`${r.v} ${r.name}: body padding ${r.bodyPad}px < 58px bar height`);
@@ -974,7 +979,61 @@ async function main() {
   })()`);
   record(a11y.skip && a11y.imgsNoAlt === 0 && a11y.buttonsNoName === 0 && a11y.focusables > 10, "keyboard + naming basics", JSON.stringify(a11y));
 
+  /* ---- gifts: the mobile money number is visible and copyable ---- */
+  await page.goto(`${BASE}/gifts/`, { settle: 600 });
+  const g = await page.eval(`(() => {
+    const num = document.querySelector('.momo__num');
+    const copy = document.querySelector('[data-copy]');
+    const badge = document.querySelector('.momo__badge');
+    const steps = document.querySelectorAll('.momo__step').length;
+    const numCs = num ? getComputedStyle(num) : null;
+    const r = num ? num.getBoundingClientRect() : { width: 0, height: 0 };
+    return {
+      number: num ? num.textContent.trim() : null,
+      digits: num ? (num.textContent.match(/\\d/g) || []).length : 0,
+      badge: badge ? badge.textContent.trim() : null,
+      copyAttr: copy ? copy.getAttribute('data-copy') : null,
+      copyIsButton: copy ? copy.tagName === 'BUTTON' : false,
+      copyH: copy ? Math.round(copy.getBoundingClientRect().height) : 0,
+      steps,
+      fontSize: numCs ? numCs.fontSize : null,
+      bodyFont: getComputedStyle(document.body).fontSize,
+      numFits: r.width <= document.documentElement.clientWidth,
+      telLinks: [...document.querySelectorAll('a[href^="tel:"]')].length,
+    };
+  })()`);
+  record(/^\d{3} \d{3} \d{4}$/.test(g.number || ""), `gifts shows a readable phone number (${g.number})`);
+  record(g.digits === 10, `number has all 10 digits (${g.digits})`);
+  record(g.badge === "MTN MoMo", `MTN MoMo badge present (${g.badge})`);
+  record(g.copyIsButton && g.copyAttr === g.number, "Copy button carries the exact number", JSON.stringify(g.copyAttr));
+  record(g.copyH >= 24, `Copy button meets target size (${g.copyH}px)`);
+  record(g.steps === 4, `sending steps are shown (${g.steps})`);
+  record(parseFloat(g.fontSize) > parseFloat(g.bodyFont), `number is larger than body text (${g.fontSize} vs ${g.bodyFont})`);
+  record(g.numFits, "number fits the viewport");
+  record(g.telLinks >= 1, `a call link is offered (${g.telLinks})`);
+
+  /* the number must be the same on the home page and the gifts page */
+  await page.goto(`${BASE}/`, { settle: 500 });
+  const gHome2 = await page.eval(`(() => { const n = document.querySelector('.giftbox__num');
+    return n ? n.textContent.trim() : null; })()`);
+  record(gHome2 === g.number, `home page shows the same number (${gHome2})`);
+
+  /* clicking copy must give feedback; clipboard may be blocked, so accept the
+     toast fallback as a pass */
+  await page.goto(`${BASE}/gifts/`, { settle: 500 });
+  await page.eval(`(() => { document.querySelector('[data-copy]').click(); return 1; })()`);
+  await new Promise(r => setTimeout(r, 700));
+  const cstate = await page.eval(`(() => {
+    const b = document.querySelector('[data-copy]');
+    const t = document.querySelector('[data-toast]');
+    return { label: b.querySelector('[data-copy-label]').textContent.trim(),
+             toastOn: t.classList.contains('is-on'), toast: t.textContent.trim().slice(0, 60) };
+  })()`);
+  record(cstate.label === "Copied" || cstate.toastOn,
+    "Copy gives the visitor feedback", JSON.stringify(cstate));
+
   /* ---- verse rail: WCAG 2.2.2 Pause/Stop/Hide ----
+
      The rail drifts on its own for longer than five seconds, so it needs a
      control the visitor can actually operate. Hover pause alone is not enough. */
   await page.goto(`${BASE}/`, { settle: 700 });

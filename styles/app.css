@@ -1113,6 +1113,34 @@ body.lb-open { overflow: hidden; }
 .wishbox__head h3 { font-size: var(--t-lg); }
 .wishbox__note { margin: 0.5rem 0 1rem; font-size: var(--t-sm); color: var(--text-dim); }
 
+/* home page gift box: same shape as the wish box, with the number called out so
+   a visitor can send something without leaving the page */
+.giftbox {
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--r-lg);
+  background: linear-gradient(150deg, color-mix(in srgb, var(--rose-600) 18%, transparent), var(--card));
+  border: 1px solid color-mix(in srgb, var(--rose-400) 26%, transparent);
+  text-align: center;
+}
+.giftbox__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--rose-200);
+}
+.giftbox__head h3 { font-size: var(--t-lg); }
+.giftbox__note { margin: 0.5rem 0 0; font-size: var(--t-sm); color: var(--text-dim); }
+.giftbox__num {
+  margin: 0.6rem 0 0;
+  font-size: var(--t-xl);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
 /* ---------- opening gate ----------
    A brief hook in front of the real page. Fixed overlay, lifts away, and is
    removed from the DOM by script - it is never a blocking loader. */
@@ -2397,6 +2425,105 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
 /* prompt cards: a button, so it needs the full reset the other buttons get */
 .chatseed { font: inherit; color: inherit; text-align: left; width: 100%; cursor: pointer; }
 .chatseed:hover { transform: translateY(-3px); }
+/* ---------- gifts: mobile money ----------
+   The number is the whole point of this page, so it is the largest text on it.
+   MTN's brand yellow is used only as a small text badge. No MTN logo or
+   trademark artwork is reproduced. */
+.momo {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding: var(--s-5) var(--s-4);
+  border-radius: var(--r-lg);
+  background: var(--card-2);
+  border: 1px solid var(--line);
+  text-align: center;
+}
+.momo__net { margin: 0 0 var(--s-3); }
+.momo__badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--r-full);
+  background: #ffcc00;
+  color: #101a3a;
+  font-size: var(--t-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.momo__label {
+  margin: 0;
+  font-size: var(--t-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+.momo__num {
+  margin: var(--s-2) 0 0;
+  font-size: clamp(1.9rem, 1.2rem + 3.2vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.momo__acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: center;
+  margin-top: var(--s-5);
+}
+.momo__net-note {
+  margin: var(--s-4) 0 0;
+  font-size: var(--t-xs);
+  color: var(--text-mute);
+}
+
+.momo__steps {
+  max-width: 34rem;
+  margin-inline: auto;
+}
+.momo__steps-h {
+  font-size: var(--t-md);
+  text-align: center;
+  margin-bottom: var(--s-4);
+}
+.momo__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: momo;
+  display: grid;
+  gap: var(--s-3);
+}
+.momo__step {
+  counter-increment: momo;
+  position: relative;
+  padding: var(--s-3) var(--s-4) var(--s-3) 3rem;
+  border-radius: var(--r);
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: var(--t-sm);
+  color: var(--text-soft);
+}
+.momo__step::before {
+  content: counter(momo);
+  position: absolute;
+  left: var(--s-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-full);
+  background: #ffcc00;
+  color: #101a3a;
+  font-size: var(--t-xs);
+  font-weight: 800;
+}
+
+
 /* ---------- home: bible verse section ----------
    One featured verse (Mercy's own choice) sits still and centred. The rest
    drift slowly left to right in a single long loop. Built entirely from the
