@@ -139,6 +139,21 @@ for (const i of ["favicon-32.png", "apple-touch-icon.png", "app-icon-192.png", "
   if (!existsSync(path.join(DIST, "icons", i))) issues.push(`global: icons/${i} missing`);
 }
 
+/* Mojibake guard. A character that was UTF-8 encoded and then decoded as
+   latin-1 survives in the source as several odd characters, and it reaches
+   the page as visible garbage (e.g. "Friend â€¢" instead of "Friend •").
+   These are the tell-tale C1 range, replacement char, and smart-quote
+   sequences that only ever appear when that round-trip has happened. */
+const MOJIBAKE = /[Â-ÿ]|â(?:€|™|œ|ž|„|“|”|€¦|€ |€¢|€³|€¤|€¦)|Ã©|Ã¨|Ã¡|Ã­|ï¿½/;
+for (const page of pages) {
+  const html = readFileSync(path.join(DIST, page), "utf8");
+  const m = html.match(MOJIBAKE);
+  if (m) {
+    const i = Math.max(0, m.index - 30);
+    add(page, `possible mojibake "${m[0]}" near: ...${html.slice(i, m.index + 40).replace(/\s+/g, " ")}...`);
+  }
+}
+
 /* ---- report ---- */
 if (issues.length) {
   console.error(`\nFAILED - ${issues.length} issue(s):\n`);

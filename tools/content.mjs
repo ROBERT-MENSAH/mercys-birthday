@@ -33,7 +33,7 @@ export const contact = {
 
 export const creator = {
   name: "Robert Mensah",
-  role: "Friend â€¢ Web Creator",
+  role: "Friend • Web Creator",
   photo: "img/robert-the-web-creator.png",
   kicker: "Created for Mercy",
   subtitle: "A Birthday Digital Experience",
