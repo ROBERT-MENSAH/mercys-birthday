@@ -2637,12 +2637,12 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
     transform: none !important;
   }
   .vrail__track[aria-hidden="true"] { display: none; }
-  .vcard { width: auto; }
+  .vitem { width: auto; }
   /* nothing is moving, so there is nothing to pause */
   .vmore__toggle { display: none; }
 }
 
-.vcard {
+.vitem {
   flex: none;
   width: min(19rem, 74vw);
   padding: var(--s-4);
@@ -2650,12 +2650,12 @@ a.row:hover { transform: translateX(3px); background: var(--card-2); color: #fff
   background: var(--card);
   border: 1px solid var(--line);
 }
-.vcard__text {
+.vitem__text {
   font-size: var(--t-sm);
   line-height: 1.6;
   color: var(--text-soft);
 }
-.vcard__ref {
+.vitem__ref {
   margin-top: var(--s-2);
   font-size: var(--t-xs);
   color: var(--rose-300);

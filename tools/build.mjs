@@ -144,9 +144,9 @@ function home() {
         <ul class="vrail__track">
           ${bibleVerses.more
             .map(
-              (v) => `<li class="vcard">
-            <p class="vcard__text">${esc(v.text)}</p>
-            <p class="vcard__ref">${esc(v.ref)}</p>
+              (v) => `<li class="vitem">
+            <p class="vitem__text">${esc(v.text)}</p>
+            <p class="vitem__ref">${esc(v.ref)}</p>
           </li>`,
             )
             .join("\n          ")}
@@ -154,9 +154,9 @@ function home() {
         <ul class="vrail__track" aria-hidden="true">
           ${bibleVerses.more
             .map(
-              (v) => `<li class="vcard">
-            <p class="vcard__text">${esc(v.text)}</p>
-            <p class="vcard__ref">${esc(v.ref)}</p>
+              (v) => `<li class="vitem">
+            <p class="vitem__text">${esc(v.text)}</p>
+            <p class="vitem__ref">${esc(v.ref)}</p>
           </li>`,
             )
             .join("\n          ")}

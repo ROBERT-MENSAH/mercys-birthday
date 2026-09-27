@@ -713,6 +713,23 @@ async function main() {
     `video cards complete (${vids.cards} cards)`, JSON.stringify(vids));
   record(vids.liveVideos === 0, "no <video> created before play", JSON.stringify({ liveVideos: vids.liveVideos }));
 
+  /* A video card must fill its column. Regression guard: the verse rail once
+     reused the .vcard class and its fixed width leaked onto these, squashing
+     every video into a narrow box. */
+  const vfit = await page.eval(`(() => {
+    const c = document.querySelector('[data-video]');
+    if (!c) return { error: 'no video card' };
+    const p = c.parentElement;
+    const w = c.getBoundingClientRect().width;
+    const pw = p.getBoundingClientRect().width;
+    const cs = getComputedStyle(c);
+    return { w: Math.round(w), pw: Math.round(pw), pad: cs.paddingTop, border: cs.borderTopWidth };
+  })()`);
+  record(!vfit.error && vfit.pw > 0 && vfit.w >= vfit.pw * 0.9,
+    `video card fills its column (${vfit.w} of ${vfit.pw}px)`, JSON.stringify(vfit));
+  record(vfit.pad === "0px" && (vfit.border === "0px" || vfit.border === ""),
+    "video card carries no stray card padding or border", JSON.stringify(vfit));
+
   /* ---- interactions, at phone width ---- */
   console.log("\nInteractions (390x844)");
 
@@ -1101,7 +1118,7 @@ async function main() {
     return {
       anim: getComputedStyle(document.querySelector('.vrail__track')).animationName,
       btn: b ? getComputedStyle(b).display : 'absent',
-      verses: [...document.querySelectorAll('.vcard')].filter(c => c.getBoundingClientRect().width > 0).length,
+      verses: [...document.querySelectorAll('.vitem')].filter(c => c.getBoundingClientRect().width > 0).length,
     };
   })()`);
   record(vrm.anim === "none", `reduced motion: verse rail does not animate (${vrm.anim})`);
