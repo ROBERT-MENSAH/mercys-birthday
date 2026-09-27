@@ -117,6 +117,12 @@ img, video { height: auto; }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { background: none; border: 0; cursor: pointer; }
 
+/* iOS zooms the page in when a focused form field is under 16px, and the
+   zoom does not reset when the keyboard closes. Only the text fields that
+   actually take keyboard input are pinned. */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea, select { font-size: max(1rem, var(--t-base)); }
+
 a { color: var(--rose-300); text-decoration: none; }
 a:hover { color: var(--rose-200); }
 
@@ -417,7 +423,30 @@ p { text-wrap: pretty; }
 @media (hover: none), (pointer: coarse) {
   .ph__zoom { opacity: 1; transform: none; }
 }
-/* app-like touch polish: instant press feedback, no callout or tap flash */
+/* =============================================================================
+   Installed-app mode.
+   These rules only apply once the site is running from the home screen, so
+   normal browsing in a tab is untouched. `overscroll-behavior` is not
+   Baseline (iOS only shipped it in Safari 16), so it is a pure enhancement
+   and simply does nothing on older engines.
+   ========================================================================== */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  /* Stops pull-to-refresh reloading the whole app out from under the reader. */
+  html, body { overscroll-behavior-y: none; }
+  /* The moving verse rail should not drag the page with it. */
+  .vrail, .vrail__track { overscroll-behavior: contain; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  /* Kills the 300ms double-tap-zoom delay without blocking pinch zoom,
+     which is left working for anyone who needs it. */
+  a, button, [role="button"], label, summary { touch-action: manipulation; }
+}
+
+/* =============================================================================
+   Progressive Web App - app-like touch polish: instant press feedback, no
+   callout or tap flash
+   ========================================================================== */
 .ph__btn {
   position: relative;
   -webkit-tap-highlight-color: transparent;
