@@ -1,15 +1,16 @@
 /**
  * Mercy's Birthday - story structure and page copy.
  *
- * NARRATION: third person. Robert is the narrator, Mercy is the subject.
- * First-person references to Robert appear sparingly, as connective tissue
- * between chapters ("As I put these moments together..."). Mercy never
- * narrates her own life here.
+ * NARRATION: first person. Mercy narrates her own life here, in the words she
+ * has actually used. The writing is hers, so it stays plain - a friend talking,
+ * not a novelist. Robert's personal message further down is the one place a
+ * second voice appears, and it addresses her directly.
  *
  * FACTUAL RULE: nothing below may assert a date, achievement, relationship or
  * memory that is not already evidenced by the project assets or supplied by
- * the site owner. Where information is missing, the writing goes around it
- * rather than filling the gap.
+ * the site owner. First person does not license invention. Switching "she" to
+ * "I" must not add a single new fact. Where information is missing, the writing
+ * goes around it rather than filling the gap.
  *
  * Block types:
  *   aphorism  - large reflective pull-quote
@@ -27,121 +28,140 @@ export const chapters = [
     number: "01",
     title: "Childhood and school",
     nav: "Childhood",
-    intro: "Her childhood and her school years.",
+    intro: "Where I started, and my school years.",
     cover: "my-childhood-picture",
     blurb: "Childhood and school",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "She grew up with her parents and her siblings, and the house was full of faith." },
+      { type: "aphorism", text: "Where it started" },
       {
         type: "prose",
-        text: "Mercy grew up in a Christian home with her parents and her siblings. This is one of the earliest pictures of her, taken when she was a young girl.",
+        text: "Looking at these old memories reminds me of where I came from. So much has changed since then, but I am grateful for the life God has given me, and for the people who were there from the beginning.",
       },
       {
         type: "figure",
         photo: "my-childhood-picture",
         size: "wide",
-        caption: "Mercy as a young girl.",
+        caption: "A childhood memory.",
       },
       {
         type: "prose",
-        text: "Then came school. She went to junior high, and then to Konongo Odumase Senior High School, where she contested for Best Vocalist.",
+        text: "I grew up in a Christian home with my parents and my siblings. Then came school. I went to junior high, and then to Konongo Odumase Senior High School.",
       },
       {
         type: "pair",
         photos: ["when-was-at-jhs-some-years-back", "my-picture-at-school"],
-        captions: ["Mercy during her junior high years, with classmates.", "Mercy during her school years."],
+        captions: ["From my junior high years.", "From my school years."],
       },
       {
         type: "prose",
-        text: "These are the years before she started teaching, and before she began working on her music.",
+        text: "These are the years before I started teaching, and before I began working seriously on my music.",
       },
     ],
   },
   {
     slug: "family",
     number: "02",
-    title: "Her family",
+    title: "My family",
     nav: "Family",
-    intro: "Her parents, her siblings, and the home she grew up in.",
+    intro: "My parents, my siblings, and the home I grew up in.",
     cover: "picture-with-my-younger-siblings",
-    blurb: "The family she grew up in",
+    blurb: "My family",
     theme: "blue",
     blocks: [
-      { type: "aphorism", text: "Her parents have cared for her since birth." },
+      { type: "aphorism", text: "MY FAMILY ❤️" },
       {
         type: "prose",
-        text: "Her parents cared for her from birth and guided her as she grew up. They were strict about doing the right thing, and they are among the most important people in her life. Mercy grew up in a Christian home.",
+        text: "My parents have been there for me from the beginning. They have cared for me, guided me and taught me to make the right decisions. I know there are many things they have done for me that I may not always say thank you for, but I appreciate them. Thank you for standing by me and wanting the best for me. May God continue to bless and protect you.",
       },
       {
         type: "pair",
         photos: ["me-and-my-lovely-father", "me-and-my-lovely-mother"],
-        captions: ["Mercy and her father.", "Mercy and her mother."],
-      },
-      {
-        type: "prose",
-        text: "These are Mercy's parents. She has talked about them more than almost anyone else.",
+        captions: ["With my father.", "With my mother."],
       },
       { type: "video", video: "my-lovely-mom-video" },
       {
         type: "prose",
-        text: "Mercy also has siblings. She appreciates having them around when she needs them.",
+        text: "To my siblings - thank you for always being there whenever I need you. Having people I can turn to means a lot to me. I appreciate every moment, every conversation, and every way you have been part of my life.",
       },
       {
         type: "figure",
         photo: "picture-with-my-younger-siblings",
         size: "wide",
-        caption: "Mercy with her younger siblings.",
+        caption: "With my younger siblings.",
       },
       {
-        type: "trio",
-        photos: ["sister-cece", "sister-elizabeth", "brother-samuel"],
-        captions: ["Mercy and her sister Cece.", "Mercy and her sister Elizabeth.", "Mercy and her brother Samuel."],
+        type: "prose",
+        text: "To my sisters - thank you for the care, support and kindness you have shown me. Having people who genuinely care about me is something I do not take for granted. I appreciate every moment we have shared, and I pray that God continues to bless each one of you.",
       },
-      { type: "figure", photo: "brother-kofi", size: "half", caption: "Mercy and her brother Kofi." },
+      {
+        type: "pair",
+        photos: ["sister-cece", "sister-elizabeth"],
+        captions: ["My sister, Cece ❤️", "My sister, Elizabeth."],
+      },
+      {
+        type: "prose",
+        text: "To my brothers - thank you for always being there for me, and for the way you have stood with me as I have grown. Having brothers I can turn to means a lot to me. I appreciate you, and I pray that God continues to bless each one of you.",
+      },
+      {
+        type: "figure",
+        photo: "brother-kofi",
+        size: "half",
+        caption: "My brother, Kofi.",
+      },
+      {
+        type: "figure",
+        photo: "brother-samuel",
+        size: "half",
+        caption: "My brother, Samuel.",
+      },
     ],
   },
   {
     slug: "people",
     number: "03",
-    title: "Her friends",
+    title: "My friends",
     nav: "People",
-    intro: "The friends Mercy talks about.",
+    intro: "The people who have been beside me.",
     cover: "i-and-my-lovely-friends",
-    blurb: "The people in her life",
+    blurb: "The people in my life",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "Elijah Owusu Asante is her best friend." },
+      { type: "aphorism", text: "MY BEST FRIEND, ELIJAH ❤️" },
       {
         type: "prose",
-        text: "He has been with her through thick and thin, and she values his advice, his love and the way he cares for her.",
+        text: "Elijah, thank you for being my best friend and for being there through thick and thin. I really appreciate your advice, your love and your care.",
       },
       {
         type: "figure",
         photo: "my-best-friend-elisha-owusu-asante",
         size: "half",
-        caption: "Elijah Owusu Asante, Mercy's best friend.",
+        caption: "My best friend, Elijah.",
       },
       {
         type: "prose",
-        text: "They have had their disagreements too. Mercy admits she can be stubborn, and she values that Elijah does not get tired of her. Their friendship has grown stronger because of it.",
+        text: "We have had our disagreements too, but our friendship has continued to grow. I know I can be stubborn sometimes, but you have continued to be there. Thank you for being my best friend. I truly appreciate you.",
       },
       {
         type: "pair",
         photos: ["my-friend-sandra", "my-friend-rachael"],
-        captions: ["Mercy and her friend Sandra.", "Mercy and her friend Rachael."],
+        captions: ["With Sandra.", "With Rachael."],
       },
       {
         type: "prose",
-        text: "Sandra and Rachael are two of the others Mercy spends her time with.",
+        text: "To my friends - knowing you has been something I truly appreciate. Thank you for the moments we have shared, the laughter, the care, and simply being someone I can have in my life. Some people become part of your memories without even realising how much their presence means. I am grateful to God for allowing our paths to cross.",
       },
       {
         type: "figure",
         photo: "i-and-my-lovely-friends",
         size: "wide",
-        caption: "Mercy with some of her friends.",
+        caption: "With my friends.",
       },
-      { type: "pair", photos: ["me-with-my-friends-2", "my-favorite-person-and-i"] },
+      {
+        type: "trio",
+        photos: ["me-with-my-friends-2", "my-fighting-patner", "my-favorite-person-and-i"],
+        captions: ["Time with my friends.", "With a friend.", "With someone close to me."],
+      },
       { type: "video", video: "happy-moment-with-friends" },
       { type: "video", video: "my-family-and-friends" },
     ],
@@ -149,138 +169,179 @@ export const chapters = [
   {
     slug: "faith",
     number: "04",
-    title: "Her faith",
+    title: "My faith",
     nav: "Faith",
-    intro: "Being a Christian comes first for Mercy.",
-    cover: "me-worshiping-at-church",
-    blurb: "Her faith",
+    intro: "What I hold on to.",
+    cover: "pastor-paul-oteng-asamoah-and-mama-agartha-asamoah",
+    blurb: "My faith",
     theme: "blue",
     blocks: [
-      { type: "aphorism", text: "She does not build her life around what other people expected of her." },
+      { type: "aphorism", text: "BY GOD'S GRACE 🙏🏽" },
       {
         type: "prose",
-        text: "Mercy is straightforward about her priorities. She wants to live a whole and balanced life, to minister unto the Lord, and to be a gospel singer.",
+        text: "When I look back at my life, I know I have not come this far by my own strength. Thank You, Lord, for protecting me, for guiding me, and for giving me another year.",
       },
       { type: "video", video: "mercy-deep-worship", ratio: "16/9" },
       {
         type: "prose",
-        text: "Church has always been part of her life, and worship is something she takes part in. This clip is the one she picked out herself.",
+        text: "Church has always been part of my life, and worship is something I take part in. This clip is the one I picked out myself.",
       },
       { type: "video", video: "me-worshiping-at-church" },
       {
         type: "prose",
-        text: "Mercy describes Pastor Paul Oteng Asamoah as someone who never gave up on her, who fought for her dreams, and who wanted her to be happy. She also describes him as a father figure, and as a blessing in her life.",
+        text: "Pastor Paul, thank you for never giving up on me. Thank you for believing in my dreams, for caring about my happiness, and for standing by me like a father. I am grateful to God for placing you in my life. You have been a blessing to me, and I will always appreciate the role you have played in my life. May God continue to bless you.",
+      },
+      {
+        type: "prose",
+        text: "To Mama Agartha, thank you for the support and encouragement you have given me, and for standing with my family in the seasons that mattered. I appreciate you, and I pray that God continues to bless you and your family.",
       },
       {
         type: "figure",
         photo: "pastor-paul-oteng-asamoah-and-mama-agartha-asamoah",
         size: "wide",
-        caption: "Pastor Paul Oteng Asamoah and Mama Agartha Asamoah.",
+        caption: "With Pastor Paul and Mama Agartha.",
       },
       {
         type: "prose",
-        text: "Philippians 4:6 is the Bible verse Mercy chose.",
+        text: "Philippians 4:6 is the Bible verse I chose.",
       },
       { type: "aphorism", text: "Be anxious for nothing, but in everything, by prayer and petition with thanksgiving." },
       {
         type: "prose",
-        text: "She has said her memories taught her how to live without depending on anyone else but God, and that she does not build her life around what other people expected of her. She chooses her own way instead.",
+        text: "Please forgive me for my mistakes, draw me closer to You, and help me to keep You at the centre of my life. My memories have taught me how to live without depending on anyone else but God. I do not build my life around what other people expected of me. I choose my own way instead.",
       },
     ],
   },
   {
     slug: "music",
     number: "05",
-    title: "Her music",
+    title: "My music",
     nav: "Music",
-    intro: "Singing is something Mercy works at seriously.",
+    intro: "Singing is something I work at seriously.",
     cover: "my-studio-song",
     blurb: "Singing and music",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "Mercy wants to become a good gospel musician." },
+      { type: "aphorism", text: "THE GIFT OF MUSIC 🎶" },
       {
         type: "prose",
-        text: "Mercy likes singing, she likes listening to music, and she works at it. For her, the singing and the faith are connected.",
+        text: "Singing is something that is close to my heart. I like singing, I like listening to music, and I work at it. For me, the singing and the faith are connected.",
       },
       {
         type: "figure",
         photo: "way-back-in-shs-when-i-contested-for-best-vocalist",
         size: "square",
-        caption: "Back at Konongo Odumase Senior High School, when she contested for Best Vocalist.",
+        caption: "The flyer from when I contested for Best Vocalist at Konongo Odumase Senior High School.",
       },
       {
         type: "prose",
-        text: "This is the flyer from that time. Music was already becoming an important part of her life.",
+        text: "This is the flyer from that time. Music was already becoming an important part of my life.",
       },
       {
         type: "prose",
-        text: "Melody Singers has been part of her Christian and music journey. One of the artists she listens to is Mama Esther. Two lines she has mentioned are my soul says yes to your ways, and may the meditation of my heart be accepted to you.",
+        text: "Melody Singers has been part of my Christian and music journey. One of the artists I listen to is Mama Esther. Two lines I have mentioned are my soul says yes to your ways, and may the meditation of my heart be accepted to you.",
       },
       { type: "video", video: "my-studio-song" },
       {
         type: "prose",
-        text: "This is her working on the music she wants to keep improving.",
+        text: "This is me working on the music I want to keep improving. I pray that God continues to help me grow, and to use the gift He has given me to serve Him and encourage others.",
       },
-      { type: "figure", photo: "my-picture-at-school", size: "half", caption: "Mercy from her school years." },
+      { type: "figure", photo: "my-picture-at-school", size: "half", caption: "From my school years." },
     ],
   },
   {
     slug: "today",
     number: "06",
-    title: "Mercy today",
+    title: "Today",
     nav: "Today",
-    intro: "Mercy today.",
+    intro: "Where I am right now.",
     cover: "me-currently",
-    blurb: "Where she is now",
+    blurb: "Where I am now",
     theme: "blue",
     blocks: [
-      { type: "aphorism", text: "Away from work and school: good food, films, pink and blue." },
+      { type: "aphorism", text: "TODAY ❤️" },
       {
         type: "prose",
-        text: "Mercy is currently a teacher, and she is working towards further education at university.",
+        text: "I am still learning. I am still growing. I am still figuring things out. But I am grateful for how far God has brought me, and excited about what He has ahead.",
       },
-      { type: "figure", photo: "me-currently", size: "wide", caption: "Mercy, as she is today." },
-      { type: "pair", photos: ["my-favourate-picture", "my-picture-1"] },
       {
         type: "prose",
-        text: "Away from work and school, some of the simple things she enjoys are good food, like banku with okra stew and meat, and watching films. She has mentioned Treasure in the Sky and Best Friends in the World. Her favourite colours are pink and blue.",
+        text: "I am currently a teacher, and I am working towards further education at university.",
+      },
+      { type: "figure", photo: "me-currently", size: "wide", caption: "Me today." },
+      {
+        type: "pair",
+        photos: ["my-favourate-picture", "my-picture-1"],
+        captions: ["One of my favourite pictures.", "A moment worth remembering."],
+      },
+      {
+        type: "prose",
+        text: "Away from work and school, some of the simple things I enjoy are good food, like banku with okra stew and meat, and watching films. I have mentioned Treasure in the Sky and Best Friends in the World. My favourite colours are pink and blue.",
       },
       { type: "video", video: "some-years-back-and-up-to-today" },
-      { type: "trio", photos: ["my-picture", "my-picture-2", "years-back"] },
-      { type: "pair", photos: ["some-years-back-my-picture", "sister-elizabeth"] },
+      {
+        type: "pair",
+        photos: ["my-picture", "my-picture-2"],
+        captions: ["A happy memory.", "One of the moments that makes me smile."],
+      },
       { type: "video", video: "myself-now" },
     ],
   },
   {
     slug: "dreams",
     number: "07",
-    title: "What she is working towards",
+    title: "What I am working towards",
     nav: "Dreams",
-    intro: "What she is aiming for.",
+    intro: "What I am still working on.",
     cover: "my-picture-2",
-    blurb: "Her goals",
+    blurb: "My goals",
     theme: "pink",
     blocks: [
-      { type: "aphorism", text: "She wants to make heaven proud." },
+      { type: "aphorism", text: "I want to make heaven proud" },
       {
         type: "prose",
-        text: "She wants to become an Agric Officer. She wants to become a good gospel musician. She wants to make her parents proud.",
+        text: "I want to become an Agric Officer. I want to become a good gospel musician. I want to make my parents proud.",
       },
       {
         type: "prose",
-        text: "She has not got there yet. These are the things she is still working on.",
+        text: "I have not got there yet. These are the things I am still working on.",
       },
-      { type: "pair", photos: ["my-picture-2", "me-currently"] },
+      {
+        type: "pair",
+        photos: ["my-picture-2", "me-currently"],
+        captions: ["One of the moments that makes me smile.", "Me, today."],
+      },
       { type: "wishBox", prompt: "Tell Mercy what she is working towards" },
     ],
   },
 ];
 
+/* Mercy's birthday prayer, and the last thing a visitor reads. It is not a
+   caption and not a photo note - it is a prayer in her own voice, so it uses
+   the first person like the rest of the story. Kept here as data so the page
+   renders it with the components that already exist. */
+export const thanksgiving = {
+  kicker: "A birthday prayer",
+  title: "DEAR LORD, THANK YOU ❤️🙏🏽",
+  paragraphs: [
+    "Dear Lord,",
+    "Thank You for this day. Thank You for giving me another year of life, and for bringing me safely to it. When I look back at where I came from and everything You have carried me through, I know that I am standing here today because of Your grace, and not my own strength.",
+    "Thank You for protecting me, for guiding me and for keeping me. Thank You for my parents, who cared for me and taught me to make the right decisions. Thank You for my siblings, my friends, and for every person You have placed in my life.",
+    "Thank You for the happy moments, and thank You even for the difficult seasons that have taught me important lessons.",
+    "Lord, as I begin this new year, please go ahead and bless my life. Guide my education and every step I take this year. Bless my future, and lead me into the path You have prepared for me.",
+    "Thank You for the gift of music. Please continue to guide me as I grow, and help me to use my voice to serve You and encourage others.",
+    "Lord, forgive me for my sins and my mistakes. Help me to do better, to make the right decisions and to live according to Your will. Draw me closer to You and help me never to forget You. Help me to become the person You want me to be.",
+    "I do not know everything this new year will hold, but I trust You.",
+    "Thank You, Lord, for this birthday, and for bringing me this far.",
+    "It is only by Your grace. Amen. 🙏🏽",
+  ],
+  signoff: "Mercy",
+};
+
 /* Robert's personal message to Mercy. This is deliberately the one place the
-   voice switches out of third person and speaks to her directly. Keep it
-   sincere and specific - no invented memories, no claim to a relationship
-   that has not been established. */
+   voice switches out of first person and addresses her directly, in second
+   person. Keep it sincere and specific - no invented memories, no claim to a
+   relationship that has not been established. */
 export const personalMessage = {
   kicker: "A message from Robert",
   title: "Happy birthday, Mercy ❤️",

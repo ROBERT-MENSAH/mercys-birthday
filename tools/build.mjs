@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { site, contact, creator, photos, photoGroups, videos, bibleVerses, momo } from "./content.mjs";
-import { chapters, wishPrompts, celebration, personalMessage } from "./story.mjs";
+import { chapters, wishPrompts, celebration, personalMessage, thanksgiving } from "./story.mjs";
 import { media, cover, problems } from "./media.mjs";
 import { icon } from "./iconsprite.mjs";
 import { page, esc, picture, figure, strip, videoCard, wishBox, installCard, installBar, aphorism, prose, sectionHead, base, rel, setDepth, asset, NAV } from "./templates.mjs";
@@ -68,8 +68,8 @@ function home() {
      Picking 01/03/06 implied four chapters were missing. */
   const highlights = [
     { p: P("my-childhood-picture"), to: "story/childhood/", cap: "Childhood and school", num: "01" },
-    { p: P("picture-with-my-younger-siblings"), to: "story/family/", cap: "Her family", num: "02" },
-    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "Her friends", num: "03" },
+    { p: P("picture-with-my-younger-siblings"), to: "story/family/", cap: "My family", num: "02" },
+    { p: P("i-and-my-lovely-friends"), to: "story/people/", cap: "My friends", num: "03" },
   ];
 
   const body = `    <section class="section section--tight">
@@ -121,7 +121,7 @@ function home() {
     </section>
 
     <section class="section">
-      ${sectionHead("The chapters", "Her life, in order")}
+      ${sectionHead("The chapters", "My life, in order")}
       <p class="prose rv">Seven chapters, from the earliest photograph of her to what she is still working towards.</p>
       <div class="chgrid" style="margin-top:var(--s-5)">
         ${highlights
@@ -144,8 +144,8 @@ function home() {
     </section>
 
     <section class="section section--tight">
-      ${sectionHead("Now", "Mercy, right now")}
-      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "years-back"], { cls: "rv", captions: ["Mercy, as she is today.", "One of Mercy's favourite pictures.", "Mercy out in the sunshine.", "Mercy some years back."] })}
+      ${sectionHead("Now", "Me, right now")}
+      ${strip(["me-currently", "my-favourate-picture", "my-picture-1", "my-picture-2"], { cls: "rv", captions: ["Me today.", "One of my favourite pictures.", "A moment worth remembering.", "One of the moments that makes me smile."] })}
       <div class="btnrow" style="margin-top:var(--s-5)">
         <a class="btn btn--primary" href="birthday/">${icon("cake", { size: 18 })}<span>Go to the celebration</span></a>
       </div>
@@ -255,7 +255,7 @@ function journey() {
     .join("\n        ");
 
   const body = `    <section class="section section--tight">
-      ${sectionHead("The journey", "Her life, in order")}
+      ${sectionHead("The journey", "My life, in order")}
       <p class="prose rv">Read them in order, or start with whichever one you want. Every chapter is built from real photographs and real videos.</p>
     </section>
 
@@ -367,7 +367,7 @@ function memories() {
 
   const body = `    <section class="section section--tight">
       ${sectionHead("Memory room", "Every photograph")}
-      <p class="prose rv">All ${photos.length} photographs, grouped by the part of her life they belong to. Tap any one to see it full size.</p>
+      <p class="prose rv">All ${photos.length} photographs, grouped by the part of my life they belong to. Tap any one to see it full size.</p>
     </section>
 
     <div class="filters">
@@ -445,7 +445,7 @@ function birthday() {
 
     <section class="section section--tight">
       ${sectionHead("A few more", "Today, in pictures")}
-      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Mercy, as she is today.", "Mercy out in the sunshine.", "Mercy with some of her friends.", "Mercy and her sister Elizabeth."] })}
+      ${strip(["me-currently", "my-picture-1", "i-and-my-lovely-friends", "sister-elizabeth"], { cls: "rv", captions: ["Me today.", "A moment worth remembering.", "With my friends.", "My sister, Elizabeth."] })}
     </section>
 
     <section class="section section--tight">
@@ -453,6 +453,14 @@ function birthday() {
       <div class="card rv" style="max-width:620px">
         ${personalMessage.paragraphs.map((t) => `<p style="font-size:var(--t-base);line-height:1.65;margin-bottom:1rem">${esc(t)}</p>`).join("\n        ")}
         <p style="font-size:var(--t-base);margin-top:1.2rem;color:var(--rose-300);font-weight:600">&mdash; ${esc(personalMessage.signoff)}</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      ${sectionHead(thanksgiving.kicker, thanksgiving.title)}
+      <div class="card rv" style="max-width:620px">
+        ${thanksgiving.paragraphs.map((t) => `<p style="font-size:var(--t-base);line-height:1.65;margin-bottom:1rem">${esc(t)}</p>`).join("\n        ")}
+        <p style="font-size:var(--t-base);margin-top:1.2rem;color:var(--rose-300);font-weight:600">&mdash; ${esc(thanksgiving.signoff)}</p>
       </div>
     </section>
 
