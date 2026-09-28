@@ -210,6 +210,48 @@ export const chapters = [
         type: "prose",
         text: "Please forgive me for my mistakes, draw me closer to You, and help me to keep You at the centre of my life. My memories have taught me how to live without depending on anyone else but God. I do not build my life around what other people expected of me. I choose my own way instead.",
       },
+      { type: "aphorism", text: "A STORY THAT STAYS WITH ME" },
+      {
+        type: "prose",
+        text: "There is a true story I have read about Jim Elliot, a young Christian man who went into the Amazon jungle in Ecuador with four other men to tell the Huaorani people about Jesus. Nobody had ever reached these people before, and many of them had already been killed by others who came into their land.",
+      },
+      {
+        type: "prose",
+        text: "In January 1956, Jim and the four men with him were killed by the people they had come to reach. Jim was 28 years old, and he left behind a young wife and a baby daughter.",
+      },
+      {
+        type: "prose",
+        text: "Years before he died, Jim wrote in his own journal: \"He is no fool who gives what he cannot keep to gain what he cannot lose.\"",
+      },
+      {
+        type: "prose",
+        text: "His wife, Elisabeth, was left a widow with a small child. She could have gone anywhere in the world. Instead, she went back and lived among the same people who had killed her husband.",
+      },
+      {
+        type: "prose",
+        text: "She later wrote a book called Through Gates of Splendor, telling the story of the five men so that they would not be forgotten.",
+      },
+      {
+        type: "prose",
+        text: "This story did not happen to me, and I want to be honest about that. I share it because it challenges how I live. I can say I am thankful on an easy day. Elisabeth had every reason to hate, and she still chose to live among the people who took everything from her.",
+      },
+      {
+        type: "prose",
+        text: "I do not know if I could do what she did. But it makes me ask myself an honest question: when I am hurt, who do I become? Do I hold on to my anger, or do I let God change how I see people?",
+      },
+      {
+        type: "prose",
+        text: "I want to live like someone who forgives, because the God I serve is a God who forgave me first. Not because it is easy, but because it is right, and because I need it more than they do.",
+      },
+      {
+        type: "prose",
+        text: "Lord, teach me to forgive the way You have forgiven me. Give me strength to keep going when things are hard, and keep me humble enough to admit when I get it wrong.",
+      },
+      {
+        type: "prose",
+        text: "This is history, not something that happened to me. But if it changes even one small thing in how I live, then it was worth telling.",
+      },
+
     ],
   },
   {
